@@ -21,7 +21,7 @@ public class InterfaceVisitor extends WebIDLBaseVisitor<InterfaceDefinition> {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
         String parent = ctx.inheritance() == null || ctx.inheritance().IDENTIFIER_WEBIDL() == null
                 ? null : ctx.inheritance().IDENTIFIER_WEBIDL().getText();
-        List<InterfaceMember> members = ctx.interfaceMembers().accept(new InterfaceMembersVisitor());
+        List<InterfaceMember> members = ctx.interfaceMembers().accept(new InterfaceMembersVisitor(name));
         return new InterfaceDefinition(name, parent, constructors, members);
     }
 }

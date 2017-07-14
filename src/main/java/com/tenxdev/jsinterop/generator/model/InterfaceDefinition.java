@@ -1,8 +1,8 @@
 package com.tenxdev.jsinterop.generator.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.tenxdev.jsinterop.generator.processing.TypeUtil;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InterfaceDefinition implements Definition {
@@ -14,6 +14,8 @@ public class InterfaceDefinition implements Definition {
     private List<Method> methods;
     private List<Attribute> attributes;
     private boolean partial;
+    private List<Method> expandedMethods;
+    private List<Method> expandedConstructors;
 
     public InterfaceDefinition(String name, String parent, List<Method> constructors, List<InterfaceMember> members) {
         this.name = name;
@@ -39,6 +41,22 @@ public class InterfaceDefinition implements Definition {
         return definition.getClass().equals(InterfaceDefinition.class);
     }
 
+    public List<Method> getExpandedMethods() {
+        return expandedMethods;
+    }
+
+    public void setExpandedMethods(List<Method> expandedMethods) {
+        this.expandedMethods = expandedMethods;
+    }
+
+    public List<Method> getExpandedConstructors() {
+        return expandedConstructors;
+    }
+
+    public void setExpandedConstructors(List<Method> expandedConstructors) {
+        this.expandedConstructors = expandedConstructors;
+    }
+
     @Override
     public boolean isPartial() {
         return partial;
@@ -46,6 +64,31 @@ public class InterfaceDefinition implements Definition {
 
     public void setPartial(boolean partial) {
         this.partial = partial;
+    }
+
+    @Override
+    public Set<String> getTypeUsage() {
+        Set<String> types = new TreeSet<>();
+        if (parent != null) {
+            types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(parent));
+        }
+        for (Method method : methods) {
+            types.addAll(method.getTypeUsage());
+        }
+        for (Method constructor : constructors) {
+            types.addAll(constructor.getTypeUsage());
+        }
+        for (Constant constant : constants) {
+            if (constant.getType() != null && !constant.getType().isEmpty()) {
+                types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(constant.getType()));
+            }
+        }
+        for (Attribute attribute : attributes) {
+            for (String type : attribute.getTypes()) {
+                types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(type));
+            }
+        }
+        return types;
     }
 
     @Override
@@ -96,17 +139,17 @@ public class InterfaceDefinition implements Definition {
             if (isPartial()) {
                 return Collections.emptyList();
             }
-            constants=new ArrayList<>();
+            constants = new ArrayList<>();
         }
         return constants;
     }
 
     public List<Feature> getFeatures() {
-        if (features==null){
-            if(isPartial()){
+        if (features == null) {
+            if (isPartial()) {
                 return Collections.emptyList();
             }
-            features=new ArrayList<>();
+            features = new ArrayList<>();
         }
 
         return features;

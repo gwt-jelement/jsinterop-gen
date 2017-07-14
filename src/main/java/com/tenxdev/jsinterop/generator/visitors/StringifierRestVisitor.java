@@ -2,6 +2,7 @@ package com.tenxdev.jsinterop.generator.visitors;
 
 import com.tenxdev.jsinterop.generator.model.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.processing.TypeUtil;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
@@ -15,10 +16,10 @@ public class StringifierRestVisitor extends WebIDLBaseVisitor<InterfaceMember>{
             boolean readOnly=!ctx.readOnly().isEmpty();
             return ctx.attributeRest().accept(new AttributeRestVisitor(readOnly, false));
         }else if (ctx.operationRest()!=null){
-            String returnType = ctx.returnType().getText();
-            return ctx.operationRest().accept(new OperationRestVisitor(returnType, false));
+            String[] returnTypes = TypeUtil.INSTANCE.removeOptionalIndicator(ctx.returnType().accept(new TypeVisitor()));
+            return ctx.operationRest().accept(new OperationRestVisitor(returnTypes, false));
         }else{
-            return new Method("toString","DOMString", Collections.emptyList(),false);
+            return new Method("toString",new String[]{"DOMString"}, Collections.emptyList(),false);
         }
     }
 }

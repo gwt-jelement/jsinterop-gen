@@ -10,11 +10,11 @@ import java.util.List;
 
 public class OperationRestVisitor extends WebIDLBaseVisitor<Method>{
 
-    private final String returnType;
+    private final String[] returnTypes;
     private final boolean static_;
 
-    public OperationRestVisitor(String returnType, boolean static_){
-        this.returnType =returnType;
+    public OperationRestVisitor(String[] returnTypes, boolean static_){
+        this.returnTypes =returnTypes;
         this.static_=static_;
     }
 
@@ -23,6 +23,6 @@ public class OperationRestVisitor extends WebIDLBaseVisitor<Method>{
         String name=ctx.optionalIdentifier().getText();
         List<MethodArgument> parameters = ctx.argumentList()==null ||ctx.argumentList().argument()==null ? Collections.emptyList() :
                 ctx.argumentList().accept(new ArgumentsVisitor());
-        return new Method(name, returnType, parameters, static_);
+        return new Method(name, returnTypes, parameters, static_);
     }
 }

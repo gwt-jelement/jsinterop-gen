@@ -1,19 +1,22 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import java.util.Arrays;
+
 public class Feature implements InterfaceMember {
 
     private final FeatureType featureType;
     private final boolean readOnly;
-    String valueType;
-    String keyType;
-    public Feature(FeatureType featureType, String valueType, boolean readOnly) {
-        this(featureType, null, valueType, readOnly);
+    String[] valueTypes;
+    String[] keyTypes;
+
+    public Feature(FeatureType featureType, String[] valueTypes, boolean readOnly) {
+        this(featureType, null, valueTypes, readOnly);
     }
 
-    public Feature(FeatureType featureType, String keyType, String valueType, boolean readOnly) {
+    public Feature(FeatureType featureType, String[] keyTypes, String[] valueTypes, boolean readOnly) {
         this.featureType = featureType;
-        this.valueType = valueType;
-        this.keyType = keyType;
+        this.valueTypes = valueTypes;
+        this.keyTypes = keyTypes;
         this.readOnly = readOnly;
     }
 
@@ -25,16 +28,16 @@ public class Feature implements InterfaceMember {
         return readOnly;
     }
 
-    public String getValueType() {
-        return valueType;
+    public String[] getValueTypes() {
+        return valueTypes;
     }
 
-    public String getKeyType() {
-        return keyType;
+    public String[] getKeyTypes() {
+        return keyTypes;
     }
 
     public boolean isPairIterator() {
-        return keyType != null;
+        return keyTypes != null;
     }
 
     @Override
@@ -46,16 +49,18 @@ public class Feature implements InterfaceMember {
 
         if (readOnly != feature.readOnly) return false;
         if (featureType != feature.featureType) return false;
-        if (valueType != null ? !valueType.equals(feature.valueType) : feature.valueType != null) return false;
-        return keyType != null ? keyType.equals(feature.keyType) : feature.keyType == null;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(valueTypes, feature.valueTypes)) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        return Arrays.equals(keyTypes, feature.keyTypes);
     }
 
     @Override
     public int hashCode() {
-        int result = featureType.hashCode();
+        int result = featureType != null ? featureType.hashCode() : 0;
         result = 31 * result + (readOnly ? 1 : 0);
-        result = 31 * result + (valueType != null ? valueType.hashCode() : 0);
-        result = 31 * result + (keyType != null ? keyType.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(valueTypes);
+        result = 31 * result + Arrays.hashCode(keyTypes);
         return result;
     }
 
@@ -64,8 +69,8 @@ public class Feature implements InterfaceMember {
         return "Feature{" +
                 "featureType=" + featureType +
                 ", readOnly=" + readOnly +
-                ", valueType='" + valueType + '\'' +
-                ", keyType='" + keyType + '\'' +
+                ", valueType='" + (valueTypes == null ? null : Arrays.asList(valueTypes)) + '\'' +
+                ", keyType='" + (keyTypes == null ? null : Arrays.asList(keyTypes)) + '\'' +
                 '}';
     }
 

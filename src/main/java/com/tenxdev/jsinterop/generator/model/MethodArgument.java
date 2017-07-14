@@ -9,16 +9,20 @@ public class MethodArgument {
     private final boolean vararg;
     private final boolean optional;
 
-    public MethodArgument(String name, String type, boolean vararg, boolean optional, String defaultValue) {
-        this(name, new String[]{type}, vararg, optional, defaultValue);
-    }
-
     public MethodArgument(String name, String[] types, boolean vararg, boolean optional, String defaultValue) {
         this.types = types;
         this.name = name;
         this.vararg = vararg;
         this.optional = optional;
-        this.defaultValue=defaultValue;
+        this.defaultValue = defaultValue;
+    }
+
+    public MethodArgument(MethodArgument methodArgument) {
+        this.defaultValue = methodArgument.defaultValue;
+        this.types = Arrays.copyOf(methodArgument.types, methodArgument.types.length);
+        this.name = methodArgument.name;
+        this.vararg = methodArgument.vararg;
+        this.optional = methodArgument.optional;
     }
 
     public String getDefaultValue() {

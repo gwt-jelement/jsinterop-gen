@@ -4,6 +4,7 @@ import com.tenxdev.jsinterop.generator.model.CallbackDefinition;
 import com.tenxdev.jsinterop.generator.model.Definition;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
+import com.tenxdev.jsinterop.generator.processing.TypeUtil;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
@@ -34,10 +35,10 @@ public class CallbackVisitor extends WebIDLBaseVisitor<Definition> {
     @Override
     public CallbackDefinition visitCallbackRest(WebIDLParser.CallbackRestContext ctx) {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
-        String returnType = ctx.returnType().getText();
+        String[] returnTypes = TypeUtil.INSTANCE.removeOptionalIndicator(ctx.returnType().accept(new TypeVisitor()));
         List<MethodArgument> arguments = ctx.argumentList() != null && ctx.argumentList().arguments() != null ?
                 ctx.argumentList().accept(new ArgumentsVisitor()) : Collections.emptyList();
-        Method method = new Method(null, returnType, arguments, false);
+        Method method = new Method(null, returnTypes, arguments, false);
         return new CallbackDefinition(name, method);
     }
 }

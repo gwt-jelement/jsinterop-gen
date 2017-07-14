@@ -1,6 +1,7 @@
 package com.tenxdev.jsinterop.generator.visitors;
 
 import com.tenxdev.jsinterop.generator.model.Feature;
+import com.tenxdev.jsinterop.generator.processing.TypeUtil;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
@@ -13,7 +14,7 @@ public class SetLikeRestVisitor extends WebIDLBaseVisitor<Feature> {
 
     @Override
     public Feature visitSetlikeRest(WebIDLParser.SetlikeRestContext ctx) {
-        String type = ctx.type().accept(new TypeVisitor());
-        return new Feature(Feature.FeatureType.SetLike, type, readOnly);
+        String[] types = TypeUtil.INSTANCE.removeOptionalIndicator(ctx.type().accept(new TypeVisitor()));
+        return new Feature(Feature.FeatureType.SetLike, types, readOnly);
     }
 }

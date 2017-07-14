@@ -16,7 +16,7 @@ public class DictionaryMemberVisitor extends WebIDLBaseVisitor<List<DictionaryMe
         while (context != null && context.dictionaryMember() != null) {
             WebIDLParser.DictionaryMemberContext memberContext = context.dictionaryMember();
             boolean required = memberContext.required() != null && "required".equals(memberContext.required().getText());
-            String[] types=memberContext.type().accept(new TypeVisitor()).split("\\|");
+            String[] types=memberContext.type().accept(new TypeVisitor());
             String name=memberContext.IDENTIFIER_WEBIDL().getText();
             String defaultValue=memberContext.default_()==null || memberContext.default_().defaultValue()==null?null:
                     memberContext.default_().defaultValue().getText();

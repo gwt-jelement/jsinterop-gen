@@ -8,19 +8,19 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.Collections;
 import java.util.List;
 
-public class ConstructorVisitor extends WebIDLBaseVisitor<Method>{
+public class ConstructorVisitor extends WebIDLBaseVisitor<Method> {
     @Override
     public Method visitExtendedAttributeRest(WebIDLParser.ExtendedAttributeRestContext ctx) {
-        if (ctx.extendedAttribute()==null){
-            return new Method("","",Collections.emptyList(),false);
+        if (ctx.extendedAttribute() == null) {
+            return new Method("", null, Collections.emptyList(), false);
         }
         return ctx.extendedAttribute().accept(this);
     }
 
     @Override
     public Method visitExtendedAttribute(WebIDLParser.ExtendedAttributeContext ctx) {
-        List<MethodArgument> arguments=ctx.extendedAttributeInner()!=null?
-            ctx.extendedAttributeInner().accept(new ConstructorArgumentsVisitor()): Collections.emptyList();
-        return new Method("","",arguments,false);
+        List<MethodArgument> arguments = ctx.extendedAttributeInner() != null ?
+                ctx.extendedAttributeInner().accept(new ConstructorArgumentsVisitor()) : Collections.emptyList();
+        return new Method("", null, arguments, false);
     }
 }

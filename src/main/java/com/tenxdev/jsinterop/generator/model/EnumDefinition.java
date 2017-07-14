@@ -1,6 +1,8 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class EnumDefinition implements Definition {
 
@@ -20,6 +22,11 @@ public class EnumDefinition implements Definition {
     @Override
     public boolean isPartial() {
         return false;
+    }
+
+    @Override
+    public Set<String> getTypeUsage() {
+        return Collections.emptySet();
     }
 
     public List<String> getValues() {

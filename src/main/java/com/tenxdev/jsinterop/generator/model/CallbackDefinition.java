@@ -1,5 +1,7 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import java.util.Set;
+
 public class CallbackDefinition implements Definition {
     private String name;
     private Method method;
@@ -21,6 +23,11 @@ public class CallbackDefinition implements Definition {
     @Override
     public boolean isPartial() {
         return false;
+    }
+
+    @Override
+    public Set<String> getTypeUsage() {
+        return method.getTypeUsage();
     }
 
     @Override

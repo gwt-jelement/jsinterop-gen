@@ -2,10 +2,7 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
-import com.tenxdev.jsinterop.generator.model.Definition;
-import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
-import com.tenxdev.jsinterop.generator.model.ImplementsDefinition;
-import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
+import com.tenxdev.jsinterop.generator.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,20 +12,22 @@ import java.util.function.Predicate;
 
 class ModelPartialsMerger {
     private final ErrorReporter errorHandler;
+    private final Model model;
 
-    public ModelPartialsMerger(ErrorReporter errorHandler) {
-        this.errorHandler=errorHandler;
+    public ModelPartialsMerger(Model model, ErrorReporter errorHandler) {
+        this.model = model;
+        this.errorHandler = errorHandler;
     }
 
-    public void mergePartials(Map<String, DefinitionInfo> definitionInfoMap) {
-        processPartials(definitionInfoMap);
-        processImplements(definitionInfoMap);
-        checkForLeftOverPartials(definitionInfoMap);
+    public void mergePartials() {
+        processPartials();
+        processImplements();
+        checkForLeftOverPartials();
     }
 
-    private void processPartials(Map<String, DefinitionInfo> definitionInfoMap) {
+    private void processPartials() {
         final List<Definition> processed = new ArrayList<>();
-        definitionInfoMap.values().stream().filter(info -> !info.getPartials().isEmpty()).forEach(definitionInfo -> {
+        model.getDefinitions().stream().filter(info -> !info.getPartials().isEmpty()).forEach(definitionInfo -> {
             Definition primaryDefinition = definitionInfo.getDefinition();
             processed.clear();
             for (Definition partialDefinition : definitionInfo.getPartials()) {
@@ -44,17 +43,17 @@ class ModelPartialsMerger {
         });
     }
 
-    private void processImplements(Map<String, DefinitionInfo> definitionInfoMap) {
+    private void processImplements() {
         final List<Definition> processed = new ArrayList<>();
-        definitionInfoMap.values().stream().filter(info -> !info.getPartials().isEmpty()).forEach(definitionInfo -> {
+        model.getDefinitions().stream().filter(info -> !info.getPartials().isEmpty()).forEach(definitionInfo -> {
             Definition primaryDefinition = definitionInfo.getDefinition();
             processed.clear();
             for (Definition partialDefinition : definitionInfo.getPartials()) {
                 if (ImplementsDefinition.is(partialDefinition) && InterfaceDefinition.is(primaryDefinition)) {
-                    mergeImplements(definitionInfoMap, (InterfaceDefinition) primaryDefinition, (ImplementsDefinition) partialDefinition);
+                    mergeImplements((InterfaceDefinition) primaryDefinition, (ImplementsDefinition) partialDefinition);
                     processed.add(partialDefinition);
                 } else if (ImplementsDefinition.is(partialDefinition) && DictionaryDefinition.is(primaryDefinition)) {
-                    mergeImplements(definitionInfoMap, (DictionaryDefinition) primaryDefinition, (ImplementsDefinition) partialDefinition);
+                    mergeImplements((DictionaryDefinition) primaryDefinition, (ImplementsDefinition) partialDefinition);
                     processed.add(partialDefinition);
                 }
             }
@@ -62,8 +61,8 @@ class ModelPartialsMerger {
         });
     }
 
-    private void checkForLeftOverPartials(Map<String, DefinitionInfo> definitionInfoMap) {
-        definitionInfoMap.values().stream().filter(info -> !info.getPartials().isEmpty()).forEach(definitionInfo -> {
+    private void checkForLeftOverPartials() {
+        model.getDefinitions().stream().filter(info -> !info.getPartials().isEmpty()).forEach(definitionInfo -> {
             for (Definition partialDefinition : definitionInfo.getPartials()) {
                 errorHandler.formatError("Could not merge %s %s into %s %s%n",
                         partialDefinition.getClass().getSimpleName(), partialDefinition.getName(),
@@ -85,12 +84,11 @@ class ModelPartialsMerger {
         primaryDefinition.getFeatures().addAll(definition.getFeatures());
     }
 
-    private void lookupDefinition(Map<String, DefinitionInfo> definitionInfoMap,
-                                  ImplementsDefinition implementsDefinition,
+    private void lookupDefinition(ImplementsDefinition implementsDefinition,
                                   Predicate<Definition> accept,
                                   Consumer<Definition> acceptedConsumer) {
         String implementedDefinitionName = implementsDefinition.getParent();
-        DefinitionInfo definitionInfo = definitionInfoMap.get(implementedDefinitionName);
+        DefinitionInfo definitionInfo = model.getDefinitionInfo(implementedDefinitionName);
         if (definitionInfo == null) {
             System.err.format("Could not find deinition for %s implemented by %s%n",
                     implementedDefinitionName, implementsDefinition.getName());
@@ -103,18 +101,16 @@ class ModelPartialsMerger {
         }
     }
 
-    private void mergeImplements(Map<String, DefinitionInfo> definitionInfoMap,
-                                 InterfaceDefinition primaryDefinition,
+    private void mergeImplements(InterfaceDefinition primaryDefinition,
                                  ImplementsDefinition implementsDefinition) {
-        lookupDefinition(definitionInfoMap, implementsDefinition,
+        lookupDefinition(implementsDefinition,
                 definition -> InterfaceDefinition.is(definition),
                 definition -> mergeInterfaces(primaryDefinition, (InterfaceDefinition) definition));
     }
 
-    private void mergeImplements(Map<String, DefinitionInfo> definitionInfoMap,
-                                 DictionaryDefinition primaryDefinition,
+    private void mergeImplements(DictionaryDefinition primaryDefinition,
                                  ImplementsDefinition implementsDefinition) {
-        lookupDefinition(definitionInfoMap, implementsDefinition,
+        lookupDefinition(implementsDefinition,
                 definition -> DictionaryDefinition.is(definition),
                 definition -> mergeDicstionaries(primaryDefinition, (DictionaryDefinition) definition));
     }

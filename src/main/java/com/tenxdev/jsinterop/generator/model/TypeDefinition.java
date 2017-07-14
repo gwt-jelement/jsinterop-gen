@@ -1,6 +1,10 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.processing.TypeUtil;
+
 import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class TypeDefinition implements Definition {
     private String name;
@@ -23,6 +27,15 @@ public class TypeDefinition implements Definition {
     @Override
     public boolean isPartial() {
         return false;
+    }
+
+    @Override
+    public Set<String> getTypeUsage() {
+        Set<String> types=new TreeSet<>();
+        for (String type: types){
+            types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(type));
+        }
+        return types;
     }
 
     @Override

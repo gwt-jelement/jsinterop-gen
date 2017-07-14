@@ -13,9 +13,18 @@ public class DefinitionInfo {
     private List<Definition> partials;
     private String packgeName;
     private String filename;
+    private List<String> importedPackages;
 
     public DefinitionInfo(String name) {
         this.name = name;
+    }
+
+    public List<String> getImportedPackages() {
+        return importedPackages;
+    }
+
+    public void setImportedPackages(List<String> importedPackages) {
+        this.importedPackages = importedPackages;
     }
 
     public String getName() {

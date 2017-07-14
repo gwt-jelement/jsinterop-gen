@@ -9,7 +9,7 @@ public class TypeDefVisitor extends WebIDLBaseVisitor<TypeDefinition>{
     @Override
     public TypeDefinition visitTypedef(WebIDLParser.TypedefContext ctx) {
         String name=ctx.IDENTIFIER_WEBIDL().getText();
-        String[] types=ctx.type().accept(new TypeVisitor()).split("\\|");
+        String[] types=ctx.type().accept(new TypeVisitor());
         return new TypeDefinition(name, types);
     }
 }

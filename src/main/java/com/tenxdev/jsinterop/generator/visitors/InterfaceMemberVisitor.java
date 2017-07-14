@@ -9,16 +9,22 @@ import java.util.Collections;
 
 public class InterfaceMemberVisitor extends WebIDLBaseVisitor<InterfaceMember>{
 
+    private final String containingType;
+
+    public InterfaceMemberVisitor(String containingType){
+        this.containingType=containingType;
+    }
+
     @Override
     public InterfaceMember visitInterfaceMember(WebIDLParser.InterfaceMemberContext ctx) {
         if (ctx.operation()!=null){
-            return ctx.operation().accept(new OperationVisitor());
+            return ctx.operation().accept(new OperationVisitor(containingType));
         }
         if (ctx.const_()!=null){
             return ctx.const_().accept(new ConstantVisitor());
         }
         if (ctx.serializer()!=null){
-            return new Method("toJSON","object", Collections.emptyList(),false);
+            return new Method("toJSON",new String[]{"any"}, Collections.emptyList(),false);
         }
         if (ctx.stringifier()!=null){
             return ctx.stringifier().stringifierRest().accept(new StringifierRestVisitor());

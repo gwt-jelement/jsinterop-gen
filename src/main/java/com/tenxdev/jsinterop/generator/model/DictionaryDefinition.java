@@ -1,8 +1,8 @@
 package com.tenxdev.jsinterop.generator.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.tenxdev.jsinterop.generator.processing.TypeUtil;
+
+import java.util.*;
 
 public class DictionaryDefinition implements Definition {
     private final String name;
@@ -23,6 +23,20 @@ public class DictionaryDefinition implements Definition {
     @Override
     public boolean isPartial() {
         return partial;
+    }
+
+    @Override
+    public Set<String> getTypeUsage() {
+        Set<String> types=new TreeSet<>();
+        if (parent!=null) {
+            types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(parent));
+        }
+        for (DictionaryMember member: members){
+            for (String type: types){
+                types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(type));
+            }
+        }
+        return types;
     }
 
     public void setPartial(boolean partial) {

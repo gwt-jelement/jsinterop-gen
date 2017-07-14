@@ -10,6 +10,11 @@ import java.util.List;
 
 public class InterfaceMembersVisitor extends WebIDLBaseVisitor<List<InterfaceMember>> {
 
+    private final String containingType;
+
+    public InterfaceMembersVisitor(String containingType){
+        this.containingType=containingType;
+    }
     @Override
     public List<InterfaceMember> visitInterfaceMembers(WebIDLParser.InterfaceMembersContext ctx) {
         if (ctx.isEmpty()){
@@ -19,7 +24,7 @@ public class InterfaceMembersVisitor extends WebIDLBaseVisitor<List<InterfaceMem
         for (WebIDLParser.InterfaceMembersContext members=ctx;members!=null;members=members.interfaceMembers()){
             InterfaceMember member=null;
             if (members.interfaceMember()!=null) {
-                member = members.interfaceMember().accept(new InterfaceMemberVisitor());
+                member = members.interfaceMember().accept(new InterfaceMemberVisitor(containingType));
             }
             //FIXME add misisng types
             if (member!=null) {

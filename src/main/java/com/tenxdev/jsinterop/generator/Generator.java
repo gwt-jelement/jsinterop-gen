@@ -2,6 +2,7 @@ package com.tenxdev.jsinterop.generator;
 
 import com.tenxdev.jsinterop.generator.errors.PrintStreamErrorrHandler;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.processing.FileListBuilder;
 import com.tenxdev.jsinterop.generator.processing.ModelBuilder;
 import org.kohsuke.args4j.Argument;
@@ -36,7 +37,7 @@ public class Generator {
             parser.parseArgument(args);
             ErrorReporter errorHandler=new PrintStreamErrorrHandler(System.err);
             List<File> fileList=new FileListBuilder(errorHandler).findFiles(inputDirectory);
-            Map<String, DefinitionInfo> model=new ModelBuilder(errorHandler).buildFrom(inputDirectory, fileList);
+            Model model=new ModelBuilder(errorHandler).buildFrom(inputDirectory, fileList);
             System.exit(0);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());

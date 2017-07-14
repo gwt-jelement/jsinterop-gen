@@ -1,14 +1,16 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import java.util.Arrays;
+
 public class Attribute implements InterfaceMember {
     private final boolean static_;
     private String name;
-    private String type;
+    private String[] types;
     private boolean readOnly;
 
-    public Attribute(String name, String type, boolean readOnly, boolean static_) {
+    public Attribute(String name, String[] types, boolean readOnly, boolean static_) {
         this.name = name;
-        this.type = type;
+        this.types = types;
         this.readOnly = readOnly;
         this.static_ = static_;
     }
@@ -21,8 +23,8 @@ public class Attribute implements InterfaceMember {
         return name;
     }
 
-    public String getType() {
-        return type;
+    public String[] getTypes() {
+        return types;
     }
 
     public boolean isReadOnly() {
@@ -39,14 +41,14 @@ public class Attribute implements InterfaceMember {
         if (static_ != attribute.static_) return false;
         if (readOnly != attribute.readOnly) return false;
         if (!name.equals(attribute.name)) return false;
-        return type.equals(attribute.type);
+        return types.equals(attribute.types);
     }
 
     @Override
     public int hashCode() {
         int result = (static_ ? 1 : 0);
         result = 31 * result + name.hashCode();
-        result = 31 * result + type.hashCode();
+        result = 31 * result + types.hashCode();
         result = 31 * result + (readOnly ? 1 : 0);
         return result;
     }
@@ -56,7 +58,7 @@ public class Attribute implements InterfaceMember {
         return "\n\tAttribute{" +
                 "static_=" + static_ +
                 ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
+                ", types='" + Arrays.asList(types) + '\'' +
                 ", readOnly=" + readOnly +
                 '}';
     }

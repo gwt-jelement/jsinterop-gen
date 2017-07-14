@@ -1,6 +1,7 @@
 package com.tenxdev.jsinterop.generator.visitors;
 
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
+import com.tenxdev.jsinterop.generator.processing.TypeUtil;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
@@ -71,11 +72,12 @@ public class ConstructorArgumentsVisitor extends WebIDLBaseVisitor<List<MethodAr
             for (int i = 0; i < tokens.size() - 1; ++i) {
                 type += tokens.get(i);
             }
+            type= TypeUtil.INSTANCE.removeOptionalIndicator(type);
             if (type.indexOf('|') != -1) {
                 String[] types = type.split("\\|");
                 arguments.add(new MethodArgument(name, types, false, optional, defaultValue));
             } else {
-                arguments.add(new MethodArgument(name, type, false, optional, defaultValue));
+                arguments.add(new MethodArgument(name, new String[]{type}, false, optional, defaultValue));
             }
         }
     }

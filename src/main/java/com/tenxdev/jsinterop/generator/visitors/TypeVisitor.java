@@ -3,14 +3,14 @@ package com.tenxdev.jsinterop.generator.visitors;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
-public class TypeVisitor extends WebIDLBaseVisitor<String>{
+public class TypeVisitor extends WebIDLBaseVisitor<String[]>{
 
     @Override
-    public String visitType(WebIDLParser.TypeContext ctx) {
+    public String[] visitType(WebIDLParser.TypeContext ctx) {
         if (ctx.singleType()!=null){
-            return ctx.singleType().getText();
+            return new String[]{ctx.singleType().getText()};
         }else if (ctx.arrayType()!=null){
-            return ctx.arrayType().getText()+"[]";
+            return new String[]{ctx.arrayType().getText()};
         }else if (ctx.unionType()!=null){
             return ctx.unionType().accept(this);
         }else {
@@ -20,16 +20,16 @@ public class TypeVisitor extends WebIDLBaseVisitor<String>{
     }
 
     @Override
-    public String visitUnionType(WebIDLParser.UnionTypeContext ctx) {
+    public String[] visitUnionType(WebIDLParser.UnionTypeContext ctx) {
         String type=ctx.unionMemberType(0).getText()+'|'+ctx.unionMemberType(1).getText();
         if (ctx.unionMemberTypes()!=null){
-            type+=ctx.unionMemberTypes().accept(this);
+            type+=getType(ctx.unionMemberTypes());
         }
-        return type;
+        return type.split("\\|");
     }
 
-    @Override
-    public String visitUnionMemberTypes(WebIDLParser.UnionMemberTypesContext ctx) {
+
+    private String getType(WebIDLParser.UnionMemberTypesContext ctx) {
         String type="";
         WebIDLParser.UnionMemberTypesContext context = ctx;
         while(context!=null && context.unionMemberType()!=null){
