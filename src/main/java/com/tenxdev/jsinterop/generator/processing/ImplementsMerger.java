@@ -24,7 +24,7 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
         this.model = model;
     }
 
-    public void mergeImplements() {
+    public void processModel() {
         model.getDefinitions().stream().forEach(definitionInfo -> {
             definitionInfo.getImplementsDefinitions().forEach(implementsDefinition -> {
                 String definitionName = implementsDefinition.getName();
@@ -42,7 +42,7 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
             if (implementsInterfaces(implementsName)) {
                 processImplements(implementsName);
             }
-            mergeImplements(definitionName, implementsName);
+            processModel(definitionName, implementsName);
         }
     }
 
@@ -55,7 +55,7 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
         }
     }
 
-    private void mergeImplements(String definitionName, String implementsName) {
+    private void processModel(String definitionName, String implementsName) {
         getDefinitionByName(definitionName, primaryDefinition -> {
             getDefinitionByName(implementsName, implementsDefition -> {
                 if (primaryDefinition instanceof InterfaceDefinition && implementsDefition instanceof InterfaceDefinition) {

@@ -3,7 +3,7 @@ package com.tenxdev.jsinterop.generator.processing;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.*;
 
-class PartialsMerger extends AbstractDefinitionMerger {
+public class PartialsMerger extends AbstractDefinitionMerger {
     private final Model model;
 
     public PartialsMerger(Model model, ErrorReporter errorHandler) {
@@ -11,7 +11,7 @@ class PartialsMerger extends AbstractDefinitionMerger {
         this.model = model;
     }
 
-    public void mergePartials() {
+    public void processModel() {
         processPartials();
     }
 

@@ -13,7 +13,7 @@ public class ImportResolver {
             new TreeSet<>(Arrays.asList(
                     "void", "DOMString", "USVString", "ByteString", "sequence", "any",
                     "boolean", "byte", "int", "long", "unsignedlong", "unsignedlonglong",
-                    "unsignedshort", "double", "unrestricteddouble", "Promise", "EventHandler",
+                    "unsignedshort", "double", "unrestricteddouble", "Promise",
                     "bool", "float", "Dictionary", "longlong", "octet", "short", "FrozenArray",
                     "Function", "unrestrictedfloat","Date", "object", "SerializedScriptValue" /*=any*/,
                     "EnforceRangeunsignedlong","record"

@@ -1,16 +1,20 @@
 package com.tenxdev.jsinterop.generator.processing;
 
+import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class ModelFixer {
 
     private final Model model;
+    private final ErrorReporter errorReporter;
 
-    public ModelFixer(Model model) {
-        this.model=model;
+    public ModelFixer(Model model, ErrorReporter errorReporter) {
+        this.model = model;
+        this.errorReporter=errorReporter;
     }
 
     public void processModel() {
@@ -30,10 +34,21 @@ public class ModelFixer {
             USBDevice.idl
             UsbIsochronousOutTransferResult is mispelled in IDL file, should be USBIsochronousOutTransferResult
          */
-        List<Method> methods= ((InterfaceDefinition) model.getDefinitionInfo("USBDevice").getDefinition()).getMethods();
+        List<Method> methods = ((InterfaceDefinition) model.getDefinitionInfo("USBDevice").getDefinition()).getMethods();
         Optional<Method> methodToFix = methods.stream().filter(method -> "isochronousTransferOut".equals(method.getName())).findFirst();
-        if (methodToFix.isPresent()){
-            methodToFix.get().getReturnTypes()[0]="Promise<USBIsochronousInTransferResult>";
+        if (methodToFix.isPresent()) {
+            methodToFix.get().getReturnTypes()[0] = "Promise<USBIsochronousInTransferResult>";
+        }
+        /*
+            Add EventHnadler type
+         */
+        List<MethodArgument> arguments = Arrays.asList(new MethodArgument("event", new String[]{"Event"}, false, false, null));
+        CallbackDefinition eventHandlerDefinition = new CallbackDefinition("EventHandler",
+                new Method(null,new String[]{"Event"}, arguments, false));
+        try {
+            model.registerDefinition(eventHandlerDefinition,"","");
+        } catch (Model.ConflictingNameExcepton conflictingNameExcepton) {
+            errorReporter.reportError("Skipped addition of EventHandler, alreaady registered");
         }
     }
 }

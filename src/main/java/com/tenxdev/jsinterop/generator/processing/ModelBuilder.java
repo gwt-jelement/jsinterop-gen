@@ -21,18 +21,9 @@ public class ModelBuilder {
         this.errorHandler = errorHandler;
     }
 
-    public Model buildFrom(String inputDirectory, List<File> fileList) throws IOException {
-        Model model = processFiles(inputDirectory, fileList);
-        new ModelFixer(model).processModel();
-        new PartialsMerger(model, errorHandler).mergePartials();
-        new ImplementsMerger(model, errorHandler).mergeImplements();;
-        new MethodOptionalArgsExpander(model).processModel();
-        new ImportResolver(model, errorHandler).processModel();
-        return model;
-    }
-
-    private Model processFiles(String inputDirectory, List<File> fileList) throws IOException {
+    public Model buildFrom(String inputDirectory) throws IOException {
         Model model = new Model();
+        List<File> fileList=new FileListBuilder(errorHandler).findFiles(inputDirectory);
         int offset = new File(inputDirectory).getAbsolutePath().length();
         for (File file : fileList) {
             String packageSuffix = file.getParentFile().getAbsolutePath().substring(offset).replace(File.separator, ".");
@@ -57,7 +48,6 @@ public class ModelBuilder {
         }
         return model;
     }
-
 
     private List<Definition> scanFile(File file) throws IOException {
         try (FileReader reader = new FileReader(file)) {
