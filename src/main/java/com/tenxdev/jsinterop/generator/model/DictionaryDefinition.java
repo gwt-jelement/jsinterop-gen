@@ -8,21 +8,11 @@ public class DictionaryDefinition implements Definition {
     private final String name;
     private final String parent;
     private List<DictionaryMember> members;
-    private boolean partial;
 
     public DictionaryDefinition(String name, String parent, List<DictionaryMember> members) {
         this.name = name;
         this.parent = parent;
         this.members = members;
-    }
-
-    public boolean getPartial() {
-        return partial;
-    }
-
-    @Override
-    public boolean isPartial() {
-        return partial;
     }
 
     @Override
@@ -39,9 +29,6 @@ public class DictionaryDefinition implements Definition {
         return types;
     }
 
-    public void setPartial(boolean partial) {
-        this.partial = partial;
-    }
 
     public String getParent() {
         return parent;
@@ -54,9 +41,6 @@ public class DictionaryDefinition implements Definition {
 
     public List<DictionaryMember> getMembers() {
         if (members==null){
-            if (isPartial()){
-                return Collections.emptyList();
-            }
             members=new ArrayList<>();
         }
         return members;
@@ -67,7 +51,6 @@ public class DictionaryDefinition implements Definition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DictionaryDefinition that = (DictionaryDefinition) o;
-        if (partial != that.partial) return false;
         if (!name.equals(that.name)) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
         return members != null ? members.equals(that.members) : that.members == null;
@@ -78,21 +61,17 @@ public class DictionaryDefinition implements Definition {
         int result = name.hashCode();
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (members != null ? members.hashCode() : 0);
-        result = 31 * result + (partial ? 1 : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "\n" + (partial ? "partial " : "'") +
-                "DictionaryDefinition{" +
+        return "\n" +getClass().getSimpleName()+
+                "{" +
                 "name='" + name + '\'' +
                 ", parent='" + parent + '\'' +
                 ", members=" + members +
                 '}';
     }
 
-    public static boolean is(Definition partialDefinition) {
-        return partialDefinition.getClass().equals(DictionaryDefinition.class);
-    }
 }

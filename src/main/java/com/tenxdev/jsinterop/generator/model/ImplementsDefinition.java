@@ -9,16 +9,8 @@ public class ImplementsDefinition extends InterfaceDefinition{
     }
 
     @Override
-    public boolean isPartial() {
-        return true;
-    }
-
-    @Override
     public String toString() {
         return "\n"+getName()+" implements "+getParent();
     }
 
-    public static boolean is(Definition definition){
-        return definition.getClass().equals(ImplementsDefinition.class);
-    }
 }

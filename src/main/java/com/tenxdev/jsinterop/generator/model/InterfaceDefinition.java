@@ -13,7 +13,6 @@ public class InterfaceDefinition implements Definition {
     private List<Method> constructors;
     private List<Method> methods;
     private List<Attribute> attributes;
-    private boolean partial;
     private List<Method> expandedMethods;
     private List<Method> expandedConstructors;
 
@@ -31,14 +30,14 @@ public class InterfaceDefinition implements Definition {
                 .map(member -> (Feature) member).collect(Collectors.toList());
     }
 
-    /**
-     * checks for exact match in class, will return false for descendant types
-     *
-     * @param definition
-     * @return
-     */
-    public static boolean is(Definition definition) {
-        return definition.getClass().equals(InterfaceDefinition.class);
+    public InterfaceDefinition(InterfaceDefinition interfaceDefinition){
+        this.name = interfaceDefinition.name;
+        this.parent = interfaceDefinition.parent;
+        this.constructors = interfaceDefinition.constructors;
+        this.methods = interfaceDefinition.methods;
+        this.attributes = interfaceDefinition.attributes;
+        this.constants = interfaceDefinition.constants;
+        this.features = interfaceDefinition.features;
     }
 
     public List<Method> getExpandedMethods() {
@@ -55,15 +54,6 @@ public class InterfaceDefinition implements Definition {
 
     public void setExpandedConstructors(List<Method> expandedConstructors) {
         this.expandedConstructors = expandedConstructors;
-    }
-
-    @Override
-    public boolean isPartial() {
-        return partial;
-    }
-
-    public void setPartial(boolean partial) {
-        this.partial = partial;
     }
 
     @Override
@@ -102,9 +92,6 @@ public class InterfaceDefinition implements Definition {
 
     public List<Method> getMethods() {
         if (methods == null) {
-            if (isPartial()) {
-                return Collections.emptyList();
-            }
             methods = new ArrayList<>();
         }
         return methods;
@@ -112,9 +99,6 @@ public class InterfaceDefinition implements Definition {
 
     public List<Attribute> getAttributes() {
         if (attributes == null) {
-            if (isPartial()) {
-                return Collections.emptyList();
-            }
             attributes = new ArrayList<>();
         }
         return attributes;
@@ -126,9 +110,6 @@ public class InterfaceDefinition implements Definition {
 
     public List<Method> getConstructors() {
         if (constructors == null) {
-            if (isPartial()) {
-                return Collections.emptyList();
-            }
             constructors = new ArrayList<>();
         }
         return constructors;
@@ -136,9 +117,6 @@ public class InterfaceDefinition implements Definition {
 
     public List<Constant> getConstants() {
         if (constants == null) {
-            if (isPartial()) {
-                return Collections.emptyList();
-            }
             constants = new ArrayList<>();
         }
         return constants;
@@ -146,9 +124,6 @@ public class InterfaceDefinition implements Definition {
 
     public List<Feature> getFeatures() {
         if (features == null) {
-            if (isPartial()) {
-                return Collections.emptyList();
-            }
             features = new ArrayList<>();
         }
 
@@ -162,7 +137,6 @@ public class InterfaceDefinition implements Definition {
 
         InterfaceDefinition that = (InterfaceDefinition) o;
 
-        if (partial != that.partial) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
         if (constants != null ? !constants.equals(that.constants) : that.constants != null) return false;
@@ -181,15 +155,13 @@ public class InterfaceDefinition implements Definition {
         result = 31 * result + (constructors != null ? constructors.hashCode() : 0);
         result = 31 * result + (methods != null ? methods.hashCode() : 0);
         result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
-        result = 31 * result + (partial ? 1 : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "\n" + (partial ? "partial " : "") +
-                "InterfaceDefinition{" +
-                "constructors=" + constructors +
+        return "\n" + getClass().getSimpleName()+
+                "(constructors=" + constructors +
                 ", name='" + name + '\'' +
                 ", parent='" + parent + '\'' +
                 ", methods=" + methods +

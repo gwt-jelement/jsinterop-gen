@@ -24,7 +24,8 @@ public class ModelBuilder {
     public Model buildFrom(String inputDirectory, List<File> fileList) throws IOException {
         Model model = processFiles(inputDirectory, fileList);
         new ModelFixer(model).processModel();
-        new ModelPartialsMerger(model, errorHandler).mergePartials();
+        new PartialsMerger(model, errorHandler).mergePartials();
+        new ImplementsMerger(model, errorHandler).mergeImplements();;
         new MethodOptionalArgsExpander(model).processModel();
         new ImportResolver(model, errorHandler).processModel();
         return model;

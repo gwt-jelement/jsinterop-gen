@@ -20,11 +20,6 @@ public class EnumDefinition implements Definition {
     }
 
     @Override
-    public boolean isPartial() {
-        return false;
-    }
-
-    @Override
     public Set<String> getTypeUsage() {
         return Collections.emptySet();
     }

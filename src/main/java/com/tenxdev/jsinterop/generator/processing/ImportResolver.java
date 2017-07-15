@@ -1,6 +1,6 @@
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.DefinitionInfo;
+import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.Model;
 

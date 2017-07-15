@@ -21,11 +21,6 @@ public class CallbackDefinition implements Definition {
     }
 
     @Override
-    public boolean isPartial() {
-        return false;
-    }
-
-    @Override
     public Set<String> getTypeUsage() {
         return method.getTypeUsage();
     }

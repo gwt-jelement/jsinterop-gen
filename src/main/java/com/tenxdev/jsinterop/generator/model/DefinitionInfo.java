@@ -1,6 +1,7 @@
-package com.tenxdev.jsinterop.generator;
+package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.Definition;
+import com.tenxdev.jsinterop.generator.model.ImplementsDefinition;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +11,8 @@ public class DefinitionInfo {
 
     private final String name;
     private Definition definition;
-    private List<Definition> partials;
+    private List<PartialDefinition> partialDefinitions;
+    private List<ImplementsDefinition> implementsDefinitions;
     private String packgeName;
     private String filename;
     private List<String> importedPackages;
@@ -47,15 +49,26 @@ public class DefinitionInfo {
         this.definition = definition;
     }
 
-    public List<Definition> getPartials() {
-        return partials == null ? Collections.emptyList() : partials;
+    public List<PartialDefinition> getPartialDefinitions() {
+        return partialDefinitions == null ? Collections.emptyList() : partialDefinitions;
     }
 
-    public void addPartial(Definition definition) {
-        if (partials == null) {
-            partials = new ArrayList<>();
+    public List<ImplementsDefinition> getImplementsDefinitions() {
+        return implementsDefinitions == null ? Collections.emptyList() : implementsDefinitions;
+    }
+
+    public void addPartialDefinition(PartialDefinition definition) {
+        if (partialDefinitions == null) {
+            partialDefinitions = new ArrayList<>();
         }
-        partials.add(definition);
+        partialDefinitions.add(definition);
+    }
+
+    public void addImpementsDefinition(ImplementsDefinition definition) {
+        if (implementsDefinitions == null) {
+            implementsDefinitions = new ArrayList<>();
+        }
+        implementsDefinitions.add(definition);
     }
 
     public String getFilename() {

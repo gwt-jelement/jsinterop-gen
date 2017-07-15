@@ -1,10 +1,8 @@
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class ModelFixer {

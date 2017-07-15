@@ -7,7 +7,5 @@ public interface Definition {
 
     String getName();
 
-    boolean isPartial();
-
     Set<String> getTypeUsage();
 }

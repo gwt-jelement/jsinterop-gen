@@ -25,11 +25,6 @@ public class TypeDefinition implements Definition {
     }
 
     @Override
-    public boolean isPartial() {
-        return false;
-    }
-
-    @Override
     public Set<String> getTypeUsage() {
         Set<String> types=new TreeSet<>();
         for (String type: types){

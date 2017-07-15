@@ -2,6 +2,7 @@ package com.tenxdev.jsinterop.generator.visitors;
 
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
+import com.tenxdev.jsinterop.generator.model.PartialDictionaryDefinition;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
@@ -14,8 +15,7 @@ public class PartialDictionaryVisitor extends WebIDLBaseVisitor<DictionaryDefini
         String name = ctx.IDENTIFIER_WEBIDL().getText();
         List<DictionaryMember> members = ctx.dictionaryMembers().accept(new DictionaryMemberVisitor());
         DictionaryDefinition partialDictionary = new DictionaryDefinition(name, null, members);
-        partialDictionary.setPartial(true);
-        return partialDictionary;
+        return new PartialDictionaryDefinition(partialDictionary);
 
     }
 }
