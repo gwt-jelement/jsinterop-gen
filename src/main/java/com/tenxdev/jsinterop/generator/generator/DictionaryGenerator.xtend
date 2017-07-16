@@ -2,16 +2,16 @@ package com.tenxdev.jsinterop.generator.generator
 
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition
+import com.tenxdev.jsinterop.generator.model.DictionaryDefinition
 import com.tenxdev.jsinterop.generator.processing.TypeMapper
 
-class InterfaceGenerator extends Template{
+class DictionaryGenerator {
 
     def generate(String basePackageName, DefinitionInfo definitionInfo, TypeMapper typeMapper){
-        var definition=definitionInfo.getDefinition() as InterfaceDefinition
+        var definition=definitionInfo.getDefinition() as DictionaryDefinition
         return '''
 package «basePackageName»«definitionInfo.getPackgeName()»;
 
-«IF !definition.methods.empty»import jsinterop.annotations.JsMethod;«ENDIF»
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -21,17 +21,10 @@ import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
 
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.getName»{
-    «FOR method: definition.methods»
 
-    @JsMethod(name = "«method.name»")
-    public native «typeMapper.mapType(method.firstReturnType)» «method.callbackMethodName»(«
-        FOR argument: method.arguments SEPARATOR ", "
-        »«typeMapper.mapType(argument.types.get(0))» «argument.name»«ENDFOR»);
-    «ENDFOR»
+
 
 }
-
-
     '''
     }
 }

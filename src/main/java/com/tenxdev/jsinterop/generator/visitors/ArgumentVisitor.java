@@ -40,12 +40,4 @@ public class ArgumentVisitor extends WebIDLBaseVisitor<MethodArgument> {
         return new MethodArgument(name, types, true, optional, null);
     }
 
-    private String extractOptionalMarker(String type) {
-        if (type.endsWith("?")) {
-            return type.substring(0, type.length() - 1);
-        }
-        return type;
-    }
-
-
 }

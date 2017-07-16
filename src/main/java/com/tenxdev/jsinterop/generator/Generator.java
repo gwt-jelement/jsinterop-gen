@@ -1,8 +1,10 @@
 package com.tenxdev.jsinterop.generator;
 
 import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.errors.PrintStreamErrorrHandler;
+import com.tenxdev.jsinterop.generator.generator.SourceGenerator;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.processing.*;
 import org.kohsuke.args4j.Argument;
@@ -26,8 +28,11 @@ public class Generator {
     @Option(name = "-package", usage = "the base package into which to place the IDL files", metaVar = "basePackage")
     private String basePackage = "gwt.jelement";
 
-    @Option(name = "-force", usage = "overwrite the output folder if it exissts", metaVar = "force")
+    @Option(name = "-force", usage = "renove the output folder if it exissts", metaVar = "force")
     private boolean force;
+
+    @Option(name = "-overwrite", usage = "overwrite the output folder if it exissts", metaVar = "overwrite")
+    private boolean overwrite;
 
     @Argument
     private List<String> arguments = new ArrayList<String>();
@@ -54,40 +59,56 @@ public class Generator {
         }
     }
 
-    private void processModel(Model model, ErrorReporter errorHandler) {
+    private void processModel(Model model, ErrorReporter errorHandler) throws IOException {
+        TypeMapper typeMapper=new TypeMapper(model, errorHandler);
         new ModelFixer(model, errorHandler).processModel();
+        new TypeDefsProcessor(model).processModel(typeMapper);
         new PartialsMerger(model, errorHandler).processModel();
         new ImplementsMerger(model, errorHandler).processModel();
         new MethodOptionalArgsExpander(model).processModel();
-        new ImportResolver(model, errorHandler).processModel();
+        new MethodUnionArgsExpander(model).processModel(typeMapper);
+        new ImportResolver(model, errorHandler).processModel(typeMapper);
+        new SourceGenerator(model, outputDirectory, basePackage, errorHandler).processModel(typeMapper);
     }
 
     private void checkArguments() throws CmdLineException {
         if (basePackage.endsWith(".")) {
-            basePackage = basePackage.substring(0, basePackage.length() - 1);
+            basePackage = removeLastCharacter(basePackage);
+        }
+        if (outputDirectory.endsWith("/")) {
+            outputDirectory = removeLastCharacter(outputDirectory);
+        }
+        if (force && overwrite){
+            throw new CmdLineException(null, "Cannot specifiy both -force and -overwrite", null);
         }
         File output = new File(outputDirectory);
         if (output.exists()) {
-            clearOutputDirectory(output);
-        }else{
+            if (!overwrite) {
+                clearOutputDirectory(output);
+            }
+        } else {
             createOutputDirectory(output);
         }
     }
 
+    String removeLastCharacter(String value) {
+        return value.substring(0, value.length() - 1);
+    }
+
     private void createOutputDirectory(File output) throws CmdLineException {
-        if (!output.mkdirs()){
+        if (!output.mkdirs()) {
             throw new CmdLineException(null, String.format("Could not create output directory '%s'%n", outputDirectory), null);
         }
     }
 
     private void clearOutputDirectory(File output) throws CmdLineException {
-        if (force){
+        if (force) {
             try {
-                MoreFiles.deleteDirectoryContents(output.toPath());
+                MoreFiles.deleteDirectoryContents(output.toPath(), RecursiveDeleteOption.ALLOW_INSECURE);
             } catch (IOException e) {
-                throw new CmdLineException(null, String.format("Could not empty output direcctory '%s'%n",outputDirectory), null);
+                throw new CmdLineException(null, String.format("Could not empty output direcctory '%s': %s%n", outputDirectory, e.getMessage()), e);
             }
-        }else{
+        } else {
             throw new CmdLineException(null, String.format("Output directory '%s' exists and -force was not specified.%n", outputDirectory), null);
         }
     }

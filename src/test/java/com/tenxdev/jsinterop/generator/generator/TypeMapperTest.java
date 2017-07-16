@@ -1,15 +1,9 @@
 package com.tenxdev.jsinterop.generator.generator;
 
-import com.tenxdev.jsinterop.generator.errors.AbstractErrorHandler;
 import com.tenxdev.jsinterop.generator.errors.DevNullErrorrHandler;
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.Model;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import com.tenxdev.jsinterop.generator.processing.TypeMapper;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -19,8 +13,8 @@ public class TypeMapperTest {
     private TypeMapper typeMapper;
 
     @Before
-    public void init(){
-        typeMapper= new TypeMapper(new Model(), new DevNullErrorrHandler());
+    public void init() {
+        typeMapper = new TypeMapper(new Model(), new DevNullErrorrHandler());
     }
 
     @Test

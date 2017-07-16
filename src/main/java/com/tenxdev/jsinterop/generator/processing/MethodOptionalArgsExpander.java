@@ -8,6 +8,16 @@ import com.tenxdev.jsinterop.generator.model.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class creates nee methods without optional arguments for methods with optional arguments, and removes all method
+ * definitions with optional arguments.
+ * For example, given foo(a, b?, c?)
+ * the following methods will be added:
+ * foo(a)
+ * foo(a, b)
+ * foo(a, b, c)
+ * and the original method will be removed
+ */
 public class MethodOptionalArgsExpander {
 
     private final Model model;

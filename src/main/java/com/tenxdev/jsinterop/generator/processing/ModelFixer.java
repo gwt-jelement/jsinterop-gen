@@ -46,7 +46,7 @@ public class ModelFixer {
         CallbackDefinition eventHandlerDefinition = new CallbackDefinition("EventHandler",
                 new Method(null,new String[]{"Event"}, arguments, false));
         try {
-            model.registerDefinition(eventHandlerDefinition,"","");
+            model.registerDefinition(eventHandlerDefinition,".events","");
         } catch (Model.ConflictingNameExcepton conflictingNameExcepton) {
             errorReporter.reportError("Skipped addition of EventHandler, alreaady registered");
         }

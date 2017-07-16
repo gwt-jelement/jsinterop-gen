@@ -3,7 +3,7 @@ package com.tenxdev.jsinterop.generator.visitors;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
-public class extendedAttributeInnerVisitor extends WebIDLBaseVisitor<String>{
+public class ExtendedAttributeInnerVisitor extends WebIDLBaseVisitor<String>{
 
     @Override
     public String visitOtherOrComma(WebIDLParser.OtherOrCommaContext ctx) {

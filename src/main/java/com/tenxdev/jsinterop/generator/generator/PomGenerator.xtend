@@ -33,6 +33,11 @@ class PomGenerator {
             <artifactId>gwt-dev</artifactId>
             <version>2.8.1</version>
         </dependency>
+        <dependency>
+            <groupId>gwt-jelement</groupId>
+            <artifactId>jsinterop-ecmascript</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>
