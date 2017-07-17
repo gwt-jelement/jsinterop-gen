@@ -6,7 +6,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Method implements InterfaceMember {
+public class Method implements InterfaceMember, Comparable<Method> {
     private final boolean static_;
     private final String name;
     private final Type returnType;
@@ -25,6 +25,33 @@ public class Method implements InterfaceMember {
         this.returnType = method.returnType;
         this.static_ = method.static_;
         this.arguments = method.arguments.stream().map(MethodArgument::new).collect(Collectors.toList());
+    }
+
+    public boolean isStatic() {
+        return static_;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Type getReturnType() {
+        return returnType == null ? new NativeType("void") : returnType;
+    }
+
+    public List<MethodArgument> getArguments() {
+        return arguments;
+    }
+
+    public void setMethodReferences(Method menathodReferences) {
+        if (this.methodReferences == null) {
+            this.methodReferences = methodReferences;
+        }
+    }
+
+    @Override
+    public int compareTo(Method o) {
+        return name==null?-1:name.compareTo(o.name);
     }
 
     @Override
@@ -59,27 +86,5 @@ public class Method implements InterfaceMember {
                 ", returnType='" + returnType + '\'' +
                 ", arguments=" + arguments +
                 '}';
-    }
-
-    public boolean isStatic() {
-        return static_;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Type getReturnType() {
-        return returnType == null ? new NativeType("void") : returnType;
-    }
-
-    public List<MethodArgument> getArguments() {
-        return arguments;
-    }
-
-    public void setMethodReferences(Method methodReferences) {
-        if (this.methodReferences == null) {
-            this.methodReferences = methodReferences;
-        }
     }
 }
