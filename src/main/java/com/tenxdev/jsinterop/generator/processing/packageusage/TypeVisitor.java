@@ -9,12 +9,11 @@ import java.util.List;
 
 public class TypeVisitor extends AbstractTypeVisitor<List<String>> {
 
-
     @Override
     public List<String> accept(Type type) {
         return type instanceof PackageType ?
-                Collections.singletonList(((PackageType) type).getPackageName()) :
+                Collections.singletonList(((PackageType) type).getPackageName() +
+                        "." + ((PackageType) type).getTypeName()) :
                 Collections.emptyList();
-
     }
 }

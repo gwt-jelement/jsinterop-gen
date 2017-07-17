@@ -6,4 +6,5 @@ package com.tenxdev.jsinterop.generator.model.types;
 public interface PackageType {
 
     String getPackageName();
+    String getTypeName();
 }
