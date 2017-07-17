@@ -19,7 +19,7 @@ public class ParameterizedType implements Type {
 
     @Override
     public String displayValue() {
-        return baseType + "<" + typeParameters.stream()
+        return baseType.displayValue() + "<" + typeParameters.stream()
                 .map(Type::displayValue)
                 .collect(Collectors.joining(", "))
                 + ">";
