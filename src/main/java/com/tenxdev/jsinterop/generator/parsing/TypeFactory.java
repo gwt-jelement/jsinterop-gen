@@ -99,13 +99,12 @@ public class TypeFactory {
     }
 
     public Type getUnionType(String[] typeNames) {
-        return new UnionType(Arrays.stream(typeNames)
+        return new UnionType(null, Arrays.stream(typeNames)
                 .map(this::getType)
                 .collect(Collectors.toList()));
     }
 
     public void registerType(String name, Type type) {
-
         typeMap.put(name, type);
     }
 
@@ -115,7 +114,12 @@ public class TypeFactory {
 
     void registerTypeDefs() {
         DeferredTypeAdjuster adjuster = new DeferredTypeAdjuster(this);
-        deferredTypeDefs.forEach((name, type) ->
-                registerType(name, adjuster.accept(type)));
+        deferredTypeDefs.forEach((name, type) -> {
+            Type adjustedType = adjuster.accept(type);
+            if (adjustedType instanceof UnionType){
+                ((UnionType)adjustedType).setName(name);
+            }
+            registerType(name, adjustedType);
+        });
     }
 }

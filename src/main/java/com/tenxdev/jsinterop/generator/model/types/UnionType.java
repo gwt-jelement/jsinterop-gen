@@ -3,12 +3,22 @@ package com.tenxdev.jsinterop.generator.model.types;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UnionType implements Type{
+public class UnionType implements Type {
 
     private final List<Type> types;
+    private String name;
 
-    public UnionType(List<Type> types) {
+    public UnionType(String name, List<Type> types) {
+        this.name = name;
         this.types = types;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Type> getTypes() {
@@ -17,7 +27,7 @@ public class UnionType implements Type{
 
     @Override
     public String displayValue() {
-        return types.stream()
+        return name != null ? name : types.stream()
                 .map(Type::displayValue)
                 .collect(Collectors.joining(" or ", "(", ")"));
     }
@@ -44,6 +54,7 @@ public class UnionType implements Type{
     public String toString() {
         return "UnionType{" +
                 "types=" + types +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

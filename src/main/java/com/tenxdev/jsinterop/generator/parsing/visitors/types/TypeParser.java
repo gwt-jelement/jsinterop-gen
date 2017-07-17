@@ -64,7 +64,7 @@ public class TypeParser extends TypesBaseVisitor<Type> {
             List<Type> types = new ArrayList<>();
             types.add(ctx.unionType.accept(this));
             processUnionTypeRest(ctx.unionTypeRest(), types);
-            return new UnionType(types);
+            return new UnionType(null, types);
 
         }
         errorReporter.reportError("TypeParser: Unable to parse " + ParserUtil.getText(ctx));

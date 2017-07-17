@@ -25,14 +25,14 @@ public class DeferredTypeAdjuster extends AbstractTypeVisitor<Type> {
 
     @Override
     protected Type visitUnionType(UnionType type) {
-        return new UnionType(type.getTypes().stream()
+        return new UnionType(type.getName(), type.getTypes().stream()
                 .map(this::accept)
                 .collect(Collectors.toList()));
     }
 
     @Override
     protected Type visitParameterizedType(ParameterizedType type) {
-        return new ParameterizedType(accept(type.getBaseType()),
+        return new ParameterizedType (accept(type.getBaseType()),
                 type.getTypeParameters().stream()
                         .map(this::accept)
                         .collect(Collectors.toList()));
