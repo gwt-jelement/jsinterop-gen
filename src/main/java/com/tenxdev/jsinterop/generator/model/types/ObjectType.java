@@ -26,17 +26,17 @@ public class ObjectType implements Type, PackageType{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         ObjectType that = (ObjectType) o;
 
-        return packageName.equals(that.packageName);
+        if (packageName != null ? !packageName.equals(that.packageName) : that.packageName != null) return false;
+        return typeName != null ? typeName.equals(that.typeName) : that.typeName == null;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + packageName.hashCode();
+        int result = packageName != null ? packageName.hashCode() : 0;
+        result = 31 * result + (typeName != null ? typeName.hashCode() : 0);
         return result;
     }
 
@@ -44,6 +44,7 @@ public class ObjectType implements Type, PackageType{
     public String toString() {
         return "ObjectType{" +
                 "packageName='" + packageName + '\'' +
+                ", typeName='" + typeName + '\'' +
                 '}';
     }
 }

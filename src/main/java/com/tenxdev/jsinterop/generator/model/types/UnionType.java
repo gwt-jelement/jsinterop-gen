@@ -1,5 +1,7 @@
 package com.tenxdev.jsinterop.generator.model.types;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,6 @@ public class UnionType implements Type {
         if (!super.equals(o)) return false;
 
         UnionType unionType = (UnionType) o;
-
         return types.equals(unionType.types);
     }
 

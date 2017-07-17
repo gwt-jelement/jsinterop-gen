@@ -48,7 +48,9 @@ public class MethodOptionalArgsExpander {
         List<Method> newMethods=new ArrayList<>();
         methods.forEach(method -> {
             if (hasOptionalArgs(method)) {
-                newMethods.addAll(expandMethod(method));
+                List<Method> expandedMethods = expandMethod(method);
+                expandedMethods.removeAll(newMethods);
+                newMethods.addAll(expandedMethods);
             } else {
                 newMethods.add(method);
             }

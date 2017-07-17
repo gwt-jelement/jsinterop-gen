@@ -54,9 +54,9 @@ public class MethodUnionArgsExpander {
 
     private void processMethod(Method method, List<Method> newMethods) {
         UnionTypeVisitor unionTypeVisitor = new UnionTypeVisitor();
-        for (MethodArgument methodArgument: method.getArguments()){
+        for (MethodArgument methodArgument : method.getArguments()) {
             List<Type> suggestedTypes = unionTypeVisitor.accept(methodArgument.getType());
-            if (!suggestedTypes.isEmpty()){
+            if (!suggestedTypes.isEmpty()) {
                 processArgument(method, methodArgument, suggestedTypes, newMethods);
                 return;
             }
@@ -65,11 +65,11 @@ public class MethodUnionArgsExpander {
     }
 
     private void processArgument(Method method, MethodArgument argument, List<Type> suggestedTypes, List<Method> newMethods) {
-        int argumentIndex=method.getArguments().indexOf(argument);
+        int argumentIndex = method.getArguments().indexOf(argument);
         for (Type type : suggestedTypes) {
-            List<MethodArgument> newArguments=new ArrayList<>(method.getArguments());
-            newArguments.set(argumentIndex, new MethodArgument(argument.getName(), type,argument.isVararg(),
-                    argument.isOptional(), argument.getDefaultValue() ));
+            List<MethodArgument> newArguments = new ArrayList<>(method.getArguments());
+            newArguments.set(argumentIndex, new MethodArgument(argument.getName(), type, argument.isVararg(),
+                    argument.isOptional(), argument.getDefaultValue()));
             Method newMethod = new Method(method.getName(), method.getReturnType(), newArguments, method.isStatic());
             processMethod(newMethod, newMethods);
         }

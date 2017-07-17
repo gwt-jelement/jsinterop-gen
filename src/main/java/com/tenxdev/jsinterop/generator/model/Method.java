@@ -51,7 +51,11 @@ public class Method implements InterfaceMember, Comparable<Method> {
 
     @Override
     public int compareTo(Method o) {
-        return name==null?-1:name.compareTo(o.name);
+        int result = name == null ? -1 : name.compareTo(o.name);
+        if (result == 0) {
+            result = arguments.size() - o.arguments.size();
+        }
+        return result;
     }
 
     @Override
