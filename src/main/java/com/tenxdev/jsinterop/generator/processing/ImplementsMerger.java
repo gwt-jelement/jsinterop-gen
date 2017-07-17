@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 
 /**
- * We need to application order of implements, so if A extends B,
+ * We need to order the application of implements, so if A extends B,
  * and B extends C, C is merged into B bfore B is merged into A
  */
 public class ImplementsMerger extends AbstractDefinitionMerger {

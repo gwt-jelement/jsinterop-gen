@@ -35,9 +35,13 @@ public class MethodOptionalArgsExpander {
     }
 
     private void processInterface(InterfaceDefinition definition) {
-        List<Method> newMethods = new ArrayList<>();
-        definition.setExpandedMethods(processMethods(definition.getMethods()));
-        definition.setExpandedConstructors(processMethods(definition.getConstructors()));
+        List<Method> newMethods = processMethods(definition.getMethods());
+        definition.getMethods().clear();
+        definition.getMethods().addAll(newMethods);
+
+        List<Method> newConstructors = processMethods(definition.getConstructors());
+        definition.getConstructors().clear();
+        definition.getConstructors().addAll(newConstructors);
     }
 
     private List<Method> processMethods(List<Method> methods) {

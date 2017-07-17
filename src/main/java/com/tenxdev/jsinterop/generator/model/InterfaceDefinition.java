@@ -1,8 +1,7 @@
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.processing.TypeUtil;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class InterfaceDefinition implements Definition {
@@ -13,8 +12,6 @@ public class InterfaceDefinition implements Definition {
     private List<Method> constructors;
     private List<Method> methods;
     private List<Attribute> attributes;
-    private List<Method> expandedMethods;
-    private List<Method> expandedConstructors;
 
     public InterfaceDefinition(String name, String parent, List<Method> constructors, List<InterfaceMember> members) {
         this.name = name;
@@ -30,7 +27,7 @@ public class InterfaceDefinition implements Definition {
                 .map(member -> (Feature) member).collect(Collectors.toList());
     }
 
-    public InterfaceDefinition(InterfaceDefinition interfaceDefinition){
+    public InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
         this.name = interfaceDefinition.name;
         this.parent = interfaceDefinition.parent;
         this.constructors = interfaceDefinition.constructors;
@@ -38,22 +35,6 @@ public class InterfaceDefinition implements Definition {
         this.attributes = interfaceDefinition.attributes;
         this.constants = interfaceDefinition.constants;
         this.features = interfaceDefinition.features;
-    }
-
-    public List<Method> getExpandedMethods() {
-        return expandedMethods;
-    }
-
-    public void setExpandedMethods(List<Method> expandedMethods) {
-        this.expandedMethods = expandedMethods;
-    }
-
-    public List<Method> getExpandedConstructors() {
-        return expandedConstructors;
-    }
-
-    public void setExpandedConstructors(List<Method> expandedConstructors) {
-        this.expandedConstructors = expandedConstructors;
     }
 
     @Override
@@ -77,10 +58,6 @@ public class InterfaceDefinition implements Definition {
             attributes = new ArrayList<>();
         }
         return attributes;
-    }
-
-    public boolean hasStaticMethods() {
-        return methods.stream().anyMatch(Method::isStatic);
     }
 
     public List<Method> getConstructors() {
@@ -114,11 +91,13 @@ public class InterfaceDefinition implements Definition {
 
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
-        if (constants != null ? !constants.equals(that.constants) : that.constants != null) return false;
-        if (features != null ? !features.equals(that.features) : that.features != null) return false;
-        if (constructors != null ? !constructors.equals(that.constructors) : that.constructors != null) return false;
-        if (methods != null ? !methods.equals(that.methods) : that.methods != null) return false;
-        return attributes != null ? attributes.equals(that.attributes) : that.attributes == null;
+        if (constants != null ? constants.equals(that.constants) : that.constants == null)
+            if (features != null ? features.equals(that.features) : that.features == null)
+                if (constructors != null ? constructors.equals(that.constructors) : that.constructors == null)
+                    if (methods != null ? methods.equals(that.methods) : that.methods == null)
+                        if (attributes != null ? attributes.equals(that.attributes) : that.attributes == null)
+                            return true;
+        return false;
     }
 
     @Override
@@ -135,7 +114,7 @@ public class InterfaceDefinition implements Definition {
 
     @Override
     public String toString() {
-        return "\n" + getClass().getSimpleName()+
+        return "\n" + getClass().getSimpleName() +
                 "(constructors=" + constructors +
                 ", name='" + name + '\'' +
                 ", parent='" + parent + '\'' +
