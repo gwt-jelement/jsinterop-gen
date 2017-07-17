@@ -3,13 +3,11 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import com.tenxdev.jsinterop.generator.processing.TypeUtil;
-import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
 public class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
 
-    public ArgumentVisitor(ParsingContext parsingContext) {
+    ArgumentVisitor(ParsingContext parsingContext) {
         super(parsingContext);
     }
 

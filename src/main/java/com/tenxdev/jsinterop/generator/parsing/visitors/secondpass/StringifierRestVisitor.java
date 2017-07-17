@@ -8,7 +8,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.Collections;
 
-public class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember>{
+public class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
     public StringifierRestVisitor(ParsingContext parsingContext) {
         super(parsingContext);
@@ -16,15 +16,15 @@ public class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMe
 
     @Override
     public InterfaceMember visitStringifierRest(WebIDLParser.StringifierRestContext ctx) {
-        if (ctx.attributeRest()!=null){
-            boolean readOnly=!ctx.readOnly().isEmpty();
+        if (ctx.attributeRest() != null) {
+            boolean readOnly = !ctx.readOnly().isEmpty();
             return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContetxt, readOnly, false));
-        }else if (ctx.operationRest()!=null){
+        } else if (ctx.operationRest() != null) {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContetxt));
             return ctx.operationRest().accept(new OperationRestVisitor(parsingContetxt, returnType, false));
-        }else{
+        } else {
             return new Method("toString", parsingContetxt.getTypeFactory().getType("DOMString"),
-                    Collections.emptyList(),false);
+                    Collections.emptyList(), false);
         }
     }
 }

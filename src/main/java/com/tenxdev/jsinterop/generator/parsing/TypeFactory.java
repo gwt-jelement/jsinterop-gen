@@ -1,7 +1,6 @@
 package com.tenxdev.jsinterop.generator.parsing;
 
 import com.google.common.collect.ImmutableMap;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.SimpleType;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.ObjectType;
@@ -31,9 +30,9 @@ public class TypeFactory {
     private Map<String, Type> typeMap = new HashMap<>();
     private Map<String, Type> deferredTypeDefs = new HashMap<>();
 
-    public TypeFactory(ErrorReporter errorReporter) {
+    TypeFactory(ErrorReporter errorReporter) {
         this.errorReporter = errorReporter;
-        this.typeParser= new TypeParser(this, errorReporter);
+        this.typeParser = new TypeParser(this, errorReporter);
 
         typeMap.put("bool", new NativeType("boolean"));
         typeMap.put("boolean", new NativeType("boolean"));
@@ -58,7 +57,7 @@ public class TypeFactory {
         typeMap.put("DOMString", new NativeType("String"));
         typeMap.put("USVString", new NativeType("String"));
         typeMap.put("ByteString", new NativeType("String"));
-        typeMap.put("Date", new ObjectType("Date", "java.util.Date"));
+        typeMap.put("Date", new ObjectType("Date", "java.util"));
         typeMap.put("Function", new ObjectType("Function", ".ecmascript"));
         typeMap.put("Promise", new ObjectType("Promise", ".ecmascript"));
         typeMap.put("Dictionary", new NativeType("Object"));
@@ -74,7 +73,7 @@ public class TypeFactory {
         if (type != null) {
             return type;
         }
-        errorReporter.reportError("Assumed type of "+typeName);
+        errorReporter.reportError("Assumed type of " + typeName);
         return new NativeType(typeName);
     }
 
@@ -101,27 +100,22 @@ public class TypeFactory {
 
     public Type getUnionType(String[] typeNames) {
         return new UnionType(Arrays.stream(typeNames)
-                .map(typeName -> getType(typeName))
+                .map(this::getType)
                 .collect(Collectors.toList()));
     }
 
     public void registerType(String name, Type type) {
-       typeMap.put(name, type);
+
+        typeMap.put(name, type);
     }
 
     public void registerTypeDef(String name, Type type) {
         deferredTypeDefs.put(name, type);
     }
 
-    public void registerTypeDefs() {
-        deferredTypeDefs.forEach((name, type) -> {
-            if (type instanceof SimpleType) {
-                // recheck, because correct type may not have been available
-                //  when typedef was added
-                registerType(name, getTypeNoParse(((NativeType) type).getTypeName()));
-            } else {
-                registerType(name, type);
-            }
-        });
+    void registerTypeDefs() {
+        DeferredTypeAdjuster adjuster = new DeferredTypeAdjuster(this);
+        deferredTypeDefs.forEach((name, type) ->
+                registerType(name, adjuster.accept(type)));
     }
 }

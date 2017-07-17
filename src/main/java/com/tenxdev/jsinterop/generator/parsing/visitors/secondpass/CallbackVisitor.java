@@ -6,8 +6,6 @@ import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import com.tenxdev.jsinterop.generator.processing.TypeUtil;
-import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.Collections;
@@ -17,7 +15,7 @@ public class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
 
     private final List<Method> constructors;
 
-    public CallbackVisitor(ParsingContext context,List<Method> constructors) {
+    CallbackVisitor(ParsingContext context, List<Method> constructors) {
         super(context);
         this.constructors = constructors;
     }

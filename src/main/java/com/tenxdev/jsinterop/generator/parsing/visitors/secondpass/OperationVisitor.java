@@ -21,17 +21,19 @@ public class OperationVisitor extends ContextWebIDLBaseVisitor<Method> {
     @Override
     public Method visitOperation(WebIDLParser.OperationContext ctx) {
         if (ctx.specialOperation() != null) {
-            Type returnType = ctx.specialOperation().returnType().accept(new TypeVisitor(parsingContetxt));
-            String name =
-                    ctx.specialOperation().IDENTIFIER_WEBIDL() != null &&
-                            ctx.specialOperation().IDENTIFIER_WEBIDL().getText() != null ?
-                            ctx.specialOperation().IDENTIFIER_WEBIDL().getText() :
-                            ctx.specialOperation().special().getText();
-            List<MethodArgument> parameters = ctx.specialOperation().argumentList() == null ||
-                    ctx.specialOperation().argumentList().argument() == null ?
-                    Collections.emptyList() :
-                    ctx.specialOperation().argumentList().accept(new ArgumentsVisitor(parsingContetxt));
-            return new Method(name, returnType, parameters, false);
+            //FIXME, definition below is not correct
+//            Type returnType = ctx.specialOperation().returnType().accept(new TypeVisitor(parsingContetxt));
+//            String name =
+//                    ctx.specialOperation().IDENTIFIER_WEBIDL() != null &&
+//                            ctx.specialOperation().IDENTIFIER_WEBIDL().getText() != null ?
+//                            ctx.specialOperation().IDENTIFIER_WEBIDL().getText() :
+//                            ctx.specialOperation().special().getText();
+//            List<MethodArgument> parameters = ctx.specialOperation().argumentList() == null ||
+//                    ctx.specialOperation().argumentList().argument() == null ?
+//                    Collections.emptyList() :
+//                    ctx.specialOperation().argumentList().accept(new ArgumentsVisitor(parsingContetxt));
+//            return new Method(name, returnType, parameters, false);
+            return null;
         } else if (ctx.operationRest() != null) {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContetxt));
             return ctx.operationRest().accept(new OperationRestVisitor(parsingContetxt, returnType, false));

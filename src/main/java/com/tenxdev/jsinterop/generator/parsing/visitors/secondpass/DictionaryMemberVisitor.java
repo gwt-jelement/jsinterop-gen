@@ -3,7 +3,6 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<DictionaryMember>> {
 
-    public DictionaryMemberVisitor(ParsingContext parsingContext) {
+    DictionaryMemberVisitor(ParsingContext parsingContext) {
         super(parsingContext);
     }
 
