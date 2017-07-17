@@ -106,14 +106,14 @@ public class TypeFactory {
     }
 
     public void registerType(String name, Type type) {
-        typeMap.put(name, type);
+       typeMap.put(name, type);
     }
 
     public void registerTypeDef(String name, Type type) {
         deferredTypeDefs.put(name, type);
     }
 
-    public void regisiterTypeDefs() {
+    public void registerTypeDefs() {
         deferredTypeDefs.forEach((name, type) -> {
             if (type instanceof SimpleType) {
                 // recheck, because correct type may not have been available

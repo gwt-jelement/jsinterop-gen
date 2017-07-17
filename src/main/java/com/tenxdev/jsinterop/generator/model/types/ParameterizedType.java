@@ -17,6 +17,10 @@ public class ParameterizedType implements Type {
         return typeParameters;
     }
 
+    public Type getBaseType() {
+        return baseType;
+    }
+
     @Override
     public String displayValue() {
         return baseType.displayValue() + "<" + typeParameters.stream()

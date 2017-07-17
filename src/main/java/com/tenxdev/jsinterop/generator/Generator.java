@@ -61,13 +61,11 @@ public class Generator {
     }
 
     private void processModel(Model model, ErrorReporter errorHandler) throws IOException {
-        TypeMapper typeMapper = new TypeMapper(model, errorHandler);
         //ordering of these operations is critical
         new ModelFixer(model, errorHandler).processModel();
-        new TypeDefsProcessor(model).processModel(typeMapper);
         new PartialsMerger(model, errorHandler).processModel();
         new ImplementsMerger(model, errorHandler).processModel();
-        new MethodUnionArgsExpander(model, typeMapper).processModel();
+        new MethodUnionArgsExpander(model).processModel();
         new MethodOptionalArgsExpander(model).processModel();
         new ImportResolver().processModel(model);
         new SourceGenerator().processModel(model, outputDirectory, basePackage, errorHandler);

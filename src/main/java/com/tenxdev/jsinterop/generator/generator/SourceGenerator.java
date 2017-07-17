@@ -2,7 +2,6 @@ package com.tenxdev.jsinterop.generator.generator;
 
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.*;
-import com.tenxdev.jsinterop.generator.processing.TypeMapper;
 
 import java.io.File;
 import java.io.FileWriter;

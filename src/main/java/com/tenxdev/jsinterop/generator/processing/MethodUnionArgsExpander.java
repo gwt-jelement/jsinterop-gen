@@ -24,11 +24,9 @@ import java.util.stream.Collectors;
  */
 public class MethodUnionArgsExpander {
     private final Model model;
-    private final TypeMapper typeMapper;
 
-    public MethodUnionArgsExpander(Model model, TypeMapper typeMapper) {
+    public MethodUnionArgsExpander(Model model) {
         this.model = model;
-        this.typeMapper = typeMapper;
     }
 
     public void processModel() {
@@ -56,7 +54,7 @@ public class MethodUnionArgsExpander {
 
     private void processMethod(Method method, List<Method> newMethods) {
         Optional<MethodArgument> argument = method.getArguments().stream()
-                .filter(this::isUnionTypeArgument)
+                .filter(arg-> arg.getType() instanceof UnionType)
                 .findFirst();
         if (argument.isPresent()) {
             for (Method newMethod : processArgument(method, argument.get())) {
@@ -69,7 +67,7 @@ public class MethodUnionArgsExpander {
 
     private List<Method> processArgument(Method method, MethodArgument argument) {
         List<Method> newMethods=new ArrayList<>();
-        for (Type type : getUnionSubtypes(argument)) {
+        for (Type type : ((UnionType)argument.getType()).getTypes()) {
             List<MethodArgument> newArguments = method.getArguments().stream().map(arg ->
                     new MethodArgument(arg.getName(), arg.equals(argument) ? type : arg.getType(),
                             arg.isVararg(), arg.isOptional(), arg.getDefaultValue())).collect(Collectors.toList());
@@ -79,18 +77,6 @@ public class MethodUnionArgsExpander {
         return newMethods;
     }
 
-    private boolean hasUnionArguments(Method method) {
-        return method.getArguments().stream()
-                .anyMatch(this::isUnionTypeArgument);
-    }
-
-    private boolean isUnionTypeArgument(MethodArgument argument) {
-        return argument.getType() instanceof UnionType;
-    }
-
-    private List<Type> getUnionSubtypes(MethodArgument argument) {
-        return ((UnionType) argument.getType()).getTypes();
-    }
 
 
 }

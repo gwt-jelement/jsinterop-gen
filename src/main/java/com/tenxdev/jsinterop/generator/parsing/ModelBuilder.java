@@ -8,13 +8,10 @@ import com.tenxdev.jsinterop.generator.parsing.visitors.secondpass.DefinitionsVi
 import com.tenxdev.jsinterop.generator.processing.FileListBuilder;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr4.webidl.TypesLexer;
-import org.antlr4.webidl.TypesParser;
 import org.antlr4.webidl.WebIDLLexer;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -47,7 +44,7 @@ public class ModelBuilder {
             parsingContext.setPackageSuffix(getPackageSuffix(offset, file));
             scanFile(file, parsingContext);
         }
-        parsingContext.getTypeFactory().regisiterTypeDefs();
+        parsingContext.getTypeFactory().registerTypeDefs();
         return parsingContext;
     }
 

@@ -57,15 +57,15 @@ public class MethodArgument {
         if (vararg != that.vararg) return false;
         if (optional != that.optional) return false;
         if (defaultValue != null ? !defaultValue.equals(that.defaultValue) : that.defaultValue != null) return false;
-        if (type.equals(that.type)) return false;
-        return name.equals(that.name);
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        return name != null ? name.equals(that.name) : that.name == null;
     }
 
     @Override
     public int hashCode() {
         int result = defaultValue != null ? defaultValue.hashCode() : 0;
-        result = 31 * result + type.hashCode();
-        result = 31 * result + name.hashCode();
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (vararg ? 1 : 0);
         result = 31 * result + (optional ? 1 : 0);
         return result;
