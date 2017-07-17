@@ -2,7 +2,23 @@ package com.tenxdev.jsinterop.generator.generator;
 
 import com.tenxdev.jsinterop.generator.model.Method;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
 public abstract class Template {
+
+    public static final Set<String> JAVA_RESERVED_KEYWORDS = new TreeSet<>(
+            Arrays.asList("abstract", "continue", "for", "new", "switch",
+                    "assert", "default", "goto", "package", "synchronized",
+                    "boolean	", "do	", "if	", "private	", "this",
+                    "break	", "double	", "implements	", "protected	", "throw",
+                    "byte	", "else	", "import	", "public	", "throws",
+                    "case	", "enum	", "instanceof	", "return	", "transient",
+                    "catch	", "extends	", "int	", "short	", "try",
+                    "char	", "final	", "interface	", "static	", "void",
+                    "class	", "finally	", "long	", "strictfp", "volatile",
+                    "const	", "float	", "native	", "super	", "while", "_"));
 
     protected String enumValueToJavaName(String value) {
         String result = value;
@@ -20,15 +36,11 @@ public abstract class Template {
                 .replace('+', '_');
     }
 
-    protected String getFirstReturnType(Method method) {
-        if (method.getReturnTypes() == null || method.getReturnTypes().length == 0) {
-            return "void";
-        } else {
-            return method.getReturnTypes()[0];
-        }
+        protected String getCallbackMethodName(Method method) {
+        return method.getName() == null || method.getName().isEmpty() ? "callback" : method.getName();
     }
 
-    protected String getCallbackMethodName(Method method) {
-        return method.getName() == null || method.getName().isEmpty() ? "callback" : method.getName();
+    protected String adjustJavaName(String name) {
+        return JAVA_RESERVED_KEYWORDS.contains(name) ? name + "_" : name;
     }
 }

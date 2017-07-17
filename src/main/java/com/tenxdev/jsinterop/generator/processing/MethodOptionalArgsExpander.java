@@ -67,15 +67,15 @@ public class MethodOptionalArgsExpander {
         List<MethodArgument> newArguments = new ArrayList<>();
         for (MethodArgument argument : method.getArguments()) {
             if (argument.isOptional() && !hasOptionsl) {
-                Method newMethod = new Method(method.getName(), method.getReturnTypes(), new ArrayList<>(newArguments), method.isStatic());
+                Method newMethod = new Method(method.getName(), method.getReturnType(), new ArrayList<>(newArguments), method.isStatic());
                 expandedMethods.add(newMethod);
                 hasOptionsl = true;
-                newArguments.add(new MethodArgument(argument.getName(), argument.getTypes(), argument.isVararg(), false, argument.getDefaultValue()));
+                newArguments.add(new MethodArgument(argument.getName(), argument.getType(), argument.isVararg(), false, argument.getDefaultValue()));
             } else {
                 newArguments.add(argument);
             }
         }
-        Method newMethod = new Method(method.getName(), method.getReturnTypes(), newArguments, method.isStatic());
+        Method newMethod = new Method(method.getName(), method.getReturnType(), newArguments, method.isStatic());
         if (hasOptionsl) {
             expandMethod(newMethod, expandedMethods);
         } else {

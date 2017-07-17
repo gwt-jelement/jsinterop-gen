@@ -1,12 +1,14 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.Type;
+
 public class Constant implements InterfaceMember {
 
     private String name;
-    private String type;
+    private Type type;
     private String value;
 
-    public Constant(String name, String type, String value) {
+    public Constant(String name, Type type, String value) {
         this.name = name;
         this.type = type;
         this.value = value;
@@ -45,7 +47,7 @@ public class Constant implements InterfaceMember {
         return name;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 

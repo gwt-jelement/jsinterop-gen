@@ -6,6 +6,7 @@ import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.errors.PrintStreamErrorrHandler;
 import com.tenxdev.jsinterop.generator.generator.SourceGenerator;
 import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.parsing.ModelBuilder;
 import com.tenxdev.jsinterop.generator.processing.*;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -60,15 +61,16 @@ public class Generator {
     }
 
     private void processModel(Model model, ErrorReporter errorHandler) throws IOException {
-        TypeMapper typeMapper=new TypeMapper(model, errorHandler);
+        TypeMapper typeMapper = new TypeMapper(model, errorHandler);
+        //ordering of these operations is critical
         new ModelFixer(model, errorHandler).processModel();
         new TypeDefsProcessor(model).processModel(typeMapper);
         new PartialsMerger(model, errorHandler).processModel();
         new ImplementsMerger(model, errorHandler).processModel();
+        new MethodUnionArgsExpander(model, typeMapper).processModel();
         new MethodOptionalArgsExpander(model).processModel();
-        new MethodUnionArgsExpander(model).processModel(typeMapper);
-        new ImportResolver(model, errorHandler).processModel(typeMapper);
-        new SourceGenerator(model, outputDirectory, basePackage, errorHandler).processModel(typeMapper);
+        new ImportResolver().processModel(model);
+        new SourceGenerator().processModel(model, outputDirectory, basePackage, errorHandler);
     }
 
     private void checkArguments() throws CmdLineException {
@@ -78,7 +80,7 @@ public class Generator {
         if (outputDirectory.endsWith("/")) {
             outputDirectory = removeLastCharacter(outputDirectory);
         }
-        if (force && overwrite){
+        if (force && overwrite) {
             throw new CmdLineException(null, "Cannot specifiy both -force and -overwrite", null);
         }
         File output = new File(outputDirectory);
@@ -103,6 +105,12 @@ public class Generator {
 
     private void clearOutputDirectory(File output) throws CmdLineException {
         if (force) {
+            //sanity check, we should find pom.xml in the folder, if not have the user delete the folder manually,
+            //we do not want to delete the user's hard drive
+            File checkFile = new File(output, "pom.xml");
+            if (!checkFile.exists()) {
+                throw new CmdLineException(null, String.format("Could not empty output direcctory '%s'%n", outputDirectory), null);
+            }
             try {
                 MoreFiles.deleteDirectoryContents(output.toPath(), RecursiveDeleteOption.ALLOW_INSECURE);
             } catch (IOException e) {

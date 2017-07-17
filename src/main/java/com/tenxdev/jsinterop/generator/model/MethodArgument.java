@@ -1,16 +1,18 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.Type;
+
 import java.util.Arrays;
 
 public class MethodArgument {
     private final String defaultValue;
-    private final String[] types;
+    private final Type type;
     private final String name;
     private final boolean vararg;
     private final boolean optional;
 
-    public MethodArgument(String name, String[] types, boolean vararg, boolean optional, String defaultValue) {
-        this.types = types;
+    public MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue) {
+        this.type = type;
         this.name = name;
         this.vararg = vararg;
         this.optional = optional;
@@ -19,7 +21,7 @@ public class MethodArgument {
 
     public MethodArgument(MethodArgument methodArgument) {
         this.defaultValue = methodArgument.defaultValue;
-        this.types = Arrays.copyOf(methodArgument.types, methodArgument.types.length);
+        this.type = methodArgument.type;
         this.name = methodArgument.name;
         this.vararg = methodArgument.vararg;
         this.optional = methodArgument.optional;
@@ -41,8 +43,8 @@ public class MethodArgument {
         return optional;
     }
 
-    public String[] getTypes() {
-        return types;
+    public Type getType() {
+        return type;
     }
 
     @Override
@@ -55,15 +57,14 @@ public class MethodArgument {
         if (vararg != that.vararg) return false;
         if (optional != that.optional) return false;
         if (defaultValue != null ? !defaultValue.equals(that.defaultValue) : that.defaultValue != null) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(types, that.types)) return false;
+        if (type.equals(that.type)) return false;
         return name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
         int result = defaultValue != null ? defaultValue.hashCode() : 0;
-        result = 31 * result + Arrays.hashCode(types);
+        result = 31 * result + type.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + (vararg ? 1 : 0);
         result = 31 * result + (optional ? 1 : 0);
@@ -74,7 +75,7 @@ public class MethodArgument {
     public String toString() {
         return "\nMethodArgument{" +
                 "defaultValue='" + defaultValue + '\'' +
-                ", types=" + Arrays.toString(types) +
+                ", type=" + type +
                 ", name='" + name + '\'' +
                 ", vararg=" + vararg +
                 ", optional=" + optional +

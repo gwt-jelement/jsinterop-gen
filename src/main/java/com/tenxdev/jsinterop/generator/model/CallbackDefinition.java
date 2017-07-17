@@ -1,5 +1,6 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import java.util.List;
 import java.util.Set;
 
 public class CallbackDefinition implements Definition {
@@ -18,11 +19,6 @@ public class CallbackDefinition implements Definition {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public Set<String> getTypeUsage() {
-        return method.getTypeUsage();
     }
 
     @Override

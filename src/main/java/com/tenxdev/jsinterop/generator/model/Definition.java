@@ -7,5 +7,4 @@ public interface Definition {
 
     String getName();
 
-    Set<String> getTypeUsage();
 }

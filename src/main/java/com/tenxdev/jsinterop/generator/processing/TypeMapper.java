@@ -5,6 +5,7 @@ import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.TypeDefinition;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.*;
 
@@ -26,36 +27,8 @@ public class TypeMapper {
             .put("Promise", ".ecmascript")
             .build();
 
-    private static ImmutableMap<String, String> TYPE_MAPPINGS = ImmutableMap.<String, String>builder()
-            .put("bool", "boolean")
-            .put("boolean", "boolean")
-            .put("int", "int")
-            .put("byte", "byte")
-            .put("octet", "byte")
-            .put("any", "Object")
-            .put("SerializedScriptValue", "Object")
-            .put("object", "Object")
-            .put("void", "void")
-            .put("unrestricteddouble", "double")
-            .put("double", "double")
-            .put("unrestrictedfloat", "float")
-            .put("float", "float")
-            .put("unsignedlong", "long")
-            .put("unsignedlonglong", "long")
-            .put("EnforceRangeunsignedlong", "long")
-            .put("long", "long")
-            .put("longlong", "long")
-            .put("unsignedshort", "short")
-            .put("short", "short")
-            .put("DOMString", "String")
-            .put("USVString", "String")
-            .put("ByteString", "String")
-            .put("Date", "Date")
-            .put("Function", "Function")
-            .put("Promise", "Promise")
-            .put("Dictionary", "Object")
-            .put("record", "object")
-            .build();
+    private static Map<String, String> TYPE_MAPPINGS = new HashMap<>(ImmutableMap.<String, String>builder()
+            .build());
 
     private static ImmutableMap<String, String> BOXED_TYPES = ImmutableMap.<String, String>builder()
             .put("void", "Void")
@@ -187,17 +160,38 @@ public class TypeMapper {
         return !TYPES_THAT_DO_NOT_NEED_PACKAGE_RESOLTION.contains(type);
     }
 
-    public void addTypeDefinitions(Map<String, String[]> typesMap) {
-        this.typeDefinitions.putAll(typesMap);
+    public void addTypeDefinitions(Map<String, Type> typesMap) {
     }
 
     /**
      * check if the given type is overriden by a typedef
+     *
      * @param type the type to check
      * @return the efftive types, which may be the typedef'ed type(s) if any
      */
-    public String[] getEffectiveTypes(String type) {
+    public List<String> getEffectiveTypes(String type) {
+        if (isParameterizedType(type)){
+            String baseType=extractBaseType(type);
+            String[] parameters = extractParameters(type);
+            List<String> result=new ArrayList<>();
+            getEffectiveTypes(new ArrayList<>(Arrays.asList(parameters)), baseType+"<", result);
+            return result;
+        }
         String[] effectiveTypes = typeDefinitions.get(type);
-        return effectiveTypes == null ? new String[]{type} : effectiveTypes;
+        return effectiveTypes == null ? Arrays.asList(type) : Arrays.asList(effectiveTypes);
     }
+
+    private void getEffectiveTypes(List<String> parameterTypes, String prefix, List<String> result){
+        if (parameterTypes.isEmpty()) {
+            result.add(prefix.substring(0, prefix.length() - 1) + ">");
+        }else {
+            List<String> effectiveTypes = getEffectiveTypes(parameterTypes.remove(0));
+            for (String effectiveType : effectiveTypes) {
+                getEffectiveTypes(parameterTypes, prefix + effectiveType + ",", result);
+            }
+        }
+    }
+
+
+
 }

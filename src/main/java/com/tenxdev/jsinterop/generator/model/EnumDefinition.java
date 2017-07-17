@@ -19,11 +19,6 @@ public class EnumDefinition implements Definition {
         return name;
     }
 
-    @Override
-    public Set<String> getTypeUsage() {
-        return Collections.emptySet();
-    }
-
     public List<String> getValues() {
         return values;
     }

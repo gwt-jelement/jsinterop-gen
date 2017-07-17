@@ -15,21 +15,6 @@ public class DictionaryDefinition implements Definition {
         this.members = members;
     }
 
-    @Override
-    public Set<String> getTypeUsage() {
-        Set<String> types=new TreeSet<>();
-        if (parent!=null) {
-            types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(parent));
-        }
-        for (DictionaryMember member: members){
-            for (String type: types){
-                types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(type));
-            }
-        }
-        return types;
-    }
-
-
     public String getParent() {
         return parent;
     }

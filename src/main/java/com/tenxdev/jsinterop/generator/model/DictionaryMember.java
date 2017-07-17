@@ -1,5 +1,7 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.Type;
+
 import java.util.Arrays;
 
 public class DictionaryMember {
@@ -7,11 +9,11 @@ public class DictionaryMember {
     private final String name;
     private final boolean required;
     private final String defaultValue;
-    private final String[] types;
+    private final Type type;
 
-    public DictionaryMember(String name, String[] types, boolean required, String defaultValue) {
+    public DictionaryMember(String name, Type type, boolean required, String defaultValue) {
         this.name = name;
-        this.types = types;
+        this.type = type;
         this.required = required;
         this.defaultValue = defaultValue;
     }
@@ -20,8 +22,8 @@ public class DictionaryMember {
         return required;
     }
 
-    public String[] getTypes() {
-        return types;
+    public Type getType() {
+        return type;
     }
 
     public String getName() {
@@ -42,7 +44,7 @@ public class DictionaryMember {
         if (required != that.required) return false;
         if (!name.equals(that.name)) return false;
         if (defaultValue != null ? !defaultValue.equals(that.defaultValue) : that.defaultValue != null) return false;
-        return Arrays.equals(types, that.types);
+        return type.equals(that.type);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class DictionaryMember {
         int result = name.hashCode();
         result = 31 * result + (required ? 1 : 0);
         result = 31 * result + (defaultValue != null ? defaultValue.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(types);
+        result = 31 * result + type.hashCode();
         return result;
     }
 
@@ -60,7 +62,7 @@ public class DictionaryMember {
                 "name='" + name + '\'' +
                 ", required=" + required +
                 ", defaultValue='" + defaultValue + '\'' +
-                ", types=" + Arrays.toString(types) +
+                ", type=" + type.toString() +
                 '}';
     }
 }

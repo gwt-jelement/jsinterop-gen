@@ -1,36 +1,23 @@
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.processing.TypeUtil;
-
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
 public class TypeDefinition implements Definition {
     private String name;
-    private String[] types;
+    private Type type;
 
-    public TypeDefinition(String name, String[] types) {
+    public TypeDefinition(String name, Type type) {
         this.name = name;
-        this.types = types;
+        this.type = type;
     }
 
-    public String[] getTypes() {
-        return types;
+    public Type getType() {
+        return type;
     }
 
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public Set<String> getTypeUsage() {
-        Set<String> types=new TreeSet<>();
-        for (String type: types){
-            types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(type));
-        }
-        return types;
     }
 
     @Override
@@ -42,13 +29,13 @@ public class TypeDefinition implements Definition {
 
         if (!name.equals(that.name)) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(types, that.types);
+        return type.equals(that.type);
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + Arrays.hashCode(types);
+        result = 31 * result + type.hashCode();
         return result;
     }
 
@@ -56,7 +43,7 @@ public class TypeDefinition implements Definition {
     public String toString() {
         return "\nTypeDefinition{" +
                 "name='" + name + '\'' +
-                ", types=" + Arrays.toString(types) +
+                ", types=" + type +
                 '}';
     }
 }

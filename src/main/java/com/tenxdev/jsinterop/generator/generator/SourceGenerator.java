@@ -14,19 +14,7 @@ public class SourceGenerator extends Template{
 
     public static final String VERSION = "0.0.1-SNAPSHOT";
 
-    private final Model model;
-    private final ErrorReporter errorReporter;
-    private final String outputDirectory;
-    private final String basePackageName;
-
-    public SourceGenerator(Model model, String outputDirectory, String basePackageName, ErrorReporter errorReporter) {
-        this.model = model;
-        this.errorReporter = errorReporter;
-        this.outputDirectory = outputDirectory;
-        this.basePackageName = basePackageName;
-    }
-
-    public void processModel(TypeMapper typeMapper) throws IOException {
+    public void processModel(Model model, String outputDirectory, String basePackageName, ErrorReporter errorReporter) throws IOException {
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
         EnumGenerator enumGenerator = new EnumGenerator();
         CallbackGenerator callbackGenerator=new CallbackGenerator();
@@ -38,11 +26,11 @@ public class SourceGenerator extends Template{
             if (definition instanceof EnumDefinition) {
                 outputFile(filePath, enumGenerator.generate(basePackageName, definitionInfo));
             }else if (definition instanceof CallbackDefinition){
-                outputFile(filePath, callbackGenerator.generate(basePackageName, definitionInfo, typeMapper));
+                outputFile(filePath, callbackGenerator.generate(basePackageName, definitionInfo));
             }else if (definition instanceof InterfaceDefinition){
-                outputFile(filePath, interfaceGenerator.generate(basePackageName,definitionInfo,typeMapper));
+                outputFile(filePath, interfaceGenerator.generate(basePackageName,definitionInfo));
             }else if (definition instanceof DictionaryDefinition){
-                outputFile(filePath, dictionaryGenerator.generate(basePackageName,definitionInfo,typeMapper));
+                outputFile(filePath, dictionaryGenerator.generate(basePackageName,definitionInfo));
             }
         }
     }

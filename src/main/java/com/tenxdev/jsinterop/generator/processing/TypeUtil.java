@@ -34,10 +34,6 @@ public enum TypeUtil {
         return type;
     }
 
-    public boolean hasOptioanlMarker(String[] types) {
-        return Arrays.stream(types).anyMatch(type -> type.endsWith("?"));
-    }
-
     public String removeArrayIndicator(String type) {
         if (type.endsWith("[]")){
             return type.substring(0, type.length()-2);

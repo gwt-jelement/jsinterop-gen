@@ -57,31 +57,6 @@ public class InterfaceDefinition implements Definition {
     }
 
     @Override
-    public Set<String> getTypeUsage() {
-        Set<String> types = new TreeSet<>();
-        if (parent != null) {
-            types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(parent));
-        }
-        for (Method method : methods) {
-            types.addAll(method.getTypeUsage());
-        }
-        for (Method constructor : constructors) {
-            types.addAll(constructor.getTypeUsage());
-        }
-        for (Constant constant : constants) {
-            if (constant.getType() != null && !constant.getType().isEmpty()) {
-                types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(constant.getType()));
-            }
-        }
-        for (Attribute attribute : attributes) {
-            for (String type : attribute.getTypes()) {
-                types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(type));
-            }
-        }
-        return types;
-    }
-
-    @Override
     public String getName() {
         return name;
     }

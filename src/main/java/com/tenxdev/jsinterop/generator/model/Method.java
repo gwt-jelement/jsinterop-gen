@@ -1,5 +1,6 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.processing.TypeUtil;
 
 import java.util.Arrays;
@@ -11,19 +12,20 @@ import java.util.stream.Collectors;
 public class Method implements InterfaceMember {
     private final boolean static_;
     private final String name;
-    private final String[] returnTypes;
+    private final Type returnType;
     private final List<MethodArgument> arguments;
+    private Method methodReferences;
 
-    public Method(String name, String[] returnTypes, List<MethodArgument> arguments, boolean static_) {
+    public Method(String name, Type returnType, List<MethodArgument> arguments, boolean static_) {
         this.name = name;
-        this.returnTypes = returnTypes;
+        this.returnType = returnType;
         this.arguments = arguments;
         this.static_ = static_;
     }
 
     public Method(Method method) {
         this.name = method.name;
-        this.returnTypes = Arrays.copyOf(method.returnTypes, method.returnTypes.length);
+        this.returnType = method.returnType;
         this.static_ = method.static_;
         this.arguments = method.arguments.stream().map(MethodArgument::new).collect(Collectors.toList());
     }
@@ -37,17 +39,18 @@ public class Method implements InterfaceMember {
 
         if (static_ != method.static_) return false;
         if (name != null ? !name.equals(method.name) : method.name != null) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(returnTypes, method.returnTypes)) return false;
-        return arguments != null ? arguments.equals(method.arguments) : method.arguments == null;
+        if (returnType != null ? !returnType.equals(method.returnType) : method.returnType != null) return false;
+        if (arguments != null ? !arguments.equals(method.arguments) : method.arguments != null) return false;
+        return methodReferences != null ? methodReferences.equals(method.methodReferences) : method.methodReferences == null;
     }
 
     @Override
     public int hashCode() {
         int result = (static_ ? 1 : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(returnTypes);
+        result = 31 * result + (returnType != null ? returnType.hashCode() : 0);
         result = 31 * result + (arguments != null ? arguments.hashCode() : 0);
+        result = 31 * result + (methodReferences != null ? methodReferences.hashCode() : 0);
         return result;
     }
 
@@ -56,7 +59,7 @@ public class Method implements InterfaceMember {
         return "\n\tMethod{" +
                 "static_=" + static_ +
                 ", name='" + name + '\'' +
-                ", returnType='" + Arrays.asList(returnTypes) + '\'' +
+                ", returnType='" + returnType + '\'' +
                 ", arguments=" + arguments +
                 '}';
     }
@@ -69,26 +72,17 @@ public class Method implements InterfaceMember {
         return name;
     }
 
-    public String[] getReturnTypes() {
-        return returnTypes;
+    public Type getReturnType() {
+        return returnType;
     }
 
     public List<MethodArgument> getArguments() {
         return arguments;
     }
 
-    public Set<String> getTypeUsage() {
-        Set<String> types = new TreeSet<>();
-        if (returnTypes != null) {
-            for (String returnType : returnTypes) {
-                types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(returnType));
-            }
+    public void setMethodReferences(Method methodReferences) {
+        if (this.methodReferences==null) {
+            this.methodReferences = methodReferences;
         }
-        arguments.forEach(methodArgument -> {
-            for (String type : methodArgument.getTypes()) {
-                types.addAll(TypeUtil.INSTANCE.checkParameterizedTypes(type));
-            }
-        });
-        return types;
     }
 }
