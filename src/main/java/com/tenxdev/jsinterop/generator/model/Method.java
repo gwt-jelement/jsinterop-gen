@@ -1,12 +1,9 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
-import com.tenxdev.jsinterop.generator.processing.TypeUtil;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class Method implements InterfaceMember {
@@ -73,7 +70,7 @@ public class Method implements InterfaceMember {
     }
 
     public Type getReturnType() {
-        return returnType;
+        return returnType == null ? new NativeType("void") : returnType;
     }
 
     public List<MethodArgument> getArguments() {
@@ -81,7 +78,7 @@ public class Method implements InterfaceMember {
     }
 
     public void setMethodReferences(Method methodReferences) {
-        if (this.methodReferences==null) {
+        if (this.methodReferences == null) {
             this.methodReferences = methodReferences;
         }
     }

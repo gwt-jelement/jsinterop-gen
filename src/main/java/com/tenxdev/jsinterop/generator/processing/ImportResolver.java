@@ -15,7 +15,6 @@ public class ImportResolver {
     public void processModel(Model model) {
         Map<DefinitionInfo, List<String>> packagesMap = new PackageUsageModelVisitor().accept(model);
         packagesMap.entrySet().stream()
-                .filter(entry->!entry.getValue().isEmpty())
                 .forEach(entry->processPackagesForDefinition(entry.getKey(), entry.getValue()));
     }
 
@@ -24,7 +23,6 @@ public class ImportResolver {
                 .filter(packageName->needsImport(definitionInfo, packageName))
                 .collect(Collectors.toList()));
     }
-
 
     private boolean needsImport(DefinitionInfo definitionInfo, String packageName) {
         return packageName!=null && !definitionInfo.getPackgeName().equals(packageName);
