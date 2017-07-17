@@ -23,10 +23,11 @@ public class ParameterizedType implements Type {
 
     @Override
     public String displayValue() {
-        return baseType.displayValue() + "<" + typeParameters.stream()
-                .map(Type::displayValue)
-                .collect(Collectors.joining(", "))
-                + ">";
+        return baseType.displayValue() + (typeParameters.isEmpty() ? "" : (
+                "<" + typeParameters.stream()
+                        .map(Type::displayValue)
+                        .collect(Collectors.joining(", "))
+                        + ">"));
     }
 
     @Override
