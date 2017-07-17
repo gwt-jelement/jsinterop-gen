@@ -1,4 +1,4 @@
-package com.tenxdev.jsinterop.generator.processing;
+package com.tenxdev.jsinterop.generator.processing.unionargsexampansion;
 
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Method;
@@ -46,37 +46,34 @@ public class MethodUnionArgsExpander {
         definition.getConstructors().addAll(newConstructors);
     }
 
-    private List<Method> processMethods(List<Method> methods){
+    private List<Method> processMethods(List<Method> methods) {
         List<Method> newMethods = new ArrayList<>();
         methods.forEach(method -> processMethod(method, newMethods));
         return newMethods;
     }
 
     private void processMethod(Method method, List<Method> newMethods) {
-        Optional<MethodArgument> argument = method.getArguments().stream()
-                .filter(arg-> arg.getType() instanceof UnionType)
-                .findFirst();
-        if (argument.isPresent()) {
-            for (Method newMethod : processArgument(method, argument.get())) {
-                processMethod(newMethod, newMethods);
+        UnionTypeVisitor unionTypeVisitor = new UnionTypeVisitor();
+        for (MethodArgument methodArgument: method.getArguments()){
+            List<Type> suggestedTypes = unionTypeVisitor.accept(methodArgument.getType());
+            if (!suggestedTypes.isEmpty()){
+                processArgument(method, methodArgument, suggestedTypes, newMethods);
+                return;
             }
-        } else {
-            newMethods.add(method);
         }
+        newMethods.add(method);
     }
 
-    private List<Method> processArgument(Method method, MethodArgument argument) {
-        List<Method> newMethods=new ArrayList<>();
-        for (Type type : ((UnionType)argument.getType()).getTypes()) {
-            List<MethodArgument> newArguments = method.getArguments().stream().map(arg ->
-                    new MethodArgument(arg.getName(), arg.equals(argument) ? type : arg.getType(),
-                            arg.isVararg(), arg.isOptional(), arg.getDefaultValue())).collect(Collectors.toList());
-            Method newMethod=new Method(method.getName(), method.getReturnType(), newArguments, method.isStatic());
-            newMethods.add(newMethod);
+    private void processArgument(Method method, MethodArgument argument, List<Type> suggestedTypes, List<Method> newMethods) {
+        int argumentIndex=method.getArguments().indexOf(argument);
+        for (Type type : suggestedTypes) {
+            List<MethodArgument> newArguments=new ArrayList<>(method.getArguments());
+            newArguments.set(argumentIndex, new MethodArgument(argument.getName(), type,argument.isVararg(),
+                    argument.isOptional(), argument.getDefaultValue() ));
+            Method newMethod = new Method(method.getName(), method.getReturnType(), newArguments, method.isStatic());
+            processMethod(newMethod, newMethods);
         }
-        return newMethods;
     }
-
 
 
 }
