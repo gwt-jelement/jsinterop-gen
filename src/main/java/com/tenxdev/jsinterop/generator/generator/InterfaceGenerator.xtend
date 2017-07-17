@@ -22,7 +22,7 @@ import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
 
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.name.adjustJavaName»«
-        IF definition.parent!==null» extends «definition.parent»«ENDIF» {
+        IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF» {
     «FOR method: definition.methods»
 
     @JsMethod(name = "«method.name»")

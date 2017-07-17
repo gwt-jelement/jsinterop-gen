@@ -1,19 +1,21 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.Type;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class InterfaceDefinition implements Definition {
     private final String name;
-    private final String parent;
+    private final Type parent;
     private List<Constant> constants;
     private List<Feature> features;
     private List<Method> constructors;
     private List<Method> methods;
     private List<Attribute> attributes;
 
-    public InterfaceDefinition(String name, String parent, List<Method> constructors, List<InterfaceMember> members) {
+    public InterfaceDefinition(String name, Type parent, List<Method> constructors, List<InterfaceMember> members) {
         this.name = name;
         this.parent = parent;
         this.constructors = constructors;
@@ -42,7 +44,7 @@ public class InterfaceDefinition implements Definition {
         return name;
     }
 
-    public String getParent() {
+    public Type getParent() {
         return parent;
     }
 

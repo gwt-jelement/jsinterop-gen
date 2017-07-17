@@ -1,6 +1,7 @@
 package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.types.PackageType;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractInterfaceDefinitionVisitor;
 
 import java.util.Collections;
@@ -10,6 +11,16 @@ import java.util.stream.Collectors;
 public class InterfaceDefinitionVisitor extends AbstractInterfaceDefinitionVisitor<List<String>> {
 
     private TypeVisitor typeVisitor=new TypeVisitor();
+
+    @Override
+    public List<String> accept(InterfaceDefinition interfaceDefinition) {
+        List<String> result = super.accept(interfaceDefinition);
+        if (interfaceDefinition.getParent() instanceof PackageType){
+            PackageType packageType = (PackageType) interfaceDefinition.getParent();
+            result.add(packageType.getPackageName()+"."+packageType.getTypeName());
+        }
+        return result;
+    }
 
     @Override
     protected List<String> visitConstructors(List<Method> constructors) {
