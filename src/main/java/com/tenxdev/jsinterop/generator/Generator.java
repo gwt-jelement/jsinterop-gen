@@ -6,7 +6,7 @@ import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.errors.PrintStreamErrorrHandler;
 import com.tenxdev.jsinterop.generator.generator.SourceGenerator;
 import com.tenxdev.jsinterop.generator.model.Model;
-import com.tenxdev.jsinterop.generator.parsing.ModelBuilder;
+import com.tenxdev.jsinterop.generator.processing.ModelBuilder;
 import com.tenxdev.jsinterop.generator.processing.*;
 import com.tenxdev.jsinterop.generator.processing.unionargsexampansion.MethodUnionArgsExpander;
 import org.kohsuke.args4j.Argument;

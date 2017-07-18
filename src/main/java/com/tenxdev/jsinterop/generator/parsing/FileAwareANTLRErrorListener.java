@@ -7,7 +7,7 @@ import org.antlr.v4.runtime.Recognizer;
 
 import java.io.File;
 
-class FileAwareANTLRErrorListener extends BaseErrorListener {
+public class FileAwareANTLRErrorListener extends BaseErrorListener {
     private final File file;
     private final ErrorReporter errorHandler;
 

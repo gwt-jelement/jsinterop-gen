@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * provides replacement types for an type containing union types
  */
-public class UnionTypeVisitor extends AbstractTypeVisitor<List<Type>> {
+public class UnionTypeReplacementVisitor extends AbstractTypeVisitor<List<Type>> {
 
     @Override
     public List<Type> accept(Type type) {

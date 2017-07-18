@@ -1,6 +1,7 @@
 package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.types.Type;
+import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class InterfaceDefinition implements Definition {
     private List<Method> constructors;
     private List<Method> methods;
     private List<Attribute> attributes;
+    private List<UnionType> unionReturnTypes;
 
     public InterfaceDefinition(String name, Type parent, List<Method> constructors, List<InterfaceMember> members) {
         this.name = name;
@@ -125,6 +127,14 @@ public class InterfaceDefinition implements Definition {
                 ", constants=" + constants +
                 ", features=" + features +
                 '}';
+    }
+
+    public List<UnionType> getUnionReturnTypes() {
+        return unionReturnTypes;
+    }
+
+    public void setUnionReturnTypes(List<UnionType> unionReturnTypes) {
+        this.unionReturnTypes = unionReturnTypes;
     }
 }
 

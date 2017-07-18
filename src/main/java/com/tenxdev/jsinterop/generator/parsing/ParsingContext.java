@@ -1,7 +1,7 @@
 package com.tenxdev.jsinterop.generator.parsing;
 
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
-import com.tenxdev.jsinterop.generator.model.types.Type;
+import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 
 public class ParsingContext {
 

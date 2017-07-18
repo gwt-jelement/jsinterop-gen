@@ -9,7 +9,6 @@ import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
  */
 public class MethodUnionArgsExpander {
     private final Model model;
+    private final GetUnionTypesVisitor getUnionTypesVisitor=new GetUnionTypesVisitor();
 
     public MethodUnionArgsExpander(Model model) {
         this.model = model;
@@ -38,12 +38,30 @@ public class MethodUnionArgsExpander {
     }
 
     private void processInterface(InterfaceDefinition definition) {
+        expandMethodArguments(definition);
+        expandConstructorArguments(definition);
+        findUnionReturnTypes(definition);
+    }
+
+    private void expandMethodArguments(InterfaceDefinition definition) {
         List<Method> newMethods = processMethods(definition.getMethods());
         definition.getMethods().clear();
         definition.getMethods().addAll(newMethods);
+    }
+
+    private void expandConstructorArguments(InterfaceDefinition definition) {
         List<Method> newConstructors = processMethods(definition.getConstructors());
         definition.getConstructors().clear();
         definition.getConstructors().addAll(newConstructors);
+    }
+
+    private void findUnionReturnTypes(InterfaceDefinition definition) {
+        List<UnionType> unionReturnTypes = definition.getMethods().stream()
+                .map(method -> getUnionTypesVisitor.accept(method.getReturnType()))
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
+        definition.setUnionReturnTypes(unionReturnTypes);
     }
 
     private List<Method> processMethods(List<Method> methods) {
@@ -53,7 +71,7 @@ public class MethodUnionArgsExpander {
     }
 
     private void processMethod(Method method, List<Method> newMethods) {
-        UnionTypeVisitor unionTypeVisitor = new UnionTypeVisitor();
+        UnionTypeReplacementVisitor unionTypeVisitor = new UnionTypeReplacementVisitor();
         for (MethodArgument methodArgument : method.getArguments()) {
             List<Type> suggestedTypes = unionTypeVisitor.accept(methodArgument.getType());
             if (!suggestedTypes.isEmpty()) {

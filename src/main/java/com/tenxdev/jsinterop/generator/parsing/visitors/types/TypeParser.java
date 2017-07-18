@@ -2,7 +2,7 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.types;
 
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.types.*;
-import com.tenxdev.jsinterop.generator.parsing.TypeFactory;
+import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 import com.tenxdev.jsinterop.generator.processing.ParserUtil;
 import org.antlr.v4.runtime.*;
 import org.antlr4.webidl.TypesBaseVisitor;

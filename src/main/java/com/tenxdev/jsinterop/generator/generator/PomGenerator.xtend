@@ -34,9 +34,14 @@ class PomGenerator {
             <version>2.8.1</version>
         </dependency>
         <dependency>
-            <groupId>gwt-jelement</groupId>
-            <artifactId>jsinterop-ecmascript</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.google.elemental2</groupId>
+            <artifactId>elemental2-core</artifactId>
+            <version>1.0.0-beta-1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.elemental2</groupId>
+            <artifactId>elemental2-promise</artifactId>
+            <version>1.0.0-beta-1</version>
         </dependency>
     </dependencies>
 

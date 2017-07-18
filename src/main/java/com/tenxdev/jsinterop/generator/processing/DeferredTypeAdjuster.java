@@ -1,4 +1,4 @@
-package com.tenxdev.jsinterop.generator.parsing;
+package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractTypeVisitor;

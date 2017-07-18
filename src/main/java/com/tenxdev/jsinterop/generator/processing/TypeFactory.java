@@ -1,4 +1,4 @@
-package com.tenxdev.jsinterop.generator.parsing;
+package com.tenxdev.jsinterop.generator.processing;
 
 import com.google.common.collect.ImmutableMap;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
@@ -7,6 +7,7 @@ import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.parsing.visitors.types.TypeParser;
+import com.tenxdev.jsinterop.generator.processing.DeferredTypeAdjuster;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class TypeFactory {
     private Map<String, Type> typeMap = new HashMap<>();
     private Map<String, Type> deferredTypeDefs = new HashMap<>();
 
-    TypeFactory(ErrorReporter errorReporter) {
+    public TypeFactory(ErrorReporter errorReporter) {
         this.errorReporter = errorReporter;
         this.typeParser = new TypeParser(this, errorReporter);
 
@@ -39,7 +40,7 @@ public class TypeFactory {
         typeMap.put("int", new NativeType("int"));
         typeMap.put("byte", new NativeType("byte"));
         typeMap.put("octet", new NativeType("byte"));
-        typeMap.put("any", new NativeType("Object"));
+        typeMap.put("any", new ObjectType("Any", "jsinterop.base"));
         typeMap.put("SerializedScriptValue", new NativeType("Object"));
         typeMap.put("object", new NativeType("Object"));
         typeMap.put("void", new NativeType("void"));
@@ -58,10 +59,10 @@ public class TypeFactory {
         typeMap.put("USVString", new NativeType("String"));
         typeMap.put("ByteString", new NativeType("String"));
         typeMap.put("Date", new ObjectType("Date", "java.util"));
-        typeMap.put("Function", new ObjectType("Function", ".ecmascript"));
-        typeMap.put("Promise", new ObjectType("Promise", ".ecmascript"));
+        typeMap.put("Function", new ObjectType("Function", "elemental2.core"));
+        typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
         typeMap.put("Dictionary", new NativeType("Object"));
-        typeMap.put("record", new NativeType("object"));
+        typeMap.put("record", new NativeType("Object"));
     }
 
 

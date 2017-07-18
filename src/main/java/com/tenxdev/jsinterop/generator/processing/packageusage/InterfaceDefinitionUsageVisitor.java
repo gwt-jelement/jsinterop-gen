@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class InterfaceDefinitionVisitor extends AbstractInterfaceDefinitionVisitor<List<String>> {
+public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinitionVisitor<List<String>> {
 
     private TypeVisitor typeVisitor=new TypeVisitor();
 
@@ -18,6 +18,14 @@ public class InterfaceDefinitionVisitor extends AbstractInterfaceDefinitionVisit
         if (interfaceDefinition.getParent() instanceof PackageType){
             PackageType packageType = (PackageType) interfaceDefinition.getParent();
             result.add(packageType.getPackageName()+"."+packageType.getTypeName());
+        }
+        if (!interfaceDefinition.getUnionReturnTypes().isEmpty()){
+            result.add("jsinterop.annotations.JsOverlay");
+            result.add("jsinterop.annotations.JsType");
+            result.add("jsinterop.base.Js");
+        }
+        if (!interfaceDefinition.getMethods().isEmpty()){
+            result.add("jsinterop.annotations.JsMethod");
         }
         return result;
     }

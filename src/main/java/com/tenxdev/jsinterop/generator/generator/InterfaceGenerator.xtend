@@ -12,7 +12,6 @@ class InterfaceGenerator extends Template{
         return '''
 package «basePackageName»«definitionInfo.getPackgeName()»;
 
-«IF !definition.methods.empty»import jsinterop.annotations.JsMethod;«ENDIF»
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -23,6 +22,27 @@ import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.name.adjustJavaName»«
         IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF» {
+
+    «FOR unionType: definition.getUnionReturnTypes»
+    @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
+    public interface «unionType.name» {
+        «FOR type: unionType.types»
+        @JsOverlay
+        default «type.displayValue» as«type.displayValue.toFirstUpper»(){
+            return Js.cast(this);
+        }
+
+        «ENDFOR»
+        «FOR type: unionType.types»
+        @JsOverlay
+        default boolean is«type.displayValue.toFirstUpper»(){
+            return (Object) this instanceof «type.displayValue»;
+        }
+
+        «ENDFOR»
+    }
+
+    «ENDFOR»
     «FOR method: definition.methods»
 
     @JsMethod(name = "«method.name»")

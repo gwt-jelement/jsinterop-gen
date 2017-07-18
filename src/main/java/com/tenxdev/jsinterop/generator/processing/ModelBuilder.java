@@ -1,8 +1,10 @@
-package com.tenxdev.jsinterop.generator.parsing;
+package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.Definition;
 import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.parsing.FileAwareANTLRErrorListener;
+import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import com.tenxdev.jsinterop.generator.parsing.visitors.firstpass.DefinitionsScanner;
 import com.tenxdev.jsinterop.generator.parsing.visitors.secondpass.DefinitionsVisitor;
 import com.tenxdev.jsinterop.generator.processing.FileListBuilder;

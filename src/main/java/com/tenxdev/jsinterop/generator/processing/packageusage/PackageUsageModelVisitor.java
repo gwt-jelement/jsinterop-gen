@@ -32,7 +32,7 @@ public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>>
 
     @Override
     public List<String> visitInterfaceDefinition(InterfaceDefinition interfaceDefinition){
-        return new InterfaceDefinitionVisitor().accept(interfaceDefinition);
+        return new InterfaceDefinitionUsageVisitor().accept(interfaceDefinition);
     }
 
     @Override
