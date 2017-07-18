@@ -16,6 +16,8 @@ public class SourceGenerator extends Template {
     public void processModel(Model model, String outputDirectory, String basePackageName, ErrorReporter errorReporter) throws IOException {
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
         outputFile(Paths.get(outputDirectory, ".gitignore"), new GitIgnoreGenerator().generate());
+        outputFile(Paths.get(outputDirectory,"src", "main", "java", packageNameToPath(basePackageName),
+                "JElement.gwt.xml"), new GwtModuleGenerator().generate());
         EnumGenerator enumGenerator = new EnumGenerator();
         CallbackGenerator callbackGenerator = new CallbackGenerator();
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator();
@@ -37,8 +39,12 @@ public class SourceGenerator extends Template {
 
     private Path getSourcePath(String outputDirectory, DefinitionInfo definitionInfo, String basePackageName) {
         return Paths.get(outputDirectory, "src", "main", "java",
-                (basePackageName + definitionInfo.getPackageName()).replace(".", File.separator),
+                packageNameToPath(basePackageName + definitionInfo.getPackageName()),
                 definitionInfo.getName() + ".java");
+    }
+
+    private String packageNameToPath(String packageName){
+        return packageName.replace(".", File.separator);
     }
 
     private void outputFile(Path filePath, CharSequence contents) throws IOException {

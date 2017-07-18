@@ -3,7 +3,6 @@ package com.tenxdev.jsinterop.generator.generator
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition
 import java.util.Collections
-import com.tenxdev.jsinterop.generator.model.types.ObjectType
 import com.tenxdev.jsinterop.generator.model.MethodArgument
 import com.tenxdev.jsinterop.generator.model.types.NativeType
 import com.tenxdev.jsinterop.generator.model.Method
@@ -22,10 +21,6 @@ import jsinterop.annotations.JsType;
 «FOR importName: definitionInfo.importedPackages»
 import  «IF importName.startsWith(".")»«basePackageName»«ENDIF»«importName»;
 «ENDFOR»
-
-/*
-«definition.toString»
-*/
 
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.name.adjustJavaName»«
