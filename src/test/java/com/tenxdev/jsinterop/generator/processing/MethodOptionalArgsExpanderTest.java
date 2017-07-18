@@ -1,13 +1,5 @@
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.model.Method;
-import com.tenxdev.jsinterop.generator.model.MethodArgument;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.*;
-
 public class MethodOptionalArgsExpanderTest {
     @org.junit.Test
     public void expandMethod() throws Exception {

@@ -14,7 +14,7 @@ public class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
     @Override
     public MethodArgument visitOptionalArgument(WebIDLParser.OptionalArgumentContext ctx) {
         String name = ctx.argumentName().getText();
-        Type type = ctx.type().accept(new TypeVisitor(parsingContetxt));
+        Type type = ctx.type().accept(new TypeVisitor(parsingContext));
         String defaultValue = ctx.default_() == null || ctx.default_().defaultValue() == null ? null :
                 ctx.default_().defaultValue().getText();
         return new MethodArgument(name, type, false, true, defaultValue);
@@ -23,14 +23,14 @@ public class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
     @Override
     public MethodArgument visitRequiredArgument(WebIDLParser.RequiredArgumentContext ctx) {
         String name = ctx.argumentName().getText();
-        Type type = ctx.type().accept(new TypeVisitor(parsingContetxt));
+        Type type = ctx.type().accept(new TypeVisitor(parsingContext));
         return new MethodArgument(name, type, false, false, null);
     }
 
     @Override
     public MethodArgument visitRequiredVarArgArgument(WebIDLParser.RequiredVarArgArgumentContext ctx) {
         String name = ctx.argumentName().getText();
-        Type type = ctx.type().accept(new TypeVisitor(parsingContetxt));
+        Type type = ctx.type().accept(new TypeVisitor(parsingContext));
         return new MethodArgument(name, type, true, false, null);
     }
 

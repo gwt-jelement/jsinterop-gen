@@ -2,14 +2,12 @@ package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
-import java.util.Arrays;
-
 public class Feature implements InterfaceMember {
 
     private final FeatureType featureType;
     private final boolean readOnly;
-    Type valueType;
-    Type keyType;
+    private Type valueType;
+    private Type keyType;
 
     public Feature(FeatureType featureType, Type valueType, boolean readOnly) {
         this(featureType, null, valueType, readOnly);

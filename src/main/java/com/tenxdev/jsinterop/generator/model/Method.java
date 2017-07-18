@@ -12,6 +12,8 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private final Type returnType;
     private final List<MethodArgument> arguments;
     private Method methodReferences;
+    private boolean privateMethod;
+    private Method enumOverlay;
 
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean static_) {
         this.name = name;
@@ -43,7 +45,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
         return arguments;
     }
 
-    public void setMethodReferences(Method menathodReferences) {
+    public void setMethodReferences(Method methodReferences) {
         if (this.methodReferences == null) {
             this.methodReferences = methodReferences;
         }
@@ -56,6 +58,26 @@ public class Method implements InterfaceMember, Comparable<Method> {
             result = arguments.size() - o.arguments.size();
         }
         return result;
+    }
+
+    public boolean isStatic_() {
+        return static_;
+    }
+
+    public boolean isPrivateMethod() {
+        return privateMethod;
+    }
+
+    public void setPrivate() {
+        this.privateMethod = true;
+    }
+
+    public Method getEnumOverlay() {
+        return enumOverlay;
+    }
+
+    public void setEnumOverlay(Method enumOverlay) {
+        this.enumOverlay = enumOverlay;
     }
 
     @Override

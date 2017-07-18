@@ -12,7 +12,7 @@ public class TypeVisitor extends AbstractTypeVisitor<List<String>> {
 
     @Override
     public List<String> accept(Type type) {
-        if (type==null){
+        if (type == null) {
             return Collections.emptyList();
         }
         return super.accept(type);
@@ -32,7 +32,7 @@ public class TypeVisitor extends AbstractTypeVisitor<List<String>> {
     }
 
     @Override
-    protected List<String> visitParameterizedType(ParameterizedType type) {
+    protected List<String> visitParameterisedType(ParameterisedType type) {
         List<String> result = new ArrayList<>();
         result.addAll(accept(type.getBaseType()));
         for (Type parameterType : type.getTypeParameters()) {

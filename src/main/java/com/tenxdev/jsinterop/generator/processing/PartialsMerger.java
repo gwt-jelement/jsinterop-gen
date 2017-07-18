@@ -22,7 +22,7 @@ public class PartialsMerger extends AbstractDefinitionMerger {
                 if (partialDefinition instanceof PartialInterfaceDefinition && primaryDefinition instanceof InterfaceDefinition) {
                     mergeInterfaces((InterfaceDefinition) primaryDefinition, (InterfaceDefinition) partialDefinition);
                 } else if (partialDefinition instanceof PartialDictionaryDefinition && primaryDefinition instanceof DictionaryDefinition) {
-                    mergeDicstionaries((DictionaryDefinition) primaryDefinition, (DictionaryDefinition) partialDefinition);
+                    mergeDictionaries((DictionaryDefinition) primaryDefinition, (DictionaryDefinition) partialDefinition);
                 } else {
                     reportTypeMismatch(primaryDefinition, partialDefinition);
                 }

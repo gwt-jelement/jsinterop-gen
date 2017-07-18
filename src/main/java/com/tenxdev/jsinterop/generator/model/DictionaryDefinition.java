@@ -1,8 +1,7 @@
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.processing.TypeUtil;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DictionaryDefinition implements Definition {
     private final String name;
@@ -15,7 +14,7 @@ public class DictionaryDefinition implements Definition {
         this.members = members;
     }
 
-    public String getParent() {
+    String getParent() {
         return parent;
     }
 
@@ -25,8 +24,8 @@ public class DictionaryDefinition implements Definition {
     }
 
     public List<DictionaryMember> getMembers() {
-        if (members==null){
-            members=new ArrayList<>();
+        if (members == null) {
+            members = new ArrayList<>();
         }
         return members;
     }
@@ -51,7 +50,7 @@ public class DictionaryDefinition implements Definition {
 
     @Override
     public String toString() {
-        return "\n" +getClass().getSimpleName()+
+        return "\n" + getClass().getSimpleName() +
                 "{" +
                 "name='" + name + '\'' +
                 ", parent='" + parent + '\'' +

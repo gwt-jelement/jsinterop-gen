@@ -9,7 +9,7 @@ class DictionaryGenerator {
     def generate(String basePackageName, DefinitionInfo definitionInfo){
         var definition=definitionInfo.getDefinition() as DictionaryDefinition
         return '''
-package «basePackageName»«definitionInfo.getPackgeName()»;
+package «basePackageName»«definitionInfo.getPackageName()»;
 
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;

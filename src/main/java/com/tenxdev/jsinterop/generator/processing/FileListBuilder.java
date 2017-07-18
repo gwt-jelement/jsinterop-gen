@@ -6,12 +6,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileListBuilder {
+class FileListBuilder {
 
     private final ErrorReporter errorHandler;
 
     public FileListBuilder(ErrorReporter errorHandler) {
-        this.errorHandler=errorHandler;
+        this.errorHandler = errorHandler;
     }
 
     public List<File> findFiles(String baseDirectory) {
@@ -21,7 +21,7 @@ public class FileListBuilder {
         }
         List<File> fileList = new ArrayList<>();
         findFiles(directory, fileList);
-        if (fileList.isEmpty()){
+        if (fileList.isEmpty()) {
             errorHandler.formatFatalError("No idl files were found in input directory %s%n", baseDirectory);
         }
         return fileList;
@@ -32,11 +32,13 @@ public class FileListBuilder {
             File file = new File(dir, name);
             return file.isDirectory() || (file.isFile() && name.toLowerCase().endsWith(".idl"));
         });
-        for (File file : files) {
-            if (file.isDirectory()) {
-                findFiles(file, fileList);
-            } else {
-                fileList.add(file);
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    findFiles(file, fileList);
+                } else {
+                    fileList.add(file);
+                }
             }
         }
     }

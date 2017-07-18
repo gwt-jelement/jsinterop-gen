@@ -2,8 +2,8 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.types;
 
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.types.*;
-import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 import com.tenxdev.jsinterop.generator.processing.ParserUtil;
+import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 import org.antlr.v4.runtime.*;
 import org.antlr4.webidl.TypesBaseVisitor;
 import org.antlr4.webidl.TypesLexer;
@@ -44,21 +44,21 @@ public class TypeParser extends TypesBaseVisitor<Type> {
         if (ctx.simpleType != null && ctx.simpleType.getText() != null) {
             return determineType(ctx.simpleType.getText());
         }
-        if (ctx.isArray != null && ctx.isArray != null) {
+        if (ctx.isArray != null) {
             return new ArrayType(ctx.isArray.accept(this));
         }
         if (ctx.baseType != null) {
             if (ctx.promiseRest() != null && ctx.promiseRest().type() != null) {
-                return new ParameterizedType(determineType(ctx.baseType.getText()),
-                        Arrays.asList(typeFactory.boxType(ctx.promiseRest().type().accept(this))));
+                return new ParameterisedType(determineType(ctx.baseType.getText()),
+                        Collections.singletonList(typeFactory.boxType(ctx.promiseRest().type().accept(this))));
             }
             if (ctx.promiseRest2() != null && ctx.promiseRest2().type(0) != null
                     && ctx.promiseRest2().type(1) != null) {
-                return new ParameterizedType(determineType(ctx.baseType.getText()),
+                return new ParameterisedType(determineType(ctx.baseType.getText()),
                         Arrays.asList(typeFactory.boxType(ctx.promiseRest2().type(0).accept(this)),
                                 typeFactory.boxType(ctx.promiseRest2().type(1).accept(this))));
             }
-            return new ParameterizedType(determineType(ctx.baseType.getText()), Collections.emptyList());
+            return new ParameterisedType(determineType(ctx.baseType.getText()), Collections.emptyList());
         }
         if (ctx.unionType != null) {
             List<Type> types = new ArrayList<>();

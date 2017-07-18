@@ -1,8 +1,6 @@
 package com.tenxdev.jsinterop.generator.model;
 
-import java.util.Collections;
-
-public class ImplementsDefinition implements Definition{
+public class ImplementsDefinition implements Definition {
 
     private String name;
     private String parent;

@@ -1,12 +1,15 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.processing.TypeFactory;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Model {
 
-    Map<String, DefinitionInfo> definitions = new HashMap<>();
+    private Map<String, DefinitionInfo> definitions = new HashMap<>();
+    private TypeFactory typeFactory;
 
     public Collection<DefinitionInfo> getDefinitions() {
         return definitions.values();
@@ -16,26 +19,34 @@ public class Model {
         return definitions.get(name);
     }
 
-    public void registerDefinition(Definition definition, String packageSuffix, String filename) throws ConflictingNameExcepton {
-        DefinitionInfo definitionInfo = definitions.computeIfAbsent(definition.getName(), key -> new DefinitionInfo(key));
+    public void registerDefinition(Definition definition, String packageSuffix, String filename) throws ConflictingNameException {
+        DefinitionInfo definitionInfo = definitions.computeIfAbsent(definition.getName(), DefinitionInfo::new);
         if (definition instanceof PartialDefinition) {
             definitionInfo.addPartialDefinition((PartialDefinition) definition);
-        }else if (definition instanceof ImplementsDefinition){
-            definitionInfo.addImpementsDefinition((ImplementsDefinition) definition);
+        } else if (definition instanceof ImplementsDefinition) {
+            definitionInfo.addImplementsDefinition((ImplementsDefinition) definition);
         } else {
             if (definitionInfo.getDefinition() != null && !definitionInfo.getDefinition().equals(definition)) {
-                throw new ConflictingNameExcepton(definitionInfo);
+                throw new ConflictingNameException(definitionInfo);
             }
             definitionInfo.setDefinition(definition);
-            definitionInfo.setPackgeName(packageSuffix);
+            definitionInfo.setPackageName(packageSuffix);
             definitionInfo.setFilename(filename);
         }
     }
 
-    public class ConflictingNameExcepton extends Exception {
+    public TypeFactory getTypeFactory() {
+        return typeFactory;
+    }
+
+    public void setTypeFactory(TypeFactory typeFactory) {
+        this.typeFactory = typeFactory;
+    }
+
+    public class ConflictingNameException extends Exception {
         private final DefinitionInfo definitionInfo;
 
-        private ConflictingNameExcepton(DefinitionInfo definitionInfo) {
+        private ConflictingNameException(DefinitionInfo definitionInfo) {
             this.definitionInfo = definitionInfo;
         }
 

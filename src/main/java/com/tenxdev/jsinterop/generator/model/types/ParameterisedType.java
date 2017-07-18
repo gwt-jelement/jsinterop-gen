@@ -3,12 +3,12 @@ package com.tenxdev.jsinterop.generator.model.types;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ParameterizedType implements Type {
+public class ParameterisedType implements Type {
 
     private final List<Type> typeParameters;
     private final Type baseType;
 
-    public ParameterizedType(Type baseType, List<Type> typeParameters) {
+    public ParameterisedType(Type baseType, List<Type> typeParameters) {
         this.baseType = baseType;
         this.typeParameters = typeParameters;
     }
@@ -35,7 +35,7 @@ public class ParameterizedType implements Type {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ParameterizedType that = (ParameterizedType) o;
+        ParameterisedType that = (ParameterisedType) o;
 
         if (!typeParameters.equals(that.typeParameters)) return false;
         return baseType.equals(that.baseType);
@@ -50,7 +50,7 @@ public class ParameterizedType implements Type {
 
     @Override
     public String toString() {
-        return "ParameterizedType{" +
+        return "ParameterisedType{" +
                 "typeParameters=" + typeParameters +
                 ", baseType=" + baseType +
                 '}';

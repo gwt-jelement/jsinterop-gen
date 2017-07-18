@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-public abstract class Template {
+abstract class Template {
 
-    public static final Set<String> JAVA_RESERVED_KEYWORDS = new TreeSet<>(
+    private static final Set<String> JAVA_RESERVED_KEYWORDS = new TreeSet<>(
             Arrays.asList("abstract", "continue", "for", "new", "switch",
                     "assert", "default", "goto", "package", "synchronized",
                     "boolean	", "do	", "if	", "private	", "this",
@@ -36,7 +36,7 @@ public abstract class Template {
                 .replace('+', '_');
     }
 
-        protected String getCallbackMethodName(Method method) {
+    protected String getCallbackMethodName(Method method) {
         return method.getName() == null || method.getName().isEmpty() ? "callback" : method.getName();
     }
 

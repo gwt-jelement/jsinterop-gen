@@ -31,8 +31,8 @@ public class DeferredTypeAdjuster extends AbstractTypeVisitor<Type> {
     }
 
     @Override
-    protected Type visitParameterizedType(ParameterizedType type) {
-        return new ParameterizedType (accept(type.getBaseType()),
+    protected Type visitParameterisedType(ParameterisedType type) {
+        return new ParameterisedType(accept(type.getBaseType()),
                 type.getTypeParameters().stream()
                         .map(this::accept)
                         .collect(Collectors.toList()));

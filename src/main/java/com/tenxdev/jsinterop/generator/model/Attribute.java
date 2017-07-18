@@ -2,9 +2,6 @@ package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class Attribute implements InterfaceMember {
     private final boolean static_;
     private String name;

@@ -8,27 +8,27 @@ import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDefinitionMerger {
+abstract class AbstractDefinitionMerger {
 
-    protected final ErrorReporter errorReporter;
+    final ErrorReporter errorReporter;
 
-    public AbstractDefinitionMerger(ErrorReporter errorReporter) {
+    AbstractDefinitionMerger(ErrorReporter errorReporter) {
         this.errorReporter = errorReporter;
     }
 
-    protected void mergeDicstionaries(DictionaryDefinition primaryDefinition, DictionaryDefinition partialDefinition) {
+    void mergeDictionaries(DictionaryDefinition primaryDefinition, DictionaryDefinition partialDefinition) {
         primaryDefinition.getMembers().addAll(partialDefinition.getMembers());
     }
 
-    protected void mergeInterfaces(InterfaceDefinition primaryDefinition, InterfaceDefinition definition) {
-        primaryDefinition.getAttributes().addAll(disjoinList(primaryDefinition.getAttributes(), definition.getAttributes()));
-        primaryDefinition.getMethods().addAll(disjoinList(primaryDefinition.getMethods(), definition.getMethods()));
-        primaryDefinition.getConstants().addAll(disjoinList(primaryDefinition.getConstants(), definition.getConstants()));
-        primaryDefinition.getConstructors().addAll(disjoinList(primaryDefinition.getConstructors(), definition.getConstructors()));
-        primaryDefinition.getFeatures().addAll(disjoinList(primaryDefinition.getFeatures(), definition.getFeatures()));
+    void mergeInterfaces(InterfaceDefinition primaryDefinition, InterfaceDefinition definition) {
+        primaryDefinition.getAttributes().addAll(disjointList(primaryDefinition.getAttributes(), definition.getAttributes()));
+        primaryDefinition.getMethods().addAll(disjointList(primaryDefinition.getMethods(), definition.getMethods()));
+        primaryDefinition.getConstants().addAll(disjointList(primaryDefinition.getConstants(), definition.getConstants()));
+        primaryDefinition.getConstructors().addAll(disjointList(primaryDefinition.getConstructors(), definition.getConstructors()));
+        primaryDefinition.getFeatures().addAll(disjointList(primaryDefinition.getFeatures(), definition.getFeatures()));
     }
 
-    protected void reportTypeMismatch(Definition primaryDefinition, Definition secondaryDefinition) {
+    void reportTypeMismatch(Definition primaryDefinition, Definition secondaryDefinition) {
         errorReporter.formatError("Do not know how to merge implements of %s %s and %s %s%n",
                 primaryDefinition.getClass().getSimpleName(), primaryDefinition.getName(),
                 secondaryDefinition.getClass().getSimpleName(), secondaryDefinition.getName());
@@ -36,12 +36,13 @@ public abstract class AbstractDefinitionMerger {
 
     /**
      * gets all the elements in secondaryList that are not in primaryList
-     * @param primaryList the first list
+     *
+     * @param primaryList   the first list
      * @param secondaryList the second list
-     * @param <T> the type of the lists
+     * @param <T>           the type of the lists
      * @return a list with all the elements in secondaryList that are not in primaryList
      */
-    private <T> List<T> disjoinList(List<T> primaryList, List<T> secondaryList) {
+    private <T> List<T> disjointList(List<T> primaryList, List<T> secondaryList) {
         List<T> result = new ArrayList<>(secondaryList);
         result.removeAll(primaryList);
         return result;

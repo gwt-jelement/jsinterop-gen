@@ -2,17 +2,14 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.google.common.collect.ImmutableMap;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
-import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.parsing.visitors.types.TypeParser;
-import com.tenxdev.jsinterop.generator.processing.DeferredTypeAdjuster;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,13 +25,11 @@ public class TypeFactory {
             .put("boolean", new NativeType("Boolean"))
             .put("char", new NativeType("Character"))
             .build();
-    private final ErrorReporter errorReporter;
     private final TypeParser typeParser;
     private Map<String, Type> typeMap = new HashMap<>();
-    private Map<String, Type> deferredTypeDefs = new HashMap<>();
+    private Map<String, Type> deferredTypeDefinitions = new HashMap<>();
 
     public TypeFactory(ErrorReporter errorReporter) {
-        this.errorReporter = errorReporter;
         this.typeParser = new TypeParser(this, errorReporter);
 
         typeMap.put("bool", new NativeType("boolean"));
@@ -99,7 +94,7 @@ public class TypeFactory {
             Type boxedType = BOXED_TYPES.get(((NativeType) type).getTypeName());
             return boxedType != null ? boxedType : type;
         }
-        //TODO may neet to box other types
+        //TODO may need to box other types
         return type;
     }
 
@@ -114,12 +109,12 @@ public class TypeFactory {
     }
 
     public void registerTypeDef(String name, Type type) {
-        deferredTypeDefs.put(name, type);
+        deferredTypeDefinitions.put(name, type);
     }
 
-    void registerTypeDefs() {
+    void registerTypeDefinitions() {
         DeferredTypeAdjuster adjuster = new DeferredTypeAdjuster(this);
-        deferredTypeDefs.forEach((name, type) -> {
+        deferredTypeDefinitions.forEach((name, type) -> {
             Type adjustedType = adjuster.accept(type);
             if (adjustedType instanceof UnionType) {
                 ((UnionType) adjustedType).setName(name);

@@ -1,7 +1,6 @@
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class EnumValuesVisitor extends ContextWebIDLBaseVisitor<List<String>> {
     public List<String> visitEnumValueListComma(WebIDLParser.EnumValueListCommaContext ctx) {
         List<String> values = new ArrayList<>();
         WebIDLParser.EnumValueListCommaContext context = ctx;
-        while (context!=null && context.enumValueListString() != null && context.enumValueListString().STRING_WEBIDL()!=null) {
+        while (context != null && context.enumValueListString() != null && context.enumValueListString().STRING_WEBIDL() != null) {
             values.add(context.enumValueListString().STRING_WEBIDL().getText());
             context = context.enumValueListString().enumValueListComma();
         }

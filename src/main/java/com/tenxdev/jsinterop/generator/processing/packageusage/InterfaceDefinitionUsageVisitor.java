@@ -27,6 +27,9 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         if (!interfaceDefinition.getMethods().isEmpty()){
             result.add("jsinterop.annotations.JsMethod");
         }
+        if (!interfaceDefinition.getAttributes().isEmpty()){
+            result.add("jsinterop.annotations.JsProperty");
+        }
         return result;
     }
 

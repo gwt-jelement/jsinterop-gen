@@ -23,12 +23,12 @@ public class MethodOptionalArgsExpander {
     private final Model model;
 
     public MethodOptionalArgsExpander(Model model) {
-        this.model=model;
+        this.model = model;
     }
 
     public void processModel() {
         model.getDefinitions().forEach(definitionInfo -> {
-            if (definitionInfo.getDefinition() instanceof  InterfaceDefinition){
+            if (definitionInfo.getDefinition() instanceof InterfaceDefinition) {
                 processInterface((InterfaceDefinition) definitionInfo.getDefinition());
             }
         });
@@ -45,7 +45,7 @@ public class MethodOptionalArgsExpander {
     }
 
     private List<Method> processMethods(List<Method> methods) {
-        List<Method> newMethods=new ArrayList<>();
+        List<Method> newMethods = new ArrayList<>();
         methods.forEach(method -> {
             if (hasOptionalArgs(method)) {
                 List<Method> expandedMethods = expandMethod(method);
@@ -62,27 +62,27 @@ public class MethodOptionalArgsExpander {
         return method.getArguments().stream().anyMatch(MethodArgument::isOptional);
     }
 
-    List<Method> expandMethod(Method method) {
+    private List<Method> expandMethod(Method method) {
         List<Method> expandedMethods = new ArrayList<>();
         expandMethod(method, expandedMethods);
         return expandedMethods;
     }
 
     private void expandMethod(Method method, List<Method> expandedMethods) {
-        boolean hasOptionsl = false;
+        boolean hasOptions = false;
         List<MethodArgument> newArguments = new ArrayList<>();
         for (MethodArgument argument : method.getArguments()) {
-            if (argument.isOptional() && !hasOptionsl) {
+            if (argument.isOptional() && !hasOptions) {
                 Method newMethod = new Method(method.getName(), method.getReturnType(), new ArrayList<>(newArguments), method.isStatic());
                 expandedMethods.add(newMethod);
-                hasOptionsl = true;
+                hasOptions = true;
                 newArguments.add(new MethodArgument(argument.getName(), argument.getType(), argument.isVararg(), false, argument.getDefaultValue()));
             } else {
                 newArguments.add(argument);
             }
         }
         Method newMethod = new Method(method.getName(), method.getReturnType(), newArguments, method.isStatic());
-        if (hasOptionsl) {
+        if (hasOptions) {
             expandMethod(newMethod, expandedMethods);
         } else {
             expandedMethods.add(newMethod);

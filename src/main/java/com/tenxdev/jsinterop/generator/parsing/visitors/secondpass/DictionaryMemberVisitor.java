@@ -21,12 +21,12 @@ public class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<Dicti
         while (context != null && context.dictionaryMember() != null) {
             WebIDLParser.DictionaryMemberContext memberContext = context.dictionaryMember();
             boolean required = memberContext.required() != null && "required".equals(memberContext.required().getText());
-            Type type=memberContext.type().accept(new TypeVisitor(parsingContetxt));
-            String name=memberContext.IDENTIFIER_WEBIDL().getText();
-            String defaultValue=memberContext.default_()==null || memberContext.default_().defaultValue()==null?null:
+            Type type = memberContext.type().accept(new TypeVisitor(parsingContext));
+            String name = memberContext.IDENTIFIER_WEBIDL().getText();
+            String defaultValue = memberContext.default_() == null || memberContext.default_().defaultValue() == null ? null :
                     memberContext.default_().defaultValue().getText();
             members.add(new DictionaryMember(name, type, required, defaultValue));
-            context=context.dictionaryMembers();
+            context = context.dictionaryMembers();
         }
         return members;
     }

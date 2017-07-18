@@ -3,11 +3,11 @@ package com.tenxdev.jsinterop.generator;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
-import com.tenxdev.jsinterop.generator.errors.PrintStreamErrorrHandler;
+import com.tenxdev.jsinterop.generator.errors.PrintStreamErrorHandler;
 import com.tenxdev.jsinterop.generator.generator.SourceGenerator;
 import com.tenxdev.jsinterop.generator.model.Model;
-import com.tenxdev.jsinterop.generator.processing.ModelBuilder;
 import com.tenxdev.jsinterop.generator.processing.*;
+import com.tenxdev.jsinterop.generator.processing.enumarguments.MethodEnumArgumentProcessor;
 import com.tenxdev.jsinterop.generator.processing.unionargsexampansion.MethodUnionArgsExpander;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Generator {
+class Generator {
 
     @Option(name = "-in", usage = "the folder from which to read IDL files", required = true, metaVar = "inputDirectory")
     private String inputDirectory;
@@ -30,14 +30,14 @@ public class Generator {
     @Option(name = "-package", usage = "the base package into which to place the IDL files", metaVar = "basePackage")
     private String basePackage = "gwt.jelement";
 
-    @Option(name = "-force", usage = "renove the output folder if it exissts", metaVar = "force")
+    @Option(name = "-force", usage = "remove the output folder if it exists", metaVar = "force")
     private boolean force;
 
-    @Option(name = "-overwrite", usage = "overwrite the output folder if it exissts", metaVar = "overwrite")
+    @Option(name = "-overwrite", usage = "overwrite the output folder if it exists", metaVar = "overwrite")
     private boolean overwrite;
 
     @Argument
-    private List<String> arguments = new ArrayList<String>();
+    private List<String> arguments = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         new Generator().checkArguments(args);
@@ -48,7 +48,7 @@ public class Generator {
         try {
             parser.parseArgument(args);
             checkArguments();
-            ErrorReporter errorHandler = new PrintStreamErrorrHandler(System.err);
+            ErrorReporter errorHandler = new PrintStreamErrorHandler(System.err);
             Model model = new ModelBuilder(errorHandler).buildFrom(inputDirectory);
             processModel(model, errorHandler);
             System.exit(0);
@@ -63,9 +63,9 @@ public class Generator {
 
     private void processModel(Model model, ErrorReporter errorHandler) throws IOException {
         //ordering of these operations is critical
-        new ModelFixer(model, errorHandler).processModel();
         new PartialsMerger(model, errorHandler).processModel();
         new ImplementsMerger(model, errorHandler).processModel();
+        new MethodEnumArgumentProcessor().process(model);
         new MethodUnionArgsExpander(model).processModel();
         new MethodOptionalArgsExpander(model).processModel();
         new ImportResolver().processModel(model);
@@ -80,7 +80,7 @@ public class Generator {
             outputDirectory = removeLastCharacter(outputDirectory);
         }
         if (force && overwrite) {
-            throw new CmdLineException(null, "Cannot specifiy both -force and -overwrite", null);
+            throw new CmdLineException(null, "Cannot specify both -force and -overwrite", null);
         }
         File output = new File(outputDirectory);
         if (output.exists()) {
@@ -92,7 +92,7 @@ public class Generator {
         }
     }
 
-    String removeLastCharacter(String value) {
+    private String removeLastCharacter(String value) {
         return value.substring(0, value.length() - 1);
     }
 
@@ -108,12 +108,12 @@ public class Generator {
             //we do not want to delete the user's hard drive
             File checkFile = new File(output, "pom.xml");
             if (!checkFile.exists()) {
-                throw new CmdLineException(null, String.format("Could not empty output direcctory '%s'%n", outputDirectory), null);
+                throw new CmdLineException(null, String.format("Could not empty output directory '%s'%n", outputDirectory), null);
             }
             try {
                 MoreFiles.deleteDirectoryContents(output.toPath(), RecursiveDeleteOption.ALLOW_INSECURE);
             } catch (IOException e) {
-                throw new CmdLineException(null, String.format("Could not empty output direcctory '%s': %s%n", outputDirectory, e.getMessage()), e);
+                throw new CmdLineException(null, String.format("Could not empty output directory '%s': %s%n", outputDirectory, e.getMessage()), e);
             }
         } else {
             throw new CmdLineException(null, String.format("Output directory '%s' exists and -force was not specified.%n", outputDirectory), null);

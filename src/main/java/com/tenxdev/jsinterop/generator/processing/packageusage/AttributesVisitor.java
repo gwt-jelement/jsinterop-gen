@@ -5,11 +5,11 @@ import com.tenxdev.jsinterop.generator.model.Attribute;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AttributesVisitor {
+class AttributesVisitor {
 
-    private TypeVisitor typeVisitor=new TypeVisitor();
+    private TypeVisitor typeVisitor = new TypeVisitor();
 
-    List<String> accept(List<Attribute> attributes){
+    List<String> accept(List<Attribute> attributes) {
         return attributes.stream()
                 .map(this::visitAttribute)
                 .flatMap(List::stream)

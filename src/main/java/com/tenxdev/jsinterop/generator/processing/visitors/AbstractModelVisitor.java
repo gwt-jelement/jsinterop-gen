@@ -15,7 +15,7 @@ public abstract class AbstractModelVisitor<T> {
         return result;
     }
 
-    protected T visitDefinition(Definition definition) {
+    private T visitDefinition(Definition definition) {
         if (definition instanceof InterfaceDefinition) {
             return visitInterfaceDefinition((InterfaceDefinition) definition);
         } else if (definition instanceof DictionaryDefinition) {

@@ -1,8 +1,6 @@
 package com.tenxdev.jsinterop.generator.errors;
 
-import java.io.PrintStream;
-
-public class DevNullErrorrHandler extends AbstractErrorHandler {
+public class DevNullErrorHandler extends AbstractErrorHandler {
 
     @Override
     public void reportError(String error) {

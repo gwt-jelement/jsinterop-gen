@@ -19,7 +19,7 @@ public class AttributeRestVisitor extends ContextWebIDLBaseVisitor<Attribute> {
     @Override
     public Attribute visitAttributeRest(WebIDLParser.AttributeRestContext ctx) {
         String name = ctx.attributeName().getText();
-        Type type = ctx.type().accept(new TypeVisitor(parsingContetxt));
+        Type type = ctx.type().accept(new TypeVisitor(parsingContext));
         return new Attribute(name, type, readOnly, static_);
     }
 

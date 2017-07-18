@@ -1,8 +1,5 @@
 package com.tenxdev.jsinterop.generator.model;
 
-import java.util.List;
-import java.util.Set;
-
 public class CallbackDefinition implements Definition {
     private String name;
     private Method method;

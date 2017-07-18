@@ -7,7 +7,6 @@ import com.tenxdev.jsinterop.generator.parsing.FileAwareANTLRErrorListener;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import com.tenxdev.jsinterop.generator.parsing.visitors.firstpass.DefinitionsScanner;
 import com.tenxdev.jsinterop.generator.parsing.visitors.secondpass.DefinitionsVisitor;
-import com.tenxdev.jsinterop.generator.processing.FileListBuilder;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr4.webidl.WebIDLLexer;
@@ -46,7 +45,7 @@ public class ModelBuilder {
             parsingContext.setPackageSuffix(getPackageSuffix(offset, file));
             scanFile(file, parsingContext);
         }
-        parsingContext.getTypeFactory().registerTypeDefs();
+        parsingContext.getTypeFactory().registerTypeDefinitions();
         return parsingContext;
     }
 
@@ -62,21 +61,22 @@ public class ModelBuilder {
             for (Definition definition : definitions) {
                 try {
                     model.registerDefinition(definition, packageSuffix, file.getAbsolutePath());
-                } catch (Model.ConflictingNameExcepton conflictingNameExcepton) {
+                } catch (Model.ConflictingNameException conflictingNameException) {
                     errorHandler.formatError("Name collision detected:%n\t%s is defined in package %s in file %s%n" +
                                     "\t%s is also defined in package %s in file %s%n",
-                            conflictingNameExcepton.getDefinitionInfo().getDefinition().getName(),
-                            conflictingNameExcepton.getDefinitionInfo().getPackgeName(),
-                            conflictingNameExcepton.getDefinitionInfo().getFilename(),
+                            conflictingNameException.getDefinitionInfo().getDefinition().getName(),
+                            conflictingNameException.getDefinitionInfo().getPackageName(),
+                            conflictingNameException.getDefinitionInfo().getFilename(),
                             definition.getName(), packageSuffix, file.getAbsolutePath());
                     errorHandler.reportError("Definition 1:");
-                    errorHandler.reportError(conflictingNameExcepton.getDefinitionInfo().getDefinition().toString());
+                    errorHandler.reportError(conflictingNameException.getDefinitionInfo().getDefinition().toString());
                     errorHandler.reportError("Definition 2:");
                     errorHandler.reportError(definition.toString());
                     errorHandler.reportError("");
                 }
             }
         }
+        model.setTypeFactory(parsingContext.getTypeFactory());
         return model;
     }
 

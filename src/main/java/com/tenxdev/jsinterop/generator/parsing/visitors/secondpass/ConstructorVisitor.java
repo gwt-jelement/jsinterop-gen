@@ -3,7 +3,6 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.Collections;
@@ -26,7 +25,7 @@ public class ConstructorVisitor extends ContextWebIDLBaseVisitor<Method> {
     @Override
     public Method visitExtendedAttribute(WebIDLParser.ExtendedAttributeContext ctx) {
         List<MethodArgument> arguments = ctx.extendedAttributeInner() != null ?
-                ctx.extendedAttributeInner().accept(new ConstructorArgumentsVisitor(parsingContetxt)) :
+                ctx.extendedAttributeInner().accept(new ConstructorArgumentsVisitor(parsingContext)) :
                 Collections.emptyList();
         return new Method("", null, arguments, false);
     }

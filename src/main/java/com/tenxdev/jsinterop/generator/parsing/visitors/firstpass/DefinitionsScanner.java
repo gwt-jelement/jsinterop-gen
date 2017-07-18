@@ -14,7 +14,7 @@ public class DefinitionsScanner extends ContextWebIDLBaseVisitor<Void> {
     public Void visitDefinitions(WebIDLParser.DefinitionsContext ctx) {
         WebIDLParser.DefinitionsContext definitions = ctx;
         while (definitions != null && definitions.definition() != null) {
-            definitions.definition().accept(new DefinitionScanner(parsingContetxt));
+            definitions.definition().accept(new DefinitionScanner(parsingContext));
             definitions = definitions.definitions();
         }
         return null;

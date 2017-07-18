@@ -26,7 +26,7 @@ public class GetUnionTypesVisitor extends AbstractTypeVisitor<List<UnionType>> {
     }
 
     @Override
-    protected List<UnionType> visitParameterizedType(ParameterizedType type) {
+    protected List<UnionType> visitParameterisedType(ParameterisedType type) {
         List<UnionType> result = new ArrayList<>();
         result.addAll(accept(type.getBaseType()));
         result.addAll(type.getTypeParameters().stream()

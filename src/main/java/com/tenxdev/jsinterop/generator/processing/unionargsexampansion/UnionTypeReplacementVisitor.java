@@ -22,7 +22,7 @@ public class UnionTypeReplacementVisitor extends AbstractTypeVisitor<List<Type>>
     protected List<Type> visitArrayType(ArrayType type) {
         List<Type> unionTypes = accept(type.getType());
         return unionTypes.stream()
-                .map(unionType->new ArrayType(unionType))
+                .map(ArrayType::new)
                 .collect(Collectors.toList());
     }
 
@@ -32,22 +32,22 @@ public class UnionTypeReplacementVisitor extends AbstractTypeVisitor<List<Type>>
     }
 
     @Override
-    protected List<Type> visitParameterizedType(ParameterizedType type) {
+    protected List<Type> visitParameterisedType(ParameterisedType type) {
         List<Type> types = accept(type.getBaseType());
-        if (!types.isEmpty()){
+        if (!types.isEmpty()) {
             return types.stream()
-                    .map(unionType->new ParameterizedType(unionType, type.getTypeParameters()))
+                    .map(unionType -> new ParameterisedType(unionType, type.getTypeParameters()))
                     .collect(Collectors.toList());
         }
-        for (Type subType: type.getTypeParameters()){
+        for (Type subType : type.getTypeParameters()) {
             List<Type> unionTypes = accept(subType);
-            if (!unionTypes.isEmpty()){
-                List<Type> result=new ArrayList<>();
-                for (Type unionType: unionTypes){
+            if (!unionTypes.isEmpty()) {
+                List<Type> result = new ArrayList<>();
+                for (Type unionType : unionTypes) {
                     ArrayList<Type> newSubTypes = new ArrayList<>(type.getTypeParameters());
-                    int index=newSubTypes.indexOf(subType);
+                    int index = newSubTypes.indexOf(subType);
                     newSubTypes.set(index, unionType);
-                    result.add(new ParameterizedType(type.getBaseType(), newSubTypes));
+                    result.add(new ParameterisedType(type.getBaseType(), newSubTypes));
                 }
                 return result;
             }

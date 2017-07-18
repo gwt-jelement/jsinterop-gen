@@ -18,12 +18,12 @@ public class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMe
     public InterfaceMember visitStringifierRest(WebIDLParser.StringifierRestContext ctx) {
         if (ctx.attributeRest() != null) {
             boolean readOnly = !ctx.readOnly().isEmpty();
-            return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContetxt, readOnly, false));
+            return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContext, readOnly, false));
         } else if (ctx.operationRest() != null) {
-            Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContetxt));
-            return ctx.operationRest().accept(new OperationRestVisitor(parsingContetxt, returnType, false));
+            Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
+            return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, false));
         } else {
-            return new Method("toString", parsingContetxt.getTypeFactory().getType("DOMString"),
+            return new Method("toString", parsingContext.getTypeFactory().getType("DOMString"),
                     Collections.emptyList(), false);
         }
     }

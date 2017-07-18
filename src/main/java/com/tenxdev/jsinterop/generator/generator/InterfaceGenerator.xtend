@@ -10,7 +10,7 @@ class InterfaceGenerator extends Template{
         var definition=definitionInfo.getDefinition() as InterfaceDefinition
         Collections.sort(definition.methods)
         return '''
-package «basePackageName»«definitionInfo.getPackgeName()»;
+package «basePackageName»«definitionInfo.getPackageName()»;
 
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
@@ -43,8 +43,17 @@ public class «definition.name.adjustJavaName»«
     }
 
     «ENDFOR»
-    «FOR method: definition.methods»
+    «FOR attribute: definition.attributes»
+//        @JsProperty(name="«attribute.name»")
+//        public native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
+        «IF !attribute.readOnly»
 
+//        @JsProperty(name="«attribute.name»")
+//        public native void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name»);
+        «ENDIF»
+
+    «ENDFOR»
+    «FOR method: definition.methods SEPARATOR "\n"»
     @JsMethod(name = "«method.name»")
     public native «method.returnType.displayValue» «method.name.adjustJavaName»(«
         FOR argument: method.arguments SEPARATOR ", "

@@ -31,7 +31,7 @@ public class InterfaceDefinition implements Definition {
                 .map(member -> (Feature) member).collect(Collectors.toList());
     }
 
-    public InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
+    InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
         this.name = interfaceDefinition.name;
         this.parent = interfaceDefinition.parent;
         this.constructors = interfaceDefinition.constructors;

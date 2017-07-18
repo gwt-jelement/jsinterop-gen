@@ -5,9 +5,9 @@ import org.antlr4.webidl.WebIDLBaseVisitor;
 
 public class ContextWebIDLBaseVisitor<T> extends WebIDLBaseVisitor<T> {
 
-    protected final ParsingContext parsingContetxt;
+    protected final ParsingContext parsingContext;
 
-    public ContextWebIDLBaseVisitor(ParsingContext parsingContext){
-        this.parsingContetxt=parsingContext;
+    protected ContextWebIDLBaseVisitor(ParsingContext parsingContext) {
+        this.parsingContext = parsingContext;
     }
 }

@@ -15,8 +15,8 @@ public class MapLikeRestVisitor extends ContextWebIDLBaseVisitor<Feature> {
 
     @Override
     public Feature visitMaplikeRest(WebIDLParser.MaplikeRestContext ctx) {
-        Type keyType = ctx.type(0).accept(new TypeVisitor(parsingContetxt));
-        Type valueType = ctx.type(1).accept(new TypeVisitor(parsingContetxt));
+        Type keyType = ctx.type(0).accept(new TypeVisitor(parsingContext));
+        Type valueType = ctx.type(1).accept(new TypeVisitor(parsingContext));
         return new Feature(Feature.FeatureType.MapLike, keyType, valueType, readOnly);
     }
 }

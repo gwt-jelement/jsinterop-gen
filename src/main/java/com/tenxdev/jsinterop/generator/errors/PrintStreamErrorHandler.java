@@ -1,15 +1,13 @@
 package com.tenxdev.jsinterop.generator.errors;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
-
 import java.io.PrintStream;
 
-public class PrintStreamErrorrHandler extends AbstractErrorHandler{
+public class PrintStreamErrorHandler extends AbstractErrorHandler {
 
     private final PrintStream printStream;
 
-    public PrintStreamErrorrHandler(PrintStream printStream) {
-        this.printStream=printStream;
+    public PrintStreamErrorHandler(PrintStream printStream) {
+        this.printStream = printStream;
     }
 
     @Override

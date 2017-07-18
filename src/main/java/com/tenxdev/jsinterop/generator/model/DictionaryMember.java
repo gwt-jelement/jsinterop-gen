@@ -2,8 +2,6 @@ package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
-import java.util.Arrays;
-
 public class DictionaryMember {
 
     private final String name;

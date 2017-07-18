@@ -8,7 +8,7 @@ class CallbackGenerator extends Template{
     def generate(String basePackageName, DefinitionInfo definitionInfo){
         var definition=definitionInfo.definition as CallbackDefinition
         return '''
-package «basePackageName»«definitionInfo.getPackgeName()»;
+package «basePackageName»«definitionInfo.getPackageName()»;
 
 import jsinterop.annotations.JsFunction;
 «FOR importName: definitionInfo.importedPackages»
@@ -19,7 +19,7 @@ import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
 public interface «definition.name»{
     «definition.method.returnType.displayValue» «definition.method.callbackMethodName»(«
         FOR argument: definition.method.arguments SEPARATOR ", "
-    »«argument.type.displayValue» «argument.name»«ENDFOR»);
+        »«argument.type.displayValue» «argument.name»«ENDFOR»);
 }
     '''
     }

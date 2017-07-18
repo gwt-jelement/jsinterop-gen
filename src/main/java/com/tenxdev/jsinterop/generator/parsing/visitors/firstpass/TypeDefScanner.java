@@ -15,8 +15,8 @@ public class TypeDefScanner extends ContextWebIDLBaseVisitor<Void> {
     @Override
     public Void visitTypedef(WebIDLParser.TypedefContext ctx) {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
-        Type type = ctx.type().accept(new TypeScanner(parsingContetxt));
-        parsingContetxt.getTypeFactory().registerTypeDef(name, type);
+        Type type = ctx.type().accept(new TypeScanner(parsingContext));
+        parsingContext.getTypeFactory().registerTypeDef(name, type);
         return null;
     }
 }

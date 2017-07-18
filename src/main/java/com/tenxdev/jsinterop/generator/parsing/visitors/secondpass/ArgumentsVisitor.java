@@ -3,7 +3,6 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgume
             boolean added = visitIfNotNull(arguments.argument().optionalOrRequiredArgument().optionalArgument(), argumentList) ||
                     visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredArgument(), argumentList) ||
                     visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList);
-            if (!added){
+            if (!added) {
                 System.err.println("Invalid state in Arguments visitor");
             }
         }
@@ -31,7 +30,7 @@ public class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgume
 
     private boolean visitIfNotNull(ParserRuleContext context, List<MethodArgument> argumentList) {
         if (context != null) {
-            argumentList.add(context.accept(new ArgumentVisitor(parsingContetxt)));
+            argumentList.add(context.accept(new ArgumentVisitor(parsingContext)));
             return true;
         }
         return false;
@@ -43,7 +42,7 @@ public class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgume
         boolean added = visitIfNotNull(ctx.argument().optionalOrRequiredArgument().optionalArgument(), argumentList) ||
                 visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredArgument(), argumentList) ||
                 visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList);
-        if (!added){
+        if (!added) {
             System.err.println("Invalid state in Arguments visitor");
         }
         if (ctx.arguments() != null && ctx.arguments().argument() != null) {

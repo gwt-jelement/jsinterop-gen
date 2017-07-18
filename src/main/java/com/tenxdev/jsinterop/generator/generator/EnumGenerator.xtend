@@ -8,7 +8,7 @@ class EnumGenerator extends Template {
     def generate(String basePackageName, DefinitionInfo definitionInfo){
         var definition=definitionInfo.getDefinition() as EnumDefinition;
         return '''
-package «basePackageName»«definitionInfo.getPackgeName()»;
+package «basePackageName»«definitionInfo.getPackageName()»;
 
 public enum «definition.getName»{
     «FOR value: definition.getValues() SEPARATOR ",\n" AFTER ";\n"

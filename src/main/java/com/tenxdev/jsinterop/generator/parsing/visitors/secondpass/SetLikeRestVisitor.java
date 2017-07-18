@@ -15,7 +15,7 @@ public class SetLikeRestVisitor extends ContextWebIDLBaseVisitor<Feature> {
 
     @Override
     public Feature visitSetlikeRest(WebIDLParser.SetlikeRestContext ctx) {
-        Type type = ctx.type().accept(new TypeVisitor(parsingContetxt));
+        Type type = ctx.type().accept(new TypeVisitor(parsingContext));
         return new Feature(Feature.FeatureType.SetLike, type, readOnly);
     }
 }

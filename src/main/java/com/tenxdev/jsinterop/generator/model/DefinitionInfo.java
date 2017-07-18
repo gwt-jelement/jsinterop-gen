@@ -1,8 +1,5 @@
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.Definition;
-import com.tenxdev.jsinterop.generator.model.ImplementsDefinition;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +10,7 @@ public class DefinitionInfo {
     private Definition definition;
     private List<PartialDefinition> partialDefinitions;
     private List<ImplementsDefinition> implementsDefinitions;
-    private String packgeName;
+    private String packageName;
     private String filename;
     private List<String> importedPackages;
 
@@ -33,12 +30,12 @@ public class DefinitionInfo {
         return name;
     }
 
-    public String getPackgeName() {
-        return packgeName;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setPackgeName(String packgeName) {
-        this.packgeName = packgeName;
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public Definition getDefinition() {
@@ -64,7 +61,7 @@ public class DefinitionInfo {
         partialDefinitions.add(definition);
     }
 
-    public void addImpementsDefinition(ImplementsDefinition definition) {
+    public void addImplementsDefinition(ImplementsDefinition definition) {
         if (implementsDefinitions == null) {
             implementsDefinitions = new ArrayList<>();
         }
