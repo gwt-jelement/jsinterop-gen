@@ -2,6 +2,7 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.google.common.collect.ImmutableMap;
 import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
@@ -11,6 +12,7 @@ import com.tenxdev.jsinterop.generator.processing.DeferredTypeAdjuster;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -70,11 +72,13 @@ public class TypeFactory {
         if (typeName.endsWith("?")) {
             typeName = typeName.substring(0, typeName.length() - 1);
         }
+        if (typeName.endsWith("Constructor")) {
+            typeName = typeName.substring(0, typeName.length() - "Constructor".length());
+        }
         Type type = typeMap.get(typeName);
         if (type != null) {
             return type;
         }
-        errorReporter.reportError("Assumed type of " + typeName);
         return new NativeType(typeName);
     }
 
@@ -86,7 +90,7 @@ public class TypeFactory {
         if (type != null) {
             return type;
         }
-        return typeParser.parseType(typeName);
+        return typeParser.parseType(typeName.replace("?", ""));
     }
 
 
@@ -117,10 +121,11 @@ public class TypeFactory {
         DeferredTypeAdjuster adjuster = new DeferredTypeAdjuster(this);
         deferredTypeDefs.forEach((name, type) -> {
             Type adjustedType = adjuster.accept(type);
-            if (adjustedType instanceof UnionType){
-                ((UnionType)adjustedType).setName(name);
+            if (adjustedType instanceof UnionType) {
+                ((UnionType) adjustedType).setName(name);
             }
             registerType(name, adjustedType);
         });
     }
+
 }
