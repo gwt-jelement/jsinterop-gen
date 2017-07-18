@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 public class MethodUnionArgsExpander {
     private final Model model;
-    private final GetUnionTypesVisitor getUnionTypesVisitor=new GetUnionTypesVisitor();
+    private final GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
 
     public MethodUnionArgsExpander(Model model) {
         this.model = model;
@@ -88,7 +88,9 @@ public class MethodUnionArgsExpander {
             List<MethodArgument> newArguments = new ArrayList<>(method.getArguments());
             newArguments.set(argumentIndex, new MethodArgument(argument.getName(), type, argument.isVararg(),
                     argument.isOptional(), argument.getDefaultValue()));
-            Method newMethod = new Method(method.getName(), method.getReturnType(), newArguments, method.isStatic());
+            Method newMethod = method.newMethodWithArguments(newArguments);
+            newMethod.setPrivate(method.isPrivateMethod());
+            newMethod.setEnumOverlay(method.getEnumOverlay());
             processMethod(newMethod, newMethods);
         }
     }

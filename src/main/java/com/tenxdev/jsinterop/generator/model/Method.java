@@ -15,11 +15,14 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private boolean privateMethod;
     private Method enumOverlay;
 
-    public Method(String name, Type returnType, List<MethodArgument> arguments, boolean static_) {
+    public Method(String name, Type returnType, List<MethodArgument> arguments, boolean static_,
+                  boolean privateMethod, Method enumOverlay) {
         this.name = name;
         this.returnType = returnType;
         this.arguments = arguments;
         this.static_ = static_;
+        this.privateMethod = privateMethod;
+        this.enumOverlay = enumOverlay;
     }
 
     public Method(Method method) {
@@ -27,6 +30,13 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.returnType = method.returnType;
         this.static_ = method.static_;
         this.arguments = method.arguments.stream().map(MethodArgument::new).collect(Collectors.toList());
+        this.privateMethod = method.privateMethod;
+        this.enumOverlay = method.enumOverlay;
+    }
+
+    public Method newMethodWithArguments(List<MethodArgument> newArguments) {
+        return new Method(name, returnType, newArguments, static_,
+                privateMethod, enumOverlay);
     }
 
     public boolean isStatic() {
@@ -68,8 +78,8 @@ public class Method implements InterfaceMember, Comparable<Method> {
         return privateMethod;
     }
 
-    public void setPrivate() {
-        this.privateMethod = true;
+    public void setPrivate(boolean privateMethod) {
+        this.privateMethod = privateMethod;
     }
 
     public Method getEnumOverlay() {
@@ -111,6 +121,8 @@ public class Method implements InterfaceMember, Comparable<Method> {
                 ", name='" + name + '\'' +
                 ", returnType='" + returnType + '\'' +
                 ", arguments=" + arguments +
+                (privateMethod ? ", PRIVATE" : "") +
+                (enumOverlay != null ? "EnumOverlay='" + enumOverlay + "'" : "") +
                 '}';
     }
 }

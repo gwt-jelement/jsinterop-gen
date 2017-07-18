@@ -22,24 +22,28 @@ public class MethodEnumArgumentProcessor {
     }
 
     private void processInterfaceDefinition(InterfaceDefinition interfaceDefinition, Type substitutionType) {
+        List<Method> newMethods = new ArrayList<>();
         interfaceDefinition.getMethods().forEach(method -> {
             Method newMethod = processMethod(method, substitutionType);
             if (newMethod != null) {
-                interfaceDefinition.getMethods().add(newMethod);
+                newMethods.add(newMethod);
             }
         });
+        interfaceDefinition.getMethods().addAll(newMethods);
     }
 
     private Method processMethod(Method method, Type substitutionType) {
         boolean hasEnumTypes = false;
         List<MethodArgument> newArguments = new ArrayList<>();
-        Method newMethod = new Method(method.getName(), method.getReturnType(), newArguments, method.isStatic());
+        Method newMethod = method.newMethodWithArguments(newArguments);
         for (MethodArgument argument : method.getArguments()) {
             if (hasEnumTypeVisitor.accept(argument.getType())) {
-                newArguments.add(new MethodArgument(argument.getName(), substitutionType, argument.isVararg(), argument.isOptional(),
-                        argument.getDefaultValue()));
+                MethodArgument newMethodArgument = new MethodArgument(argument.getName(), substitutionType,
+                        argument.isVararg(), argument.isOptional(),argument.getDefaultValue());
+                newMethodArgument.setEnumSubstitution(true);
+                newArguments.add(newMethodArgument);
                 hasEnumTypes = true;
-                newMethod.setPrivate();
+                newMethod.setPrivate(true);
                 method.setEnumOverlay(newMethod);
             } else {
                 newArguments.add(argument);

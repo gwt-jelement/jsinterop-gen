@@ -3,6 +3,10 @@ package com.tenxdev.jsinterop.generator.generator
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition
 import java.util.Collections
+import com.tenxdev.jsinterop.generator.model.types.ObjectType
+import com.tenxdev.jsinterop.generator.model.MethodArgument
+import com.tenxdev.jsinterop.generator.model.types.NativeType
+import com.tenxdev.jsinterop.generator.model.Method
 
 class InterfaceGenerator extends Template{
 
@@ -16,8 +20,12 @@ import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 «FOR importName: definitionInfo.importedPackages»
-import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
+import  «IF importName.startsWith(".")»«basePackageName»«ENDIF»«importName»;
 «ENDFOR»
+
+/*
+«definition.toString»
+*/
 
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.name.adjustJavaName»«
@@ -54,15 +62,35 @@ public class «definition.name.adjustJavaName»«
 
     «ENDFOR»
     «FOR method: definition.methods SEPARATOR "\n"»
-    @JsMethod(name = "«method.name»")
-    public native «method.returnType.displayValue» «method.name.adjustJavaName»(«
+        «IF method.enumOverlay===null»
+        @JsMethod(name = "«method.name»")
+        «IF method.privateMethod»private«ELSE»public«ENDIF» native «method.returnType.displayValue» «method.name.adjustJavaName»(«
         FOR argument: method.arguments SEPARATOR ", "
         »«argument.type.displayValue» «argument.name.adjustJavaName»«ENDFOR»);
-    «ENDFOR»
+    «ELSE»
+        @JsOverlay
+        public «method.returnType.displayValue» «method.name.adjustJavaName»(«
+        FOR argument: method.arguments SEPARATOR ", "
+        »«argument.type.displayValue» «argument.name.adjustJavaName»«ENDFOR»){
+            «IF hasReturnType(method)»return «ENDIF»«method.name»(«FOR argument: method.enumOverlay.arguments SEPARATOR ", "»«
+        enumMethodArgument(argument)»«ENDFOR»);
+    }
+    «ENDIF»«ENDFOR»
 
 }
 
 
     '''
+    }
+
+    def enumMethodArgument(MethodArgument argument) {
+        if(argument.enumSubstitution)
+            '''Any.of(«argument.name».getInternalValue())'''
+        else
+            argument.name
+    }
+
+    def hasReturnType(Method method){
+        !(method.returnType instanceof NativeType && (method.returnType as NativeType).typeName === "void")
     }
 }

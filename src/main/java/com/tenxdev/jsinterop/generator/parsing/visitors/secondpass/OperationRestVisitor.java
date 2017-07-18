@@ -25,6 +25,6 @@ public class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
         String name = ctx.optionalIdentifier().getText();
         List<MethodArgument> parameters = ctx.argumentList() == null || ctx.argumentList().argument() == null ? Collections.emptyList() :
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext));
-        return new Method(name, returnType, parameters, static_);
+        return new Method(name, returnType, parameters, static_, false, null);
     }
 }

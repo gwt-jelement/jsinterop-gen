@@ -64,11 +64,11 @@ class Generator {
     private void processModel(Model model, ErrorReporter errorHandler) throws IOException {
         //ordering of these operations is critical
         new PartialsMerger(model, errorHandler).processModel();
-        new ImplementsMerger(model, errorHandler).processModel();
-        new MethodEnumArgumentProcessor().process(model);
-        new MethodUnionArgsExpander(model).processModel();
-        new MethodOptionalArgsExpander(model).processModel();
-        new ImportResolver().processModel(model);
+        new ImplementsMerger(model, errorHandler).processModel(); //must run after partials merger
+        new MethodUnionArgsExpander(model).processModel(); //must run after all interface merging
+        new MethodOptionalArgsExpander(model).processModel();//must run after union args expansion
+        new MethodEnumArgumentProcessor().process(model); // must run after all method expansions
+        new ImportResolver().processModel(model); //must run after all type substitutions
         new SourceGenerator().processModel(model, outputDirectory, basePackage, errorHandler);
     }
 

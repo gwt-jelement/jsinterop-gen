@@ -8,6 +8,7 @@ public class MethodArgument {
     private final String name;
     private final boolean vararg;
     private final boolean optional;
+    private boolean enumSubstitution;
 
     public MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue) {
         this.type = type;
@@ -43,6 +44,14 @@ public class MethodArgument {
 
     public Type getType() {
         return type;
+    }
+
+    public boolean isEnumSubstitution() {
+        return enumSubstitution;
+    }
+
+    public void setEnumSubstitution(boolean enumSubstitution) {
+        this.enumSubstitution = enumSubstitution;
     }
 
     @Override

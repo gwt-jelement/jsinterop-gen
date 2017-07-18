@@ -112,7 +112,7 @@ public class TypeFactory {
         deferredTypeDefinitions.put(name, type);
     }
 
-    void registerTypeDefinitions() {
+    void fixUpDeferredTypeDefinitions() {
         DeferredTypeAdjuster adjuster = new DeferredTypeAdjuster(this);
         deferredTypeDefinitions.forEach((name, type) -> {
             Type adjustedType = adjuster.accept(type);

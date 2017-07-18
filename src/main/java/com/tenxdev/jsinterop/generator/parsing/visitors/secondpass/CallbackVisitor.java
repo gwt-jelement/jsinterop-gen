@@ -39,7 +39,7 @@ public class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
         Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
         List<MethodArgument> arguments = ctx.argumentList() != null && ctx.argumentList().arguments() != null ?
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext)) : Collections.emptyList();
-        Method method = new Method(null, returnType, arguments, false);
+        Method method = new Method(null, returnType, arguments, false, false, null);
         return new CallbackDefinition(name, method);
     }
 }

@@ -10,25 +10,30 @@ import java.util.stream.Collectors;
 
 public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinitionVisitor<List<String>> {
 
-    private TypeVisitor typeVisitor=new TypeVisitor();
+    private TypeVisitor typeVisitor = new TypeVisitor();
 
     @Override
     public List<String> accept(InterfaceDefinition interfaceDefinition) {
         List<String> result = super.accept(interfaceDefinition);
-        if (interfaceDefinition.getParent() instanceof PackageType){
+        if (interfaceDefinition.getParent() instanceof PackageType) {
             PackageType packageType = (PackageType) interfaceDefinition.getParent();
-            result.add(packageType.getPackageName()+"."+packageType.getTypeName());
+            result.add(packageType.getPackageName() + "." + packageType.getTypeName());
         }
-        if (!interfaceDefinition.getUnionReturnTypes().isEmpty()){
+        if (!interfaceDefinition.getUnionReturnTypes().isEmpty()) {
             result.add("jsinterop.annotations.JsOverlay");
             result.add("jsinterop.annotations.JsType");
             result.add("jsinterop.base.Js");
         }
-        if (!interfaceDefinition.getMethods().isEmpty()){
+        if (!interfaceDefinition.getMethods().isEmpty()) {
             result.add("jsinterop.annotations.JsMethod");
         }
-        if (!interfaceDefinition.getAttributes().isEmpty()){
+        if (!interfaceDefinition.getAttributes().isEmpty()) {
             result.add("jsinterop.annotations.JsProperty");
+        }
+        if (interfaceDefinition.getMethods().stream()
+                .anyMatch(method -> method.getEnumOverlay() != null)) {
+            result.add("jsinterop.annotations.JsOverlay");
+            result.add("jsinterop.base.Any");
         }
         return result;
     }
@@ -71,7 +76,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
 
     @Override
     protected List<String> visitMethods(List<Method> methods) {
-        MethodVisitor methodVisitor=new MethodVisitor();
+        MethodVisitor methodVisitor = new MethodVisitor();
         return methods.stream()
                 .map(methodVisitor::accept)
                 .flatMap(List::stream)

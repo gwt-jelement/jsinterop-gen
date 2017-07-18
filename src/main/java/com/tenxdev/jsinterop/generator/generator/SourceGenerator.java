@@ -15,6 +15,7 @@ public class SourceGenerator extends Template {
 
     public void processModel(Model model, String outputDirectory, String basePackageName, ErrorReporter errorReporter) throws IOException {
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
+        outputFile(Paths.get(outputDirectory, ".gitignore"), new GitIgnoreGenerator().generate());
         EnumGenerator enumGenerator = new EnumGenerator();
         CallbackGenerator callbackGenerator = new CallbackGenerator();
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator();

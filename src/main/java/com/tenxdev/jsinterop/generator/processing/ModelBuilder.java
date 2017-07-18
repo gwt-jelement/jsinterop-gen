@@ -45,7 +45,7 @@ public class ModelBuilder {
             parsingContext.setPackageSuffix(getPackageSuffix(offset, file));
             scanFile(file, parsingContext);
         }
-        parsingContext.getTypeFactory().registerTypeDefinitions();
+        parsingContext.getTypeFactory().fixUpDeferredTypeDefinitions();
         return parsingContext;
     }
 
