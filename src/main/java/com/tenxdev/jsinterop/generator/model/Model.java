@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Model {
 
-    private Map<String, DefinitionInfo> definitions = new HashMap<>();
+    private final Map<String, DefinitionInfo> definitions = new HashMap<>();
     private TypeFactory typeFactory;
 
     public Collection<DefinitionInfo> getDefinitions() {
@@ -44,7 +44,7 @@ public class Model {
     }
 
     public class ConflictingNameException extends Exception {
-        private final DefinitionInfo definitionInfo;
+        private final transient DefinitionInfo definitionInfo;
 
         private ConflictingNameException(DefinitionInfo definitionInfo) {
             this.definitionInfo = definitionInfo;

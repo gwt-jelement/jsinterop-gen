@@ -6,12 +6,13 @@ import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
+import com.tenxdev.jsinterop.generator.processing.ParserUtil;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
+class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
 
     private final List<Method> constructors;
 
@@ -27,8 +28,8 @@ public class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
         } else if (ctx.callbackRest() != null) {
             return ctx.callbackRest().accept(this);
         } else {
-            System.err.println("unexpected state in CallbackRestOrInterface visitor");
-            System.err.println("Content: " + ctx.getText());
+            parsingContext.getErrorReporter().reportError("unexpected state in CallbackRestOrInterface visitor");
+            parsingContext.getErrorReporter().reportError("Content: " + ParserUtil.getText(ctx));
             return null;
         }
     }

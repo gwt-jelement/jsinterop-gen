@@ -4,8 +4,8 @@ import java.util.List;
 
 public class EnumDefinition implements Definition {
 
-    private String name;
-    private List<String> values;
+    private final String name;
+    private final List<String> values;
 
     public EnumDefinition(String name, List<String> values) {
         this.name = name;

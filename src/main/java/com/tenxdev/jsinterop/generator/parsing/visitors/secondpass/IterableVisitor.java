@@ -5,7 +5,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
-public class IterableVisitor extends ContextWebIDLBaseVisitor<Feature> {
+class IterableVisitor extends ContextWebIDLBaseVisitor<Feature> {
 
     public IterableVisitor(ParsingContext parsingContext) {
         super(parsingContext);
@@ -16,10 +16,10 @@ public class IterableVisitor extends ContextWebIDLBaseVisitor<Feature> {
     public Feature visitIterable(WebIDLParser.IterableContext ctx) {
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
         if (ctx.optionalType() == null || ctx.optionalType().type() == null) {
-            return new Feature(Feature.FeatureType.MapIterator, type, false);
+            return new Feature(Feature.FeatureType.MAP_ITERATOR, type, false);
         } else {
             Type type2 = ctx.optionalType().type().accept(new TypeVisitor(parsingContext));
-            return new Feature(Feature.FeatureType.MapIterator, type, type2, false);
+            return new Feature(Feature.FeatureType.MAP_ITERATOR, type, type2, false);
         }
     }
 }

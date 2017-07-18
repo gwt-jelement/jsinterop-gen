@@ -1,8 +1,8 @@
 package com.tenxdev.jsinterop.generator.model;
 
 public class CallbackDefinition implements Definition {
-    private String name;
-    private Method method;
+    private final String name;
+    private final Method method;
 
     public CallbackDefinition(String name, Method method) {
         this.name = name;

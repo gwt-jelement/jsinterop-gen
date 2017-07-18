@@ -7,7 +7,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.List;
 
-public class DictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
+class DictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
 
     public DictionaryVisitor(ParsingContext parsingContext) {
         super(parsingContext);

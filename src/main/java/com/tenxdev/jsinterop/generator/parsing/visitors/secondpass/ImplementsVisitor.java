@@ -4,7 +4,7 @@ import com.tenxdev.jsinterop.generator.model.ImplementsDefinition;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
-public class ImplementsVisitor extends ContextWebIDLBaseVisitor<ImplementsDefinition> {
+class ImplementsVisitor extends ContextWebIDLBaseVisitor<ImplementsDefinition> {
 
     public ImplementsVisitor(ParsingContext parsingContext) {
         super(parsingContext);

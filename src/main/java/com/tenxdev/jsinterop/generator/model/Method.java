@@ -3,11 +3,12 @@ package com.tenxdev.jsinterop.generator.model;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Method implements InterfaceMember, Comparable<Method> {
-    private final boolean static_;
+    private final boolean staticMethod;
     private final String name;
     private final Type returnType;
     private final List<MethodArgument> arguments;
@@ -15,12 +16,12 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private boolean privateMethod;
     private Method enumOverlay;
 
-    public Method(String name, Type returnType, List<MethodArgument> arguments, boolean static_,
+    public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
                   boolean privateMethod, Method enumOverlay) {
         this.name = name;
         this.returnType = returnType;
         this.arguments = arguments;
-        this.static_ = static_;
+        this.staticMethod = staticMethod;
         this.privateMethod = privateMethod;
         this.enumOverlay = enumOverlay;
     }
@@ -28,19 +29,19 @@ public class Method implements InterfaceMember, Comparable<Method> {
     public Method(Method method) {
         this.name = method.name;
         this.returnType = method.returnType;
-        this.static_ = method.static_;
+        this.staticMethod = method.staticMethod;
         this.arguments = method.arguments.stream().map(MethodArgument::new).collect(Collectors.toList());
         this.privateMethod = method.privateMethod;
         this.enumOverlay = method.enumOverlay;
     }
 
     public Method newMethodWithArguments(List<MethodArgument> newArguments) {
-        return new Method(name, returnType, newArguments, static_,
+        return new Method(name, returnType, newArguments, staticMethod,
                 privateMethod, enumOverlay);
     }
 
     public boolean isStatic() {
-        return static_;
+        return staticMethod;
     }
 
     public String getName() {
@@ -62,16 +63,12 @@ public class Method implements InterfaceMember, Comparable<Method> {
     }
 
     @Override
-    public int compareTo(Method o) {
+    public int compareTo(@Nonnull Method o) {
         int result = name == null ? -1 : name.compareTo(o.name);
         if (result == 0) {
             result = arguments.size() - o.arguments.size();
         }
         return result;
-    }
-
-    public boolean isStatic_() {
-        return static_;
     }
 
     public boolean isPrivateMethod() {
@@ -97,7 +94,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
 
         Method method = (Method) o;
 
-        if (static_ != method.static_) return false;
+        if (staticMethod != method.staticMethod) return false;
         if (name != null ? !name.equals(method.name) : method.name != null) return false;
         if (returnType != null ? !returnType.equals(method.returnType) : method.returnType != null) return false;
         if (arguments != null ? !arguments.equals(method.arguments) : method.arguments != null) return false;
@@ -106,7 +103,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
 
     @Override
     public int hashCode() {
-        int result = (static_ ? 1 : 0);
+        int result = (staticMethod ? 1 : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (returnType != null ? returnType.hashCode() : 0);
         result = 31 * result + (arguments != null ? arguments.hashCode() : 0);
@@ -117,7 +114,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
     @Override
     public String toString() {
         return "\n\tMethod{" +
-                "static_=" + static_ +
+                "staticMethod=" + staticMethod +
                 ", name='" + name + '\'' +
                 ", returnType='" + returnType + '\'' +
                 ", arguments=" + arguments +

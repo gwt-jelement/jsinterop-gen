@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinitionVisitor<List<String>> {
 
-    private TypeVisitor typeVisitor = new TypeVisitor();
+    private final TypeVisitor typeVisitor = new TypeVisitor();
 
     @Override
     public List<String> accept(InterfaceDefinition interfaceDefinition) {

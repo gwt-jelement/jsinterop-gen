@@ -2,8 +2,8 @@ package com.tenxdev.jsinterop.generator.model;
 
 public class ImplementsDefinition implements Definition {
 
-    private String name;
-    private String parent;
+    private final String name;
+    private final String parent;
 
     public ImplementsDefinition(String name, String parent) {
         this.name = name;

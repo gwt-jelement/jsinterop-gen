@@ -3,8 +3,8 @@ package com.tenxdev.jsinterop.generator.model;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
 public class TypeDefinition implements Definition {
-    private String name;
-    private Type type;
+    private final String name;
+    private final Type type;
 
     public TypeDefinition(String name, Type type) {
         this.name = name;

@@ -8,7 +8,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.List;
 
-public class PartialInterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
+class PartialInterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
 
     public PartialInterfaceVisitor(ParsingContext parsingContext) {
         super(parsingContext);

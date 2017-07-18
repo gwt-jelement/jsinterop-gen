@@ -8,7 +8,7 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
+class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
 
     public ArgumentsVisitor(ParsingContext parsingContext) {
         super(parsingContext);
@@ -22,7 +22,7 @@ public class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgume
                     visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredArgument(), argumentList) ||
                     visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList);
             if (!added) {
-                System.err.println("Invalid state in Arguments visitor");
+                parsingContext.getErrorReporter().reportError("Invalid state in Arguments visitor");
             }
         }
         return argumentList;
@@ -43,7 +43,7 @@ public class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgume
                 visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredArgument(), argumentList) ||
                 visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList);
         if (!added) {
-            System.err.println("Invalid state in Arguments visitor");
+            parsingContext.getErrorReporter().reportError("Invalid state in Arguments visitor");
         }
         if (ctx.arguments() != null && ctx.arguments().argument() != null) {
             argumentList.addAll(ctx.arguments().accept(this));

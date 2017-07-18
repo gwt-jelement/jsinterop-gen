@@ -1,6 +1,5 @@
 package com.tenxdev.jsinterop.generator.generator;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
 import com.tenxdev.jsinterop.generator.model.*;
 
 import java.io.File;
@@ -13,10 +12,10 @@ public class SourceGenerator extends Template {
 
     private static final String VERSION = "0.0.1-SNAPSHOT";
 
-    public void processModel(Model model, String outputDirectory, String basePackageName, ErrorReporter errorReporter) throws IOException {
+    public void processModel(Model model, String outputDirectory, String basePackageName) throws IOException {
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
         outputFile(Paths.get(outputDirectory, ".gitignore"), new GitIgnoreGenerator().generate());
-        outputFile(Paths.get(outputDirectory,"src", "main", "java", packageNameToPath(basePackageName),
+        outputFile(Paths.get(outputDirectory, "src", "main", "java", packageNameToPath(basePackageName),
                 "JElement.gwt.xml"), new GwtModuleGenerator().generate());
         EnumGenerator enumGenerator = new EnumGenerator();
         CallbackGenerator callbackGenerator = new CallbackGenerator();
@@ -43,7 +42,7 @@ public class SourceGenerator extends Template {
                 definitionInfo.getName() + ".java");
     }
 
-    private String packageNameToPath(String packageName){
+    private String packageNameToPath(String packageName) {
         return packageName.replace(".", File.separator);
     }
 

@@ -5,7 +5,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
-public class ConstantVisitor extends ContextWebIDLBaseVisitor<Constant> {
+class ConstantVisitor extends ContextWebIDLBaseVisitor<Constant> {
 
     public ConstantVisitor(ParsingContext parsingContext) {
         super(parsingContext);

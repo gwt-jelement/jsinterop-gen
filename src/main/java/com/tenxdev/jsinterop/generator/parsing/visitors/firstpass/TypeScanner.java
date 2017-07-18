@@ -5,7 +5,7 @@ import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import com.tenxdev.jsinterop.generator.parsing.visitors.secondpass.ContextWebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
-public class TypeScanner extends ContextWebIDLBaseVisitor<Type> {
+class TypeScanner extends ContextWebIDLBaseVisitor<Type> {
 
     public TypeScanner(ParsingContext parsingContext) {
         super(parsingContext);

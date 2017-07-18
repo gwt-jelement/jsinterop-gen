@@ -4,9 +4,9 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 
 public class Constant implements InterfaceMember {
 
-    private String name;
-    private Type type;
-    private String value;
+    private final String name;
+    private final Type type;
+    private final String value;
 
     public Constant(String name, Type type, String value) {
         this.name = name;

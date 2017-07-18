@@ -1,8 +1,8 @@
 package com.tenxdev.jsinterop.generator.model.types;
 
-public class NativeType implements Type{
+public class NativeType implements Type {
 
-    private String typeName;
+    private final String typeName;
 
     public NativeType(String typeName) {
         this.typeName = typeName;

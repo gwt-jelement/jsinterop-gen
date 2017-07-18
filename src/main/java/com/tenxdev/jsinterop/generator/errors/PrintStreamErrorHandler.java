@@ -20,4 +20,9 @@ public class PrintStreamErrorHandler extends AbstractErrorHandler {
         printStream.format(format, args);
     }
 
+    @Override
+    public PrintStream getPrintStream() {
+        return printStream;
+    }
+
 }

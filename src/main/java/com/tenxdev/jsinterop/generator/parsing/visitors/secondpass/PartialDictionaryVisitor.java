@@ -8,7 +8,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.List;
 
-public class PartialDictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
+class PartialDictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
 
     public PartialDictionaryVisitor(ParsingContext parsingContext) {
         super(parsingContext);

@@ -3,20 +3,20 @@ package com.tenxdev.jsinterop.generator.model;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
 public class Attribute implements InterfaceMember {
-    private final boolean static_;
-    private String name;
-    private Type type;
-    private boolean readOnly;
+    private final boolean staticAttribute;
+    private final String name;
+    private final Type type;
+    private final boolean readOnly;
 
-    public Attribute(String name, Type type, boolean readOnly, boolean static_) {
+    public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute) {
         this.name = name;
         this.type = type;
         this.readOnly = readOnly;
-        this.static_ = static_;
+        this.staticAttribute = staticAttribute;
     }
 
     public boolean isStatic() {
-        return static_;
+        return staticAttribute;
     }
 
     public String getName() {
@@ -38,7 +38,7 @@ public class Attribute implements InterfaceMember {
 
         Attribute attribute = (Attribute) o;
 
-        if (static_ != attribute.static_) return false;
+        if (staticAttribute != attribute.staticAttribute) return false;
         if (readOnly != attribute.readOnly) return false;
         if (!name.equals(attribute.name)) return false;
         return type.equals(attribute.type);
@@ -46,7 +46,7 @@ public class Attribute implements InterfaceMember {
 
     @Override
     public int hashCode() {
-        int result = (static_ ? 1 : 0);
+        int result = (staticAttribute ? 1 : 0);
         result = 31 * result + name.hashCode();
         result = 31 * result + type.hashCode();
         result = 31 * result + (readOnly ? 1 : 0);
@@ -56,7 +56,7 @@ public class Attribute implements InterfaceMember {
     @Override
     public String toString() {
         return "\n\tAttribute{" +
-                "static_=" + static_ +
+                "staticAttribute=" + staticAttribute +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", readOnly=" + readOnly +

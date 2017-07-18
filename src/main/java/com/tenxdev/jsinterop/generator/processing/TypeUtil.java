@@ -10,7 +10,7 @@ public enum TypeUtil {
 
     public Set<String> checkParameterisedTypes(String type) {
         Set<String> types = new TreeSet<>();
-        int start = type.indexOf("<");
+        int start = type.indexOf('<');
         if (start != -1 && type.endsWith(">")) {
             types.add(type.substring(0, start));
             String[] subTypes = TypeUtil.INSTANCE.removeOptionalIndicator(type.substring(start + 1, type.length() - 1).split(","));

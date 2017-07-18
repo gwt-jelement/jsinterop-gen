@@ -12,8 +12,7 @@ public class ImportResolver {
 
     public void processModel(Model model) {
         Map<DefinitionInfo, List<String>> packagesMap = new PackageUsageModelVisitor().accept(model);
-        packagesMap.entrySet().stream()
-                .forEach(entry -> processPackagesForDefinition(entry.getKey(), entry.getValue()));
+        packagesMap.entrySet().forEach(entry -> processPackagesForDefinition(entry.getKey(), entry.getValue()));
     }
 
     private void processPackagesForDefinition(DefinitionInfo definitionInfo, List<String> packages) {

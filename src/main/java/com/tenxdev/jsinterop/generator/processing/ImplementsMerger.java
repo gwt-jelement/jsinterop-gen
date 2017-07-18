@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 public class ImplementsMerger extends AbstractDefinitionMerger {
 
     private final Model model;
-    private Map<String, List<String>> implementsMap = new HashMap<>();
+    private final Map<String, List<String>> implementsMap = new HashMap<>();
 
     public ImplementsMerger(Model model, ErrorReporter errorReporter) {
         super(errorReporter);
@@ -25,7 +25,7 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
     }
 
     public void processModel() {
-        model.getDefinitions().stream().forEach(definitionInfo ->
+        model.getDefinitions().forEach(definitionInfo ->
                 definitionInfo.getImplementsDefinitions().forEach(implementsDefinition -> {
                     String definitionName = implementsDefinition.getName();
                     String implementsName = implementsDefinition.getParent();

@@ -2,6 +2,7 @@ package com.tenxdev.jsinterop.generator.generator;
 
 import com.tenxdev.jsinterop.generator.model.Method;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -20,9 +21,9 @@ abstract class Template {
                     "class	", "finally	", "long	", "strictfp", "volatile",
                     "const	", "float	", "native	", "super	", "while", "_"));
 
-    protected String enumValueToJavaName(String value) {
+    protected String enumValueToJavaName(@Nonnull String value) {
         String result = value;
-        if (value != null && value.startsWith("\"") && value.endsWith("\"")) {
+        if (value.startsWith("\"") && value.endsWith("\"")) {
             result = value.substring(1, value.length() - 1);
         }
         if (result.isEmpty()) {

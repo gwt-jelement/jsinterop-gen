@@ -3,12 +3,12 @@ package com.tenxdev.jsinterop.generator.processing.packageusage;
 import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractModelVisitor;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>> {
 
     private static final List<String> NO_IMPLEMENTATION = Collections.emptyList();
-    private TypeVisitor typeVisitor=new TypeVisitor();
 
     @Override
     protected List<String> visitTypeDefinition(TypeDefinition definition) {
@@ -31,7 +31,7 @@ public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>>
     }
 
     @Override
-    public List<String> visitInterfaceDefinition(InterfaceDefinition interfaceDefinition){
+    public List<String> visitInterfaceDefinition(InterfaceDefinition interfaceDefinition) {
         return new InterfaceDefinitionUsageVisitor().accept(interfaceDefinition);
     }
 
@@ -39,8 +39,6 @@ public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>>
     protected List<String> visitImplementsDefinition(ImplementsDefinition definition) {
         return NO_IMPLEMENTATION;
     }
-
-
 
 
 }

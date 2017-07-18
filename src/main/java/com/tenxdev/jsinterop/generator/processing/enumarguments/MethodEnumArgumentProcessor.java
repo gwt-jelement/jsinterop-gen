@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MethodEnumArgumentProcessor {
 
-    private HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
+    private final HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
 
     public void process(Model model) {
         Type substitutionType = model.getTypeFactory().getType("any");
@@ -39,7 +39,7 @@ public class MethodEnumArgumentProcessor {
         for (MethodArgument argument : method.getArguments()) {
             if (hasEnumTypeVisitor.accept(argument.getType())) {
                 MethodArgument newMethodArgument = new MethodArgument(argument.getName(), substitutionType,
-                        argument.isVararg(), argument.isOptional(),argument.getDefaultValue());
+                        argument.isVararg(), argument.isOptional(), argument.getDefaultValue());
                 newMethodArgument.setEnumSubstitution(true);
                 newArguments.add(newMethodArgument);
                 hasEnumTypes = true;

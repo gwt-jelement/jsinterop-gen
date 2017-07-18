@@ -7,7 +7,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.Collections;
 
-public class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
+class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
     private final String containingType;
 

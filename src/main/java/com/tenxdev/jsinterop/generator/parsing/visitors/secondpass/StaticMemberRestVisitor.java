@@ -5,7 +5,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
-public class StaticMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
+class StaticMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
     StaticMemberRestVisitor(ParsingContext parsingContext) {
         super(parsingContext);
@@ -21,7 +21,7 @@ public class StaticMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceM
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
             return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, true));
         }
-        System.err.println("Unexpected state in StaticMemberRest");
+        parsingContext.getErrorReporter().reportError("Unexpected state in StaticMemberRest");
         return null;
     }
 }

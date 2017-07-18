@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 class AttributesVisitor {
 
-    private TypeVisitor typeVisitor = new TypeVisitor();
+    private final TypeVisitor typeVisitor = new TypeVisitor();
 
     List<String> accept(List<Attribute> attributes) {
         return attributes.stream()

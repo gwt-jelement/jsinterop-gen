@@ -39,24 +39,24 @@ class Generator {
     @Argument
     private List<String> arguments = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
-        new Generator().checkArguments(args);
+    public static void main(String[] args) {
+        new Generator().execute(args);
     }
 
-    private void checkArguments(String[] args) {
+    public void execute(String[] args) {
+        ErrorReporter errorHandler = new PrintStreamErrorHandler(System.err);
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);
             checkArguments();
-            ErrorReporter errorHandler = new PrintStreamErrorHandler(System.err);
             Model model = new ModelBuilder(errorHandler).buildFrom(inputDirectory);
             processModel(model, errorHandler);
             System.exit(0);
         } catch (CmdLineException e) {
-            printUsage(parser, e);
+            printUsage(parser, errorHandler, e);
             System.exit(-1);
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            errorHandler.reportError(e.getMessage());
             System.exit(-1);
         }
     }
@@ -69,7 +69,7 @@ class Generator {
         new MethodOptionalArgsExpander(model).processModel();//must run after union args expansion
         new MethodEnumArgumentProcessor().process(model); // must run after all method expansions
         new ImportResolver().processModel(model); //must run after all type substitutions
-        new SourceGenerator().processModel(model, outputDirectory, basePackage, errorHandler);
+        new SourceGenerator().processModel(model, outputDirectory, basePackage);
     }
 
     private void checkArguments() throws CmdLineException {
@@ -120,11 +120,10 @@ class Generator {
         }
     }
 
-    private void printUsage(CmdLineParser parser, CmdLineException e) {
-        System.err.println(e.getMessage());
-        System.err.println("java Generator [options...]");
-        parser.printUsage(System.err);
-        System.err.println();
+    private void printUsage(CmdLineParser parser, ErrorReporter errorReporter, CmdLineException e) {
+        errorReporter.reportError(e.getMessage());
+        errorReporter.reportError("java Generator [options...]");
+        parser.printUsage(errorReporter.getPrintStream());
     }
 
 

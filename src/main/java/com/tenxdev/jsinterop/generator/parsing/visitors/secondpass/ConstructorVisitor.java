@@ -8,7 +8,7 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.Collections;
 import java.util.List;
 
-public class ConstructorVisitor extends ContextWebIDLBaseVisitor<Method> {
+class ConstructorVisitor extends ContextWebIDLBaseVisitor<Method> {
 
     public ConstructorVisitor(ParsingContext parsingContext) {
         super(parsingContext);

@@ -1,6 +1,5 @@
 target/
 .idea/
 xtend-gen/
-.xtend/
 *.iml
 

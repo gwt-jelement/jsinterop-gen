@@ -9,15 +9,15 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.Collections;
 import java.util.List;
 
-public class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
+class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
 
     private final Type returnType;
-    private final boolean static_;
+    private final boolean staticMethod;
 
-    public OperationRestVisitor(ParsingContext context, Type returnType, boolean static_) {
+    public OperationRestVisitor(ParsingContext context, Type returnType, boolean staticMethod) {
         super(context);
         this.returnType = returnType;
-        this.static_ = static_;
+        this.staticMethod = staticMethod;
     }
 
     @Override
@@ -25,6 +25,6 @@ public class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
         String name = ctx.optionalIdentifier().getText();
         List<MethodArgument> parameters = ctx.argumentList() == null || ctx.argumentList().argument() == null ? Collections.emptyList() :
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext));
-        return new Method(name, returnType, parameters, static_, false, null);
+        return new Method(name, returnType, parameters, staticMethod, false, null);
     }
 }

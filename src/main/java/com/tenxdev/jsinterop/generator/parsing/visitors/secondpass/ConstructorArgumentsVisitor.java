@@ -8,7 +8,7 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConstructorArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
+class ConstructorArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
 
     public ConstructorArgumentsVisitor(ParsingContext parsingContext) {
         super(parsingContext);
@@ -54,21 +54,13 @@ public class ConstructorArgumentsVisitor extends ContextWebIDLBaseVisitor<List<M
             if (tokens.remove("optional")) {
                 optional = true;
             }
-            if (tokens.remove("?")) {
-                optional = true;
-            }
-            for (String token : tokens) {
-                if ("optional".equals(token) || "?".equals(token)) {
-                    optional = true;
-                    continue;
-                }
-            }
+            tokens.remove("?");
             String defaultValue = null;
-            int equals = tokens.indexOf("=");
-            if (equals != -1) {
-                defaultValue = tokens.get(equals + 1);
-                tokens.remove(equals + 1);
-                tokens.remove(equals);
+            int equalsIndex = tokens.indexOf("=");
+            if (equalsIndex != -1) {
+                defaultValue = tokens.get(equalsIndex + 1);
+                tokens.remove(equalsIndex + 1);
+                tokens.remove(equalsIndex);
             }
 
             String name = tokens.get(tokens.size() - 1);

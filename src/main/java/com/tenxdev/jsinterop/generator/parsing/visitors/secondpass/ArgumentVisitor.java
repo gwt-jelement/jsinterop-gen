@@ -5,7 +5,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
-public class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
+class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
 
     ArgumentVisitor(ParsingContext parsingContext) {
         super(parsingContext);

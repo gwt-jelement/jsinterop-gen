@@ -4,7 +4,7 @@ import com.tenxdev.jsinterop.generator.model.InterfaceMember;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
-public class ReadOlyMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
+class ReadOlyMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
     public ReadOlyMemberRestVisitor(ParsingContext parsingContext) {
         super(parsingContext);
     }
@@ -20,7 +20,7 @@ public class ReadOlyMemberRestVisitor extends ContextWebIDLBaseVisitor<Interface
         if (ctx.readWriteSetlike() != null) {
             return ctx.readWriteSetlike().setlikeRest().accept(new SetLikeRestVisitor(parsingContext, true));
         }
-        System.err.println("Unexpected state in ReadOnlyMemberRest");
+        parsingContext.getErrorReporter().reportError("ReadOlyMemberRestVisitor: Unexpected state in ReadOnlyMemberRest");
         return null;
     }
 }

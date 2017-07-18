@@ -9,7 +9,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.List;
 
-public class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
+class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
 
     private final List<Method> constructors;
 

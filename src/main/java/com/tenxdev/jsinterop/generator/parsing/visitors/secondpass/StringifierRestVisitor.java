@@ -8,7 +8,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.Collections;
 
-public class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
+class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
     public StringifierRestVisitor(ParsingContext parsingContext) {
         super(parsingContext);

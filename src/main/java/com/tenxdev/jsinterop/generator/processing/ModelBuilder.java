@@ -37,7 +37,6 @@ public class ModelBuilder {
      * @return a parsing context
      */
     private ParsingContext performFirstPass(String inputDirectory) throws IOException {
-        System.err.println("************ PASS 1 **********");
         List<File> fileList = new FileListBuilder(errorHandler).findFiles(inputDirectory);
         int offset = new File(inputDirectory).getAbsolutePath().length();
         ParsingContext parsingContext = new ParsingContext(errorHandler);
@@ -50,7 +49,6 @@ public class ModelBuilder {
     }
 
     private Model performSecondPass(String inputDirectory, ParsingContext parsingContext) throws IOException {
-        System.err.println("************ PASS 2 **********");
         Model model = new Model();
         List<File> fileList = new FileListBuilder(errorHandler).findFiles(inputDirectory);
         int offset = new File(inputDirectory).getAbsolutePath().length();

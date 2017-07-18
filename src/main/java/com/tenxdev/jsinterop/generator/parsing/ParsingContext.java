@@ -5,13 +5,13 @@ import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 
 public class ParsingContext {
 
-    private TypeFactory typeFactory;
-    private ErrorReporter errorReporter;
+    private final TypeFactory typeFactory;
+    private final ErrorReporter errorReporter;
     private String packageSuffix;
 
     public ParsingContext(ErrorReporter errorReporter) {
         this.errorReporter = errorReporter;
-        this.typeFactory=new TypeFactory(errorReporter);
+        this.typeFactory = new TypeFactory(errorReporter);
     }
 
     public TypeFactory getTypeFactory() {

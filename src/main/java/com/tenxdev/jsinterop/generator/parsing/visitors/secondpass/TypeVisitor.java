@@ -4,7 +4,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
-public class TypeVisitor extends ContextWebIDLBaseVisitor<Type> {
+class TypeVisitor extends ContextWebIDLBaseVisitor<Type> {
 
     public TypeVisitor(ParsingContext parsingContext) {
         super(parsingContext);

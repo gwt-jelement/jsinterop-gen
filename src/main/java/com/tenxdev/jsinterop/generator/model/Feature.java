@@ -6,8 +6,8 @@ public class Feature implements InterfaceMember {
 
     private final FeatureType featureType;
     private final boolean readOnly;
-    private Type valueType;
-    private Type keyType;
+    private final Type valueType;
+    private final Type keyType;
 
     public Feature(FeatureType featureType, Type valueType, boolean readOnly) {
         this(featureType, null, valueType, readOnly);
@@ -74,5 +74,5 @@ public class Feature implements InterfaceMember {
                 '}';
     }
 
-    public enum FeatureType {ValueIterator, MapIterator, MapLike, SetLike}
+    public enum FeatureType {VALUE_ITERATOR, MAP_ITERATOR, MAP_LIKE, SET_LIKE}
 }

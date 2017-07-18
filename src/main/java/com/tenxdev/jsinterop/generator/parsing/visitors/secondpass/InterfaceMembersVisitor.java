@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class InterfaceMembersVisitor extends ContextWebIDLBaseVisitor<List<InterfaceMember>> {
+class InterfaceMembersVisitor extends ContextWebIDLBaseVisitor<List<InterfaceMember>> {
 
     private final String containingType;
 

@@ -6,7 +6,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.List;
 
-public class EnumVisitor extends ContextWebIDLBaseVisitor<EnumDefinition> {
+class EnumVisitor extends ContextWebIDLBaseVisitor<EnumDefinition> {
 
     public EnumVisitor(ParsingContext parsingContext) {
         super(parsingContext);

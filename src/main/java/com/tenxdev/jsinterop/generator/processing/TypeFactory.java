@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class TypeFactory {
 
-    private static ImmutableMap<String, Type> BOXED_TYPES = ImmutableMap.<String, Type>builder()
+    private static final ImmutableMap<String, Type> BOXED_TYPES = ImmutableMap.<String, Type>builder()
             .put("void", new NativeType("Void"))
             .put("int", new NativeType("Integer"))
             .put("long", new NativeType("Long"))
@@ -26,8 +26,8 @@ public class TypeFactory {
             .put("char", new NativeType("Character"))
             .build();
     private final TypeParser typeParser;
-    private Map<String, Type> typeMap = new HashMap<>();
-    private Map<String, Type> deferredTypeDefinitions = new HashMap<>();
+    private final Map<String, Type> typeMap = new HashMap<>();
+    private final Map<String, Type> deferredTypeDefinitions = new HashMap<>();
 
     public TypeFactory(ErrorReporter errorReporter) {
         this.typeParser = new TypeParser(this, errorReporter);

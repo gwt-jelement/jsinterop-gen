@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * finds a constructor definition in the extended attribute list for a definition
  */
-public class ExtendedAttributeListVisitor extends ContextWebIDLBaseVisitor<List<Method>> {
+class ExtendedAttributeListVisitor extends ContextWebIDLBaseVisitor<List<Method>> {
 
     public ExtendedAttributeListVisitor(ParsingContext parsingContext) {
         super(parsingContext);

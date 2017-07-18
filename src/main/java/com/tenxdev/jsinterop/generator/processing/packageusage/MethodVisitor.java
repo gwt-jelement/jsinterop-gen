@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 class MethodVisitor {
 
-    private TypeVisitor typeVisitor = new TypeVisitor();
+    private final TypeVisitor typeVisitor = new TypeVisitor();
 
     public List<String> accept(Method method) {
         ArrayList<String> packages = method.getArguments().stream()

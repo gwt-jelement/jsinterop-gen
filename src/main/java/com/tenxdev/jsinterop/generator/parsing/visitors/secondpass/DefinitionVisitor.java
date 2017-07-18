@@ -7,7 +7,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.List;
 
-public class DefinitionVisitor extends ContextWebIDLBaseVisitor<Definition> {
+class DefinitionVisitor extends ContextWebIDLBaseVisitor<Definition> {
     private final List<Method> constructors;
 
     public DefinitionVisitor(ParsingContext context, List<Method> constructors) {
