@@ -10,11 +10,12 @@ import java.util.stream.Collectors;
 public class Method implements InterfaceMember, Comparable<Method> {
     private final boolean staticMethod;
     private final String name;
-    private final Type returnType;
     private final List<MethodArgument> arguments;
+    private Type returnType;
     private Method methodReferences;
     private boolean privateMethod;
     private Method enumOverlay;
+    private boolean enumReturnType;
 
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
                   boolean privateMethod, Method enumOverlay) {
@@ -52,6 +53,10 @@ public class Method implements InterfaceMember, Comparable<Method> {
         return returnType == null ? new NativeType("void") : returnType;
     }
 
+    public void setReturnType(Type returnType) {
+        this.returnType = returnType;
+    }
+
     public List<MethodArgument> getArguments() {
         return arguments;
     }
@@ -87,6 +92,14 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.enumOverlay = enumOverlay;
     }
 
+    public boolean isEnumReturnType() {
+        return enumReturnType;
+    }
+
+    public void setEnumReturnType(boolean enumReturnType) {
+        this.enumReturnType = enumReturnType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -119,7 +132,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
                 ", returnType='" + returnType + '\'' +
                 ", arguments=" + arguments +
                 (privateMethod ? ", PRIVATE" : "") +
-                (enumOverlay != null ? "EnumOverlay='" + enumOverlay + "'" : "") +
+                (enumOverlay != null ? ("EnumOverlay='" + enumOverlay + "'") : "") +
                 '}';
     }
 }

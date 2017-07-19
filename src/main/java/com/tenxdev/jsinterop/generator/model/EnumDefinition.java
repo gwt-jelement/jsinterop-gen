@@ -1,5 +1,8 @@
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.NativeType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
+
 import java.util.List;
 
 public class EnumDefinition implements Definition {
@@ -19,6 +22,11 @@ public class EnumDefinition implements Definition {
 
     public List<String> getValues() {
         return values;
+    }
+
+    public Type getJavaElementType() {
+        return !values.isEmpty() && values.get(0).startsWith("\"") ?
+                new NativeType("String") : new NativeType("int");
     }
 
     @Override

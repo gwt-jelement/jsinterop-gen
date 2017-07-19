@@ -67,7 +67,7 @@ class Generator {
         new ImplementsMerger(model, errorHandler).processModel(); //must run after partials merger
         new MethodUnionArgsExpander(model).processModel(); //must run after all interface merging
         new MethodOptionalArgsExpander(model).processModel();//must run after union args expansion
-        new MethodEnumArgumentProcessor().process(model); // must run after all method expansions
+        new MethodEnumArgumentProcessor(model, errorHandler).process(); // must run after all method expansions
         new ImportResolver().processModel(model); //must run after all type substitutions
         new SourceGenerator().processModel(model, outputDirectory, basePackage);
     }
