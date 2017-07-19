@@ -1,4 +1,4 @@
-package com.tenxdev.jsinterop.generator.processing.enumarguments;
+package com.tenxdev.jsinterop.generator.processing.enumtypes;
 
 import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractTypeVisitor;

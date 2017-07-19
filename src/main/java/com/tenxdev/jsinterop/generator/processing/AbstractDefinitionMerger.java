@@ -1,6 +1,6 @@
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.Definition;
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
@@ -10,10 +10,10 @@ import java.util.List;
 
 abstract class AbstractDefinitionMerger {
 
-    final ErrorReporter errorReporter;
+    protected final Logger logger;
 
-    AbstractDefinitionMerger(ErrorReporter errorReporter) {
-        this.errorReporter = errorReporter;
+    AbstractDefinitionMerger(Logger logger) {
+        this.logger = logger;
     }
 
     void mergeDictionaries(DictionaryDefinition primaryDefinition, DictionaryDefinition partialDefinition) {
@@ -29,7 +29,7 @@ abstract class AbstractDefinitionMerger {
     }
 
     void reportTypeMismatch(Definition primaryDefinition, Definition secondaryDefinition) {
-        errorReporter.formatError("Do not know how to merge implements of %s %s and %s %s%n",
+        logger.formatError("Do not know how to merge implements of %s %s and %s %s%n",
                 primaryDefinition.getClass().getSimpleName(), primaryDefinition.getName(),
                 secondaryDefinition.getClass().getSimpleName(), secondaryDefinition.getName());
     }

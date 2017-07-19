@@ -2,13 +2,13 @@ package com.tenxdev.jsinterop.generator;
 
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
-import com.tenxdev.jsinterop.generator.errors.PrintStreamErrorHandler;
 import com.tenxdev.jsinterop.generator.generator.SourceGenerator;
+import com.tenxdev.jsinterop.generator.logging.Logger;
+import com.tenxdev.jsinterop.generator.logging.PrintStreamLogger;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.processing.*;
-import com.tenxdev.jsinterop.generator.processing.enumarguments.MethodEnumArgumentProcessor;
-import com.tenxdev.jsinterop.generator.processing.unionargsexampansion.MethodUnionArgsExpander;
+import com.tenxdev.jsinterop.generator.processing.enumtypes.MethodEnumArgumentProcessor;
+import com.tenxdev.jsinterop.generator.processing.uniontypes.MethodUnionArgsExpander;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -36,6 +36,9 @@ class Generator {
     @Option(name = "-overwrite", usage = "overwrite the output folder if it exists", metaVar = "overwrite")
     private boolean overwrite;
 
+    @Option(name = "-logLevel", usage = "logging level: 0-no logging 1-mimum logging", metaVar = "logLevel")
+    private int logLevel = 1;
+
     @Argument
     private List<String> arguments = new ArrayList<>();
 
@@ -44,32 +47,33 @@ class Generator {
     }
 
     public void execute(String[] args) {
-        ErrorReporter errorHandler = new PrintStreamErrorHandler(System.err);
+        Logger logger = new PrintStreamLogger(System.err);
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);
+            logger.setLogLevel(logLevel);
             checkArguments();
-            Model model = new ModelBuilder(errorHandler).buildFrom(inputDirectory);
-            processModel(model, errorHandler);
+            Model model = new ModelBuilder(logger).buildFrom(inputDirectory);
+            processModel(model, logger);
             System.exit(0);
         } catch (CmdLineException e) {
-            printUsage(parser, errorHandler, e);
+            printUsage(parser, logger, e);
             System.exit(-1);
         } catch (IOException e) {
-            errorHandler.reportError(e.getMessage());
+            logger.reportError(e.getMessage());
             System.exit(-1);
         }
     }
 
-    private void processModel(Model model, ErrorReporter errorHandler) throws IOException {
+    private void processModel(Model model, Logger logger) throws IOException {
         //ordering of these operations is critical
-        new PartialsMerger(model, errorHandler).processModel();
-        new ImplementsMerger(model, errorHandler).processModel(); //must run after partials merger
-        new MethodUnionArgsExpander(model).processModel(); //must run after all interface merging
-        new MethodOptionalArgsExpander(model).processModel();//must run after union args expansion
-        new MethodEnumArgumentProcessor(model, errorHandler).process(); // must run after all method expansions
-        new ImportResolver().processModel(model); //must run after all type substitutions
-        new SourceGenerator().processModel(model, outputDirectory, basePackage);
+        new PartialsMerger(model, logger).processModel();
+        new ImplementsMerger(model, logger).processModel(); //must run after partials merger
+        new MethodUnionArgsExpander(model, logger).processModel(); //must run after all interface merging
+        new MethodOptionalArgsExpander(model, logger).processModel();//must run after union args expansion
+        new MethodEnumArgumentProcessor(model, logger).process(); // must run after all method expansions
+        new ImportResolver().processModel(model, logger); //must run after all type substitutions
+        new SourceGenerator(logger).processModel(model, outputDirectory, basePackage);
     }
 
     private void checkArguments() throws CmdLineException {
@@ -120,10 +124,10 @@ class Generator {
         }
     }
 
-    private void printUsage(CmdLineParser parser, ErrorReporter errorReporter, CmdLineException e) {
-        errorReporter.reportError(e.getMessage());
-        errorReporter.reportError("java Generator [options...]");
-        parser.printUsage(errorReporter.getPrintStream());
+    private void printUsage(CmdLineParser parser, Logger logger, CmdLineException e) {
+        logger.reportError(e.getMessage());
+        logger.reportError("java Generator [options...]");
+        parser.printUsage(logger.getPrintStream());
     }
 
 

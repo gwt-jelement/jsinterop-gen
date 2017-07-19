@@ -1,6 +1,6 @@
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,21 +8,23 @@ import java.util.List;
 
 class FileListBuilder {
 
-    private final ErrorReporter errorHandler;
+    private final Logger logger;
 
-    public FileListBuilder(ErrorReporter errorHandler) {
-        this.errorHandler = errorHandler;
+    public FileListBuilder(Logger logger) {
+        this.logger = logger;
     }
 
     public List<File> findFiles(String baseDirectory) {
         File directory = new File(baseDirectory);
         if (!directory.exists()) {
-            errorHandler.formatFatalError("Input directory %s does not exist.%n", baseDirectory);
+            logger.formatError("Input directory %s does not exist.%n", baseDirectory);
+            System.exit(-1);
         }
         List<File> fileList = new ArrayList<>();
         findFiles(directory, fileList);
         if (fileList.isEmpty()) {
-            errorHandler.formatFatalError("No idl files were found in input directory %s%n", baseDirectory);
+            logger.formatError("No idl files were found in input directory %s%n", baseDirectory);
+            System.exit(-1);
         }
         return fileList;
     }

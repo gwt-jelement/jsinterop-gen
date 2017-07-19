@@ -29,7 +29,7 @@ public class DefinitionsVisitor extends ContextWebIDLBaseVisitor<List<Definition
             if (definition != null) {
                 definitionList.add(definition);
             } else {
-                parsingContext.getErrorReporter().reportError("Unexpected missed definition: " + ParserUtil.getText(ctx));
+                parsingContext.getlogger().reportError("Unexpected missed definition: " + ParserUtil.getText(ctx));
             }
             definitions = definitions.definitions();
         }

@@ -91,7 +91,8 @@ public class «definition.name.adjustJavaName»«
     «FOR method: definition.methods SEPARATOR "\n"»
         «IF method.enumOverlay===null»
         @JsMethod(name = "«method.name»")
-        «IF method.privateMethod»private«ELSE»public«ENDIF» native «method.returnType.displayValue» _«method.name.adjustJavaName»(«
+        «IF method.privateMethod»private«ELSE»public«ENDIF» native «method.returnType.displayValue» «IF method.privateMethod
+            »_«ENDIF»«method.name.adjustJavaName»(«
         FOR argument: method.arguments SEPARATOR ", "
         »«argument.type.displayValue» «argument.name.adjustJavaName»«ENDFOR»);
     «ELSE»

@@ -1,5 +1,6 @@
-package com.tenxdev.jsinterop.generator.processing.unionargsexampansion;
+package com.tenxdev.jsinterop.generator.processing.uniontypes;
 
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
@@ -24,12 +25,15 @@ import java.util.stream.Collectors;
 public class MethodUnionArgsExpander {
     private final Model model;
     private final GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
+    private Logger logger;
 
-    public MethodUnionArgsExpander(Model model) {
+    public MethodUnionArgsExpander(Model model, Logger logger) {
         this.model = model;
+        this.logger = logger;
     }
 
     public void processModel() {
+        logger.info(Logger.LEVEL_INFO, () -> "Expanding methods with union type arguments");
         model.getDefinitions().forEach(definitionInfo -> {
             if (definitionInfo.getDefinition() instanceof InterfaceDefinition) {
                 processInterface((InterfaceDefinition) definitionInfo.getDefinition());

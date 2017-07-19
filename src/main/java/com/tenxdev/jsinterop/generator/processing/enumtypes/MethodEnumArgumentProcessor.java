@@ -1,6 +1,6 @@
-package com.tenxdev.jsinterop.generator.processing.enumarguments;
+package com.tenxdev.jsinterop.generator.processing.enumtypes;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
@@ -15,14 +15,15 @@ public class MethodEnumArgumentProcessor {
 
     private final HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
     private Model model;
-    private ErrorReporter errorReporter;
+    private Logger logger;
 
-    public MethodEnumArgumentProcessor(Model model, ErrorReporter errorReporter) {
+    public MethodEnumArgumentProcessor(Model model, Logger logger) {
         this.model = model;
-        this.errorReporter = errorReporter;
+        this.logger = logger;
     }
 
     public void process() {
+        logger.info(Logger.LEVEL_INFO, () -> "Processing methods with enum arguments");
         model.getDefinitions().stream()
                 .filter(definitionInfo -> definitionInfo.getDefinition() instanceof InterfaceDefinition)
                 .map(definitionInfo -> (InterfaceDefinition) definitionInfo.getDefinition())
@@ -47,7 +48,7 @@ public class MethodEnumArgumentProcessor {
         Method newMethod = method.newMethodWithArguments(newArguments);
         for (MethodArgument argument : method.getArguments()) {
             if (hasEnumTypeVisitor.accept(argument.getType())) {
-                Type substitutionType = new EnumSubstitutionVisitor(model, errorReporter).accept(argument.getType());
+                Type substitutionType = new EnumSubstitutionVisitor(model, logger).accept(argument.getType());
                 MethodArgument newMethodArgument = new MethodArgument(argument.getName(), substitutionType,
                         argument.isVararg(), argument.isOptional(), argument.getDefaultValue());
                 newMethodArgument.setEnumSubstitution(true);
@@ -60,7 +61,7 @@ public class MethodEnumArgumentProcessor {
             }
         }
         if (hasEnumTypeVisitor.accept(method.getReturnType())) {
-            Type newReturnType = new EnumSubstitutionVisitor(model, errorReporter).accept(method.getReturnType());
+            Type newReturnType = new EnumSubstitutionVisitor(model, logger).accept(method.getReturnType());
             if (method.getReturnType() instanceof EnumType) {
                 hasEnumTypes = true;
                 newMethod.setReturnType(newReturnType);

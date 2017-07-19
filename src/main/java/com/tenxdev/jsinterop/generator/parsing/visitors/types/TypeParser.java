@@ -1,6 +1,6 @@
 package com.tenxdev.jsinterop.generator.parsing.visitors.types;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.processing.ParserUtil;
 import com.tenxdev.jsinterop.generator.processing.TypeFactory;
@@ -18,11 +18,11 @@ public class TypeParser extends TypesBaseVisitor<Type> {
 
 
     private final TypeFactory typeFactory;
-    private final ErrorReporter errorReporter;
+    private final Logger logger;
 
-    public TypeParser(TypeFactory typeFactory, ErrorReporter errorReporter) {
+    public TypeParser(TypeFactory typeFactory, Logger logger) {
         this.typeFactory = typeFactory;
-        this.errorReporter = errorReporter;
+        this.logger = logger;
     }
 
     public Type parseType(String typeName) {
@@ -33,7 +33,7 @@ public class TypeParser extends TypesBaseVisitor<Type> {
         parser.addErrorListener(new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                errorReporter.formatError("TypeParser: %s position %d:%n\t%s%n", typeName, charPositionInLine, msg);
+                logger.formatError("TypeParser: %s position %d:%n\t%s%n", typeName, charPositionInLine, msg);
             }
         });
         return parser.type().accept(this);
@@ -67,7 +67,7 @@ public class TypeParser extends TypesBaseVisitor<Type> {
             return new UnionType(null, types);
 
         }
-        errorReporter.reportError("TypeParser: Unable to parse " + ParserUtil.getText(ctx));
+        logger.reportError("TypeParser: Unable to parse " + ParserUtil.getText(ctx));
         return new NativeType("Object");
     }
 

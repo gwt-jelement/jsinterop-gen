@@ -1,5 +1,6 @@
 package com.tenxdev.jsinterop.generator.processing;
 
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
@@ -21,12 +22,15 @@ import java.util.List;
 public class MethodOptionalArgsExpander {
 
     private final Model model;
+    private Logger logger;
 
-    public MethodOptionalArgsExpander(Model model) {
+    public MethodOptionalArgsExpander(Model model, Logger logger) {
         this.model = model;
+        this.logger = logger;
     }
 
     public void processModel() {
+        logger.info(Logger.LEVEL_INFO, () -> "Expanding methods with optional arguments");
         model.getDefinitions().forEach(definitionInfo -> {
             if (definitionInfo.getDefinition() instanceof InterfaceDefinition) {
                 processInterface((InterfaceDefinition) definitionInfo.getDefinition());

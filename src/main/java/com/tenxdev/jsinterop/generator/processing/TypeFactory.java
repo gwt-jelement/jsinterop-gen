@@ -1,7 +1,7 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.google.common.collect.ImmutableMap;
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
@@ -29,8 +29,8 @@ public class TypeFactory {
     private final Map<String, Type> typeMap = new HashMap<>();
     private final Map<String, Type> deferredTypeDefinitions = new HashMap<>();
 
-    public TypeFactory(ErrorReporter errorReporter) {
-        this.typeParser = new TypeParser(this, errorReporter);
+    public TypeFactory(Logger logger) {
+        this.typeParser = new TypeParser(this, logger);
 
         typeMap.put("bool", new NativeType("boolean"));
         typeMap.put("boolean", new NativeType("boolean"));

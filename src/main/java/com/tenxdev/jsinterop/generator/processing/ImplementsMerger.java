@@ -1,6 +1,6 @@
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
 
 import java.util.ArrayList;
@@ -19,12 +19,13 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
     private final Model model;
     private final Map<String, List<String>> implementsMap = new HashMap<>();
 
-    public ImplementsMerger(Model model, ErrorReporter errorReporter) {
-        super(errorReporter);
+    public ImplementsMerger(Model model, Logger logger) {
+        super(logger);
         this.model = model;
     }
 
     public void processModel() {
+        logger.info(Logger.LEVEL_INFO, () -> "Merging 'implements' definitions");
         model.getDefinitions().forEach(definitionInfo ->
                 definitionInfo.getImplementsDefinitions().forEach(implementsDefinition -> {
                     String definitionName = implementsDefinition.getName();
@@ -48,7 +49,7 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
     private void getDefinitionByName(String name, Consumer<Definition> consumer) {
         DefinitionInfo definitionInfo = model.getDefinitionInfo(name);
         if (definitionInfo == null) {
-            errorReporter.formatError("Unknown definition %s implements %n", name);
+            logger.formatError("Unknown definition %s implements %n", name);
         } else {
             consumer.accept(definitionInfo.getDefinition());
         }

@@ -21,7 +21,7 @@ class StaticMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> 
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
             return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, true));
         }
-        parsingContext.getErrorReporter().reportError("Unexpected state in StaticMemberRest");
+        parsingContext.getlogger().reportError("Unexpected state in StaticMemberRest");
         return null;
     }
 }

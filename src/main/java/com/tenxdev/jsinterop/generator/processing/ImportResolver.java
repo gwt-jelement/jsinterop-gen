@@ -1,5 +1,6 @@
 package com.tenxdev.jsinterop.generator.processing;
 
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.processing.packageusage.PackageUsageModelVisitor;
@@ -10,7 +11,8 @@ import java.util.stream.Collectors;
 
 public class ImportResolver {
 
-    public void processModel(Model model) {
+    public void processModel(Model model, Logger logger) {
+        logger.info(Logger.LEVEL_INFO, () -> "Resolving Java package imports");
         Map<DefinitionInfo, List<String>> packagesMap = new PackageUsageModelVisitor().accept(model);
         packagesMap.entrySet().forEach(entry -> processPackagesForDefinition(entry.getKey(), entry.getValue()));
     }

@@ -1,4 +1,4 @@
-package com.tenxdev.jsinterop.generator.processing.unionargsexampansion;
+package com.tenxdev.jsinterop.generator.processing.uniontypes;
 
 import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractTypeVisitor;

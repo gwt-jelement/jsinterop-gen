@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.generator;
 
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
 
 import java.io.File;
@@ -28,8 +29,14 @@ import java.nio.file.Paths;
 public class SourceGenerator extends Template {
 
     private static final String VERSION = "0.0.1-SNAPSHOT";
+    private Logger logger;
+
+    public SourceGenerator(Logger logger) {
+        this.logger = logger;
+    }
 
     public void processModel(Model model, String outputDirectory, String basePackageName) throws IOException {
+        logger.info(Logger.LEVEL_INFO, () -> "Generating Java source code");
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
         outputFile(Paths.get(outputDirectory, ".gitignore"), new GitIgnoreGenerator().generate());
         outputFile(Paths.get(outputDirectory, "src", "main", "java", packageNameToPath(basePackageName),

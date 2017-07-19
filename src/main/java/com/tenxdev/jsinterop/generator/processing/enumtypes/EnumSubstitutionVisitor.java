@@ -15,9 +15,9 @@
  * the License.
  */
 
-package com.tenxdev.jsinterop.generator.processing.enumarguments;
+package com.tenxdev.jsinterop.generator.processing.enumtypes;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.EnumDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
 
     private Model model;
-    private ErrorReporter errorReporter;
+    private Logger logger;
 
-    public EnumSubstitutionVisitor(Model model, ErrorReporter errorReporter) {
+    public EnumSubstitutionVisitor(Model model, Logger logger) {
         super();
         this.model = model;
-        this.errorReporter = errorReporter;
+        this.logger = logger;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
         if (definitionInfo.getDefinition() instanceof EnumDefinition) {
             return ((EnumDefinition) definitionInfo.getDefinition()).getJavaElementType();
         } else {
-            errorReporter.formatError("Unexpected definition for enum type %s%n", type.getTypeName());
+            logger.formatError("Unexpected definition for enum type %s%n", type.getTypeName());
             return type;
         }
     }

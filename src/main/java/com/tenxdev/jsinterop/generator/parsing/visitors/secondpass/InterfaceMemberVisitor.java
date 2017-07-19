@@ -50,7 +50,7 @@ class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
         if (ctx.iterable() != null) {
             return ctx.iterable().accept(new IterableVisitor(parsingContext));
         }
-        parsingContext.getErrorReporter().reportError("Unexpected state in InterfaceMembers");
+        parsingContext.getlogger().reportError("Unexpected state in InterfaceMembers");
         return null;
     }
 }

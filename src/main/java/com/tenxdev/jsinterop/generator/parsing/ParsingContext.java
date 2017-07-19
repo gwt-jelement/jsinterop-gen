@@ -1,25 +1,25 @@
 package com.tenxdev.jsinterop.generator.parsing;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 
 public class ParsingContext {
 
     private final TypeFactory typeFactory;
-    private final ErrorReporter errorReporter;
+    private final Logger logger;
     private String packageSuffix;
 
-    public ParsingContext(ErrorReporter errorReporter) {
-        this.errorReporter = errorReporter;
-        this.typeFactory = new TypeFactory(errorReporter);
+    public ParsingContext(Logger logger) {
+        this.logger = logger;
+        this.typeFactory = new TypeFactory(logger);
     }
 
     public TypeFactory getTypeFactory() {
         return typeFactory;
     }
 
-    public ErrorReporter getErrorReporter() {
-        return errorReporter;
+    public Logger getlogger() {
+        return logger;
     }
 
     public String getPackageSuffix() {

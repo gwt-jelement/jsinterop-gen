@@ -1,6 +1,6 @@
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.errors.ErrorReporter;
+import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.Definition;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.parsing.FileAwareANTLRErrorListener;
@@ -18,10 +18,10 @@ import java.io.IOException;
 import java.util.List;
 
 public class ModelBuilder {
-    private final ErrorReporter errorHandler;
+    private final Logger logger;
 
-    public ModelBuilder(ErrorReporter errorHandler) {
-        this.errorHandler = errorHandler;
+    public ModelBuilder(Logger logger) {
+        this.logger = logger;
     }
 
     public Model buildFrom(String inputDirectory) throws IOException {
@@ -37,9 +37,10 @@ public class ModelBuilder {
      * @return a parsing context
      */
     private ParsingContext performFirstPass(String inputDirectory) throws IOException {
-        List<File> fileList = new FileListBuilder(errorHandler).findFiles(inputDirectory);
+        logger.info(Logger.LEVEL_INFO, () -> "Parsing pass 1-scanning object types");
+        List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory);
         int offset = new File(inputDirectory).getAbsolutePath().length();
-        ParsingContext parsingContext = new ParsingContext(errorHandler);
+        ParsingContext parsingContext = new ParsingContext(logger);
         for (File file : fileList) {
             parsingContext.setPackageSuffix(getPackageSuffix(offset, file));
             scanFile(file, parsingContext);
@@ -49,8 +50,9 @@ public class ModelBuilder {
     }
 
     private Model performSecondPass(String inputDirectory, ParsingContext parsingContext) throws IOException {
+        logger.info(Logger.LEVEL_INFO, () -> "Parsing pass 2-building model");
         Model model = new Model();
-        List<File> fileList = new FileListBuilder(errorHandler).findFiles(inputDirectory);
+        List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory);
         int offset = new File(inputDirectory).getAbsolutePath().length();
         for (File file : fileList) {
             String packageSuffix = getPackageSuffix(offset, file);
@@ -60,17 +62,17 @@ public class ModelBuilder {
                 try {
                     model.registerDefinition(definition, packageSuffix, file.getAbsolutePath());
                 } catch (Model.ConflictingNameException conflictingNameException) {
-                    errorHandler.formatError("Name collision detected:%n\t%s is defined in package %s in file %s%n" +
+                    logger.formatError("Name collision detected:%n\t%s is defined in package %s in file %s%n" +
                                     "\t%s is also defined in package %s in file %s%n",
                             conflictingNameException.getDefinitionInfo().getDefinition().getName(),
                             conflictingNameException.getDefinitionInfo().getPackageName(),
                             conflictingNameException.getDefinitionInfo().getFilename(),
                             definition.getName(), packageSuffix, file.getAbsolutePath());
-                    errorHandler.reportError("Definition 1:");
-                    errorHandler.reportError(conflictingNameException.getDefinitionInfo().getDefinition().toString());
-                    errorHandler.reportError("Definition 2:");
-                    errorHandler.reportError(definition.toString());
-                    errorHandler.reportError("");
+                    logger.reportError("Definition 1:");
+                    logger.reportError(conflictingNameException.getDefinitionInfo().getDefinition().toString());
+                    logger.reportError("Definition 2:");
+                    logger.reportError(definition.toString());
+                    logger.reportError("");
                 }
             }
         }
@@ -84,7 +86,7 @@ public class ModelBuilder {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             WebIDLParser parser = new WebIDLParser(tokens);
             parser.removeErrorListeners();
-            parser.addErrorListener(new FileAwareANTLRErrorListener(file, errorHandler));
+            parser.addErrorListener(new FileAwareANTLRErrorListener(file, logger));
             WebIDLParser.DefinitionsContext definitions = parser.definitions();
             definitions.accept(new DefinitionsScanner(parsingContext));
         }
@@ -97,7 +99,7 @@ public class ModelBuilder {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             WebIDLParser parser = new WebIDLParser(tokens);
             parser.removeErrorListeners();
-            parser.addErrorListener(new FileAwareANTLRErrorListener(file, errorHandler));
+            parser.addErrorListener(new FileAwareANTLRErrorListener(file, logger));
             WebIDLParser.DefinitionsContext definitions = parser.definitions();
             return definitions.accept(new DefinitionsVisitor(parsingContext));
         }
