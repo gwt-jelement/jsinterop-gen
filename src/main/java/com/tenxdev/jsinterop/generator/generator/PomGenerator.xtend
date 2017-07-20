@@ -37,6 +37,17 @@ class PomGenerator {
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/java</directory>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
