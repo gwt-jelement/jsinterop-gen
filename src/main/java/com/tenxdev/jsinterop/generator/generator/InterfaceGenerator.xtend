@@ -23,6 +23,8 @@ import com.tenxdev.jsinterop.generator.model.MethodArgument
 import com.tenxdev.jsinterop.generator.model.types.NativeType
 import com.tenxdev.jsinterop.generator.model.Method
 import com.tenxdev.jsinterop.generator.model.Attribute
+import com.tenxdev.jsinterop.generator.model.types.Type
+import com.tenxdev.jsinterop.generator.model.types.ArrayType
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -49,7 +51,7 @@ public class «definition.name.adjustJavaName»«
 
     def enumMethodArgument(MethodArgument argument) {
         if(argument.enumSubstitution)
-            '''«argument.name».getInternalValue()'''
+            argument.name+".getInternalValue()"
         else
             argument.name
     }
@@ -99,21 +101,41 @@ public class «definition.name.adjustJavaName»«
     '''
 
     def readableEnumAttribute(Attribute attribute)'''
-        public «staticModifier(attribute)» «attribute.type» get«attribute.name.toFirstUpper»(){
-            return «attribute.type».of(get«attribute.name.toFirstUpper»_());
+        @JsOverlay
+        public «staticModifier(attribute)» «attribute.type.displayValue» get«attribute.name.toFirstUpper»_(){
+            return «extractEnumType(attribute.type).displayValue».of(get«attribute.name.toFirstUpper»());
         }
 
         @JsProperty(name="«attribute.name»")
-        private «staticModifier(attribute)» native «attribute.enumSubstitutionType» get«attribute.name.toFirstUpper»_();
+        public «staticModifier(attribute)»native «attribute.enumSubstitutionType.displayValue» get«attribute.name.toFirstUpper»();
 
     '''
 
+    def extractEnumType(Type type){
+        if (type instanceof ArrayType) (type as ArrayType).type else type
+    }
+
     def writeableAttributes(InterfaceDefinition definition)'''
         «FOR attribute: definition.writeableAttributes»
-            @JsProperty(name="«attribute.name»")
-            public «staticModifier(attribute)»native void set«attribute.javaName.toFirstUpper»(«attribute.type.displayValue» «adjustJavaName(attribute.javaName)»);
+            «IF attribute.enumSubstitutionType!==null»
+                «writeableEnumAttribute(attribute)»
+            «ELSE»
+                @JsProperty(name="«attribute.name»")
+                public «staticModifier(attribute)»native void set«attribute.javaName.toFirstUpper»(«attribute.type.displayValue» «adjustJavaName(attribute.javaName)»);
 
+            «ENDIF»
         «ENDFOR»
+    '''
+
+    def writeableEnumAttribute(Attribute attribute)'''
+        @JsOverlay
+        public «staticModifier(attribute)» void set«attribute.name.toFirstUpper»_(«attribute.type.displayValue» «attribute.name»){
+            set«attribute.name.toFirstUpper»(«attribute.name».getInternalValue());
+        }
+
+        @JsProperty(name="«attribute.name»")
+        public «staticModifier(attribute)»native void set«attribute.name.toFirstUpper»(«attribute.enumSubstitutionType.displayValue» «attribute.name»);
+
     '''
 
     def methods(InterfaceDefinition definition)'''
@@ -129,14 +151,14 @@ public class «definition.name.adjustJavaName»«
 
     def nativeMethod(Method method)'''
         @JsMethod(name = "«method.name»")
-        «accessModifier(method)» native «method.returnType.displayValue» «IF method.privateMethod
-            »_«ENDIF»«method.name.adjustJavaName»(«arguments(method)»);
+        public native «method.returnType.displayValue» «IF method.privateMethod
+            »«ENDIF»«method.name.adjustJavaName»(«arguments(method)»);
     '''
 
     def enumOverlayMethod(Method method)'''
         @JsOverlay
         public «method.returnType.displayValue» «method.name.adjustJavaName»(«arguments(method)»){
-            «hasReturn(method)»«hasEnumReturnType(method)»_«method.name»(«enumMethodArguments(method)»);
+            «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
         }
     '''
 
@@ -160,8 +182,5 @@ public class «definition.name.adjustJavaName»«
         «FOR argument: method.arguments SEPARATOR ", "
             »«argument.type.displayValue» «argument.name.adjustJavaName»«ENDFOR»'''
 
-    def enumMethodArguments(Method method)'''
-        «FOR argument: method.enumOverlay.arguments SEPARATOR ", "»«
-            enumMethodArgument(argument)»«ENDFOR»«IF method.enumReturnType»)«ENDIF»
-    '''
+    def enumMethodArguments(Method method)'''«FOR argument: method.enumOverlay.arguments SEPARATOR ", "»«enumMethodArgument(argument)»«ENDFOR»«IF method.enumReturnType»)«ENDIF»'''
 }

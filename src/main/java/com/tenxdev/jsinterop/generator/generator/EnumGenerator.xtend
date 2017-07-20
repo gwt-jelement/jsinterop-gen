@@ -27,6 +27,8 @@ class EnumGenerator extends XtendTemplate{
 «copyright»
 package «basePackageName»«definitionInfo.getPackageName()»;
 
+import java.util.Arrays;
+
 public enum «definition.name»{
     «FOR value: definition.values SEPARATOR ",\n" AFTER ";\n"
         »«value.enumValueToJavaName().toUpperCase()»(«value»)«ENDFOR»
@@ -51,6 +53,13 @@ public enum «definition.name»{
                 return null;
         }
     }
+
+    public static «definition.name»[] of(«enumMemberType(definition)»[] values) {
+        return Arrays.<«enumMemberType(definition)»>stream(values)
+                .map(«definition.name»::of)
+                .toArray(«definition.name»[]::new);
+    }
+
 }
     '''
     }

@@ -15,7 +15,7 @@
  * the License.
  */
 
-package com.tenxdev.jsinterop.generator.processing.enumtypes;
+package com.tenxdev.jsinterop.generator.processing.uniontypes;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
@@ -24,15 +24,15 @@ import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractTypeVisitor;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
-public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
+public class RemoveEnumUnionTypeVisitor extends AbstractTypeVisitor<Type> {
 
     private Model model;
     private Logger logger;
 
-    public EnumSubstitutionVisitor(Model model, Logger logger) {
-        super();
+    public RemoveEnumUnionTypeVisitor(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
     }
@@ -43,10 +43,16 @@ public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
     }
 
     @Override
-    protected Type visitUnionType(UnionType type) {
+    public UnionType visitUnionType(UnionType type) {
         return new UnionType(type.getName(), type.getTypes().stream()
                 .map(this::accept)
                 .collect(Collectors.toList()));
+    }
+
+    public List<UnionType> visitUnionTypes(List<UnionType> unionTypes) {
+        return unionTypes.stream()
+                .map(this::visitUnionType)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -60,12 +66,11 @@ public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
     @Override
     protected Type visitEnumType(EnumType type) {
         DefinitionInfo definitionInfo = model.getDefinitionInfo(type.getTypeName());
-        if (definitionInfo.getDefinition() instanceof EnumDefinition) {
+        if (definitionInfo != null && definitionInfo.getDefinition() instanceof EnumDefinition) {
             return ((EnumDefinition) definitionInfo.getDefinition()).getJavaElementType();
-        } else {
-            logger.formatError("Unexpected definition for enum type %s%n", type.getTypeName());
-            return type;
         }
+        logger.formatError("Unable to find enum definition for %s%n", type.getTypeName());
+        return type;
     }
 
     @Override

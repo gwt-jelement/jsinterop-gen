@@ -31,6 +31,7 @@ import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
 public class AttributeUnionTypeProcessor {
 
     private final Model model;
+    private final RemoveEnumUnionTypeVisitor removeEnumUnionTypeVisitor;
     private Logger logger;
     private GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
     private HasUnionTypeVisitor hasUnionTypeVisitor = new HasUnionTypeVisitor();
@@ -38,6 +39,8 @@ public class AttributeUnionTypeProcessor {
     public AttributeUnionTypeProcessor(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
+        this.removeEnumUnionTypeVisitor = new RemoveEnumUnionTypeVisitor(model, logger);
+
     }
 
     public void process() {
@@ -79,7 +82,7 @@ public class AttributeUnionTypeProcessor {
             if (definition.getUnionReturnTypes() == null) {
                 definition.setUnionReturnTypes(new ArrayList<>());
             }
-            definition.getUnionReturnTypes().add(unionType);
+            definition.getUnionReturnTypes().add(removeEnumUnionTypeVisitor.visitUnionType(unionType));
             //writeable attribute
             if (!attribute.isReadOnly()) {
                 for (Type type : unionType.getTypes()) {

@@ -26,6 +26,7 @@ public class Attribute implements InterfaceMember {
     private boolean readOnly;
     private boolean writeOnly;
     private Type type;
+    private boolean overlay;
     private String javaName;
     private Type enumSubstitutionType;
 
@@ -42,6 +43,7 @@ public class Attribute implements InterfaceMember {
         this.readOnly = attribute.readOnly;
         this.writeOnly = attribute.writeOnly;
         this.javaName = attribute.javaName;
+        this.overlay = attribute.overlay;
         this.staticAttribute = attribute.staticAttribute;
     }
 

@@ -20,6 +20,7 @@ package com.tenxdev.jsinterop.generator.processing.enumtypes;
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.Type;
+import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 public class AttributeEnumTypeProcessor {
 
@@ -60,7 +61,9 @@ public class AttributeEnumTypeProcessor {
 
     private void processAttribute(Attribute attribute, InterfaceDefinition definition) {
         Type newType = enumSubstitutionVisitor.accept(attribute.getType());
-        attribute.setEnumSubstitutionType(newType);
+        if (!(newType instanceof UnionType)) {
+            attribute.setEnumSubstitutionType(newType);
+        }
     }
 
     private void processDictionaryMember(DictionaryMember member, DictionaryDefinition definition) {

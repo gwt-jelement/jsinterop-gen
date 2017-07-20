@@ -42,11 +42,13 @@ import java.util.stream.Collectors;
 public class MethodUnionArgsExpander {
     private final Model model;
     private final GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
+    private final RemoveEnumUnionTypeVisitor removeEnumUnionTypeVisitor;
     private Logger logger;
 
     public MethodUnionArgsExpander(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
+        this.removeEnumUnionTypeVisitor = new RemoveEnumUnionTypeVisitor(model, logger);
     }
 
     public void processModel() {
@@ -82,7 +84,7 @@ public class MethodUnionArgsExpander {
                 .flatMap(List::stream)
                 .distinct()
                 .collect(Collectors.toList());
-        definition.setUnionReturnTypes(unionReturnTypes);
+        definition.setUnionReturnTypes(removeEnumUnionTypeVisitor.visitUnionTypes(unionReturnTypes));
     }
 
     private List<Method> processMethods(List<Method> methods) {

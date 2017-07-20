@@ -24,6 +24,7 @@ import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.logging.PrintStreamLogger;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.processing.*;
+import com.tenxdev.jsinterop.generator.processing.enumtypes.AttributeEnumTypeProcessor;
 import com.tenxdev.jsinterop.generator.processing.enumtypes.MethodEnumArgumentProcessor;
 import com.tenxdev.jsinterop.generator.processing.packageusage.ImportResolver;
 import com.tenxdev.jsinterop.generator.processing.uniontypes.AttributeUnionTypeProcessor;
@@ -93,6 +94,7 @@ class Generator {
         new MethodOptionalArgsExpander(model, logger).processModel();//must run after union args expansion
         new MethodEnumArgumentProcessor(model, logger).process(); // must run after all method expansions
         new AttributeUnionTypeProcessor(model, logger).process();
+        new AttributeEnumTypeProcessor(model, logger).process();
         new RenameIncompatibleChildAttributes().process(model, logger); //anywhere after merging
         new ImportResolver().processModel(model, logger); //must run after all type substitutions
         new SourceGenerator(logger).processModel(model, outputDirectory, basePackage);
