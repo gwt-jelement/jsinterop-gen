@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
 public class Constant implements InterfaceMember {
@@ -27,7 +28,7 @@ public class Constant implements InterfaceMember {
 
     public Constant(String name, Type type, String value) {
         this.name = name;
-        this.type = type;
+        this.type = type == null ? new NativeType("int") : type;
         this.value = value;
     }
 
