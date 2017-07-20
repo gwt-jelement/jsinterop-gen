@@ -26,12 +26,22 @@ public class Attribute implements InterfaceMember {
     private final boolean readOnly;
     private Type type;
     private boolean overlay;
+    private boolean writeOnly;
 
     public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute) {
         this.name = name;
         this.type = type;
         this.readOnly = readOnly;
         this.staticAttribute = staticAttribute;
+    }
+
+    public Attribute(Attribute attribute) {
+        this.name = attribute.name;
+        this.type = attribute.type;
+        this.readOnly = attribute.readOnly;
+        this.writeOnly = attribute.writeOnly;
+        this.overlay = attribute.overlay;
+        this.staticAttribute = attribute.staticAttribute;
     }
 
     public boolean isStatic() {
@@ -52,6 +62,22 @@ public class Attribute implements InterfaceMember {
 
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public boolean isOverlay() {
+        return overlay;
+    }
+
+    public void setOverlay(boolean overlay) {
+        this.overlay = overlay;
+    }
+
+    public boolean isWriteOnly() {
+        return writeOnly;
+    }
+
+    public void setWriteOnly(boolean writeOnly) {
+        this.writeOnly = writeOnly;
     }
 
     @Override
@@ -84,9 +110,5 @@ public class Attribute implements InterfaceMember {
                 ", type='" + type + '\'' +
                 ", readOnly=" + readOnly +
                 '}';
-    }
-
-    public void setOverlay(boolean overlay) {
-        this.overlay = overlay;
     }
 }

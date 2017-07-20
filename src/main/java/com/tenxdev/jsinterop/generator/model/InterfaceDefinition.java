@@ -20,7 +20,6 @@ package com.tenxdev.jsinterop.generator.model;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
-import javax.annotation.Generated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,8 +111,19 @@ public class InterfaceDefinition implements Definition {
         this.unionReturnTypes = unionReturnTypes;
     }
 
+    public List<Attribute> getReadableAttributes() {
+        return attributes.stream()
+                .filter(attribute -> !attribute.isWriteOnly())
+                .collect(Collectors.toList());
+    }
+
+    public List<Attribute> getWriteableAttributes() {
+        return attributes.stream()
+                .filter(attribute -> !attribute.isReadOnly())
+                .collect(Collectors.toList());
+    }
+
     @Override
-    @Generated("Intellij")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

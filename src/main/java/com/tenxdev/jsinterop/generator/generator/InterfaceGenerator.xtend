@@ -80,7 +80,7 @@ public class «definition.name.adjustJavaName»«
     }
 
     «ENDFOR»
-    «FOR attribute: definition.attributes»
+    «FOR attribute: definition.readableAttributes»
         @JsProperty(name="«attribute.name»")
         public native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
         «IF !attribute.readOnly»
