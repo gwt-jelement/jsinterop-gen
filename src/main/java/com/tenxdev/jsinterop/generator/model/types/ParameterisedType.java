@@ -48,6 +48,18 @@ public class ParameterisedType implements Type {
     }
 
     @Override
+    public String getTypeName() {
+        String result = baseType.getTypeName();
+        if (!typeParameters.isEmpty()) {
+            result += "Of" + typeParameters.get(0).getTypeName();
+        }
+        if (typeParameters.size() > 1) {
+            result += "And" + typeParameters.get(1).getTypeName();
+        }
+        return result;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

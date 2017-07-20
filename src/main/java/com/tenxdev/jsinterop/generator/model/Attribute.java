@@ -23,10 +23,11 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 public class Attribute implements InterfaceMember {
     private final boolean staticAttribute;
     private final String name;
-    private final boolean readOnly;
+    private boolean readOnly;
+    private boolean writeOnly;
     private Type type;
     private boolean overlay;
-    private boolean writeOnly;
+    private String javaName;
 
     public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute) {
         this.name = name;
@@ -40,6 +41,7 @@ public class Attribute implements InterfaceMember {
         this.type = attribute.type;
         this.readOnly = attribute.readOnly;
         this.writeOnly = attribute.writeOnly;
+        this.javaName = attribute.javaName;
         this.overlay = attribute.overlay;
         this.staticAttribute = attribute.staticAttribute;
     }
@@ -64,12 +66,24 @@ public class Attribute implements InterfaceMember {
         return readOnly;
     }
 
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
     public boolean isOverlay() {
         return overlay;
     }
 
     public void setOverlay(boolean overlay) {
         this.overlay = overlay;
+    }
+
+    public String getJavaName() {
+        return javaName == null ? name : javaName;
+    }
+
+    public void setJavaName(String javaName) {
+        this.javaName = javaName;
     }
 
     public boolean isWriteOnly() {

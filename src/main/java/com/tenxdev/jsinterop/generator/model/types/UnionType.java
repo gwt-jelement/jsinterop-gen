@@ -50,6 +50,13 @@ public class UnionType implements Type {
     }
 
     @Override
+    public String getTypeName() {
+        return types.stream()
+                .map(Type::getTypeName)
+                .collect(Collectors.joining()) + "UnionType";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

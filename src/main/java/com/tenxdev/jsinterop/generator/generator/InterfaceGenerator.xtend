@@ -58,7 +58,7 @@ import  «IF importName.startsWith(".")»«basePackageName»«ENDIF»«importNam
 public class «definition.name.adjustJavaName»«
         IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF» {
 /*
-«definition.unionReturnTypes»
+«definition»
 */
     «FOR unionType: definition.unionReturnTypes»
     @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
@@ -82,13 +82,7 @@ public class «definition.name.adjustJavaName»«
     «ENDFOR»
     «FOR attribute: definition.readableAttributes»
         @JsProperty(name="«attribute.name»")
-        public native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
-        «IF !attribute.readOnly»
-
-        @JsProperty(name="«attribute.name»")
-        public native void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name»);
-        «ENDIF»
-
+        public native «attribute.type.displayValue» get«attribute.javaName.toFirstUpper»();
     «ENDFOR»
     «FOR method: definition.methods SEPARATOR "\n"»
         «IF method.enumOverlay===null»

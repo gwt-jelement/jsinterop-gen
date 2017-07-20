@@ -30,6 +30,16 @@ public class ArrayType implements Type {
     }
 
     @Override
+    public String displayValue() {
+        return type.displayValue() + "[]";
+    }
+
+    @Override
+    public String getTypeName() {
+        return getType().getTypeName() + "Array";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -49,10 +59,5 @@ public class ArrayType implements Type {
         return "ArrayType{" +
                 "type=" + type +
                 '}';
-    }
-
-    @Override
-    public String displayValue() {
-        return type.displayValue() + "[]";
     }
 }

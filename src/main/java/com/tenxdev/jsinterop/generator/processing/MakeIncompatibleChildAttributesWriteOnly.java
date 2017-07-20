@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
+
 public class MakeIncompatibleChildAttributesWriteOnly extends AbstractParentModelProcessor {
 
     public void process(Model model, Logger logger) {
@@ -54,7 +56,11 @@ public class MakeIncompatibleChildAttributesWriteOnly extends AbstractParentMode
                     // not needed as already defined in parent with same type
                 } else {
                     Attribute newAttribute = new Attribute(attribute);
-                    newAttribute.setWriteOnly(true);
+                    newAttribute.setJavaName(attribute.getType().getTypeName() +
+                            toFirstUpper(attribute.getName()));
+                    newAttribute.setReadOnly(true);
+                    attribute.setWriteOnly(true);
+                    newAttributes.add(attribute);
                     newAttributes.add(newAttribute);
                 }
             } else {
