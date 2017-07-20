@@ -20,6 +20,7 @@ package com.tenxdev.jsinterop.generator.processing.uniontypes;
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.ArrayList;
@@ -59,12 +60,15 @@ public class AttributeUnionTypeProcessor {
     }
 
     private void processInterfaceDefinition(InterfaceDefinition definition) {
+        List<Attribute> newAttributes = new ArrayList<>();
         definition.getAttributes().stream()
                 .filter(attribute -> hasUnionTypeVisitor.accept(attribute.getType()))
-                .forEach(attribute -> processAttribute(attribute, definition));
+                .forEach(attribute -> newAttributes.addAll(processAttribute(attribute, definition)));
+        definition.getAttributes().addAll(newAttributes);
     }
 
-    private void processAttribute(Attribute attribute, InterfaceDefinition definition) {
+    private List<Attribute> processAttribute(Attribute attribute, InterfaceDefinition definition) {
+        List<Attribute> newAttributes = new ArrayList<>();
         List<UnionType> unionTypes = getUnionTypesVisitor.accept(attribute.getType());
         if (unionTypes.size() == 1) {
             UnionType unionType = unionTypes.get(0);
@@ -72,18 +76,26 @@ public class AttributeUnionTypeProcessor {
                 unionType.setName(toFirstUpper(attribute.getName()) + "UnionType");
 
             }
-            Attribute newAttribute = new Attribute(attribute.getName(), new NativeType(unionType.getName()),
-                    attribute.isReadOnly(), attribute.isStatic());
-            int index = definition.getAttributes().indexOf(attribute);
-            definition.getAttributes().set(index, newAttribute);
+            //readable attribute
             if (definition.getUnionReturnTypes() == null) {
                 definition.setUnionReturnTypes(new ArrayList<>());
             }
             definition.getUnionReturnTypes().add(unionType);
+            //writeable attribute
+            if (!attribute.isReadOnly()) {
+                for (Type type : unionType.getTypes()) {
+                    Attribute newAttribute = new Attribute(attribute.getName(), type,
+                            false, attribute.isStatic());
+                    newAttribute.setWriteOnly(true);
+                    newAttributes.add(newAttribute);
+                }
+            }
+            attribute.setReadOnly(true);
         } else {
             logger.formatError("Unexpected number of union types (%d) for attribute %s in %s%n",
                     unionTypes.size(), attribute.getName(), definition.getName());
         }
+        return newAttributes;
     }
 
     private void processDictionaryMember(DictionaryMember dictionaryMember, DictionaryDefinition definition) {

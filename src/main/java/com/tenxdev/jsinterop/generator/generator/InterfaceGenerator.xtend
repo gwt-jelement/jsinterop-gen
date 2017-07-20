@@ -22,6 +22,7 @@ import java.util.Collections
 import com.tenxdev.jsinterop.generator.model.MethodArgument
 import com.tenxdev.jsinterop.generator.model.types.NativeType
 import com.tenxdev.jsinterop.generator.model.Method
+import com.tenxdev.jsinterop.generator.model.Attribute
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -40,6 +41,7 @@ public class «definition.name.adjustJavaName»«
     «constants(definition)»
     «unionTypes(definition)»
     «readableAttributes(definition)»
+    «writeableAttributes(definition)»
     «methods(definition)»
 }
 '''
@@ -87,7 +89,15 @@ public class «definition.name.adjustJavaName»«
     def readableAttributes(InterfaceDefinition definition)'''
         «FOR attribute: definition.readableAttributes»
             @JsProperty(name="«attribute.name»")
-            public «IF attribute.static»static «ENDIF»native «attribute.type.displayValue» get«attribute.javaName.toFirstUpper»();
+            public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.javaName.toFirstUpper»();
+
+        «ENDFOR»
+    '''
+
+    def writeableAttributes(InterfaceDefinition definition)'''
+        «FOR attribute: definition.writeableAttributes»
+            @JsProperty(name="«attribute.name»")
+            public «staticModifier(attribute)»native void set«attribute.javaName.toFirstUpper»(«attribute.type.displayValue» «adjustJavaName(attribute.javaName)»);
 
         «ENDFOR»
     '''
@@ -118,6 +128,10 @@ public class «definition.name.adjustJavaName»«
 
     def accessModifier(Method method){
         if (method.privateMethod) "private" else "public"
+    }
+
+    def staticModifier(Attribute attribute){
+        if (attribute.static) "static "
     }
 
     def hasReturn(Method method){
