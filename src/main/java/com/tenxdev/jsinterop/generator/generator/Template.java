@@ -73,4 +73,5 @@ abstract class Template {
     protected String adjustJavaName(String name) {
         return JAVA_RESERVED_KEYWORDS.contains(name) ? name + "_" : name;
     }
+    
 }

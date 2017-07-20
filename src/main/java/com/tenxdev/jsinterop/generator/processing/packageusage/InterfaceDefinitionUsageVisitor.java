@@ -33,6 +33,8 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
     @Override
     public List<String> accept(InterfaceDefinition interfaceDefinition) {
         List<String> result = super.accept(interfaceDefinition);
+        result.add("jsinterop.annotations.JsPackage");
+        result.add("jsinterop.annotations.JsType");
         if (interfaceDefinition.getParent() instanceof PackageType) {
             PackageType packageType = (PackageType) interfaceDefinition.getParent();
             result.add(packageType.getPackageName() + "." + packageType.getTypeName());

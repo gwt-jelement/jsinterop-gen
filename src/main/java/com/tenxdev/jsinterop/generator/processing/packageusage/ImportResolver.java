@@ -15,12 +15,11 @@
  * the License.
  */
 
-package com.tenxdev.jsinterop.generator.processing;
+package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.Model;
-import com.tenxdev.jsinterop.generator.processing.packageusage.PackageUsageModelVisitor;
 
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,7 @@ public class ImportResolver {
     private void processPackagesForDefinition(DefinitionInfo definitionInfo, List<String> packages) {
         definitionInfo.setImportedPackages(packages.stream()
                 .filter(packageName -> needsImport(definitionInfo, packageName))
+                .sorted()
                 .collect(Collectors.toList()));
     }
 

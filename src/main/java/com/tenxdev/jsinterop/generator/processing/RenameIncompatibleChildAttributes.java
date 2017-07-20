@@ -29,10 +29,10 @@ import java.util.Optional;
 
 import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
 
-public class MakeIncompatibleChildAttributesWriteOnly extends AbstractParentModelProcessor {
+public class RenameIncompatibleChildAttributes extends AbstractParentModelProcessor {
 
     public void process(Model model, Logger logger) {
-        logger.info(Logger.LEVEL_INFO, () -> "Making incompatible children attributes write only");
+        logger.info(Logger.LEVEL_INFO, () -> "Renaming incompatible readable children attributes");
         for (DefinitionInfo definitionInfo : model.getDefinitions()) {
             DefinitionInfo parentDefinitionInfo = getParentDefinition(model, definitionInfo);
             while (parentDefinitionInfo != null) {
