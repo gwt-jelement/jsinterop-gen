@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class TypeFactory {
 
-    private static final ImmutableMap<String, Type> BOXED_TYPES = ImmutableMap.<String, Type>builder()
+    public static final ImmutableMap<String, Type> BOXED_TYPES = ImmutableMap.<String, Type>builder()
             .put("void", new NativeType("Void"))
             .put("int", new NativeType("Integer"))
             .put("long", new NativeType("Long"))

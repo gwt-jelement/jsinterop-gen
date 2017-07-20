@@ -104,6 +104,14 @@ public class InterfaceDefinition implements Definition {
         return features;
     }
 
+    public List<UnionType> getUnionReturnTypes() {
+        return unionReturnTypes;
+    }
+
+    public void setUnionReturnTypes(List<UnionType> unionReturnTypes) {
+        this.unionReturnTypes = unionReturnTypes;
+    }
+
     @Override
     @Generated("Intellij")
     public boolean equals(Object o) {
@@ -148,12 +156,5 @@ public class InterfaceDefinition implements Definition {
                 '}';
     }
 
-    public List<UnionType> getUnionReturnTypes() {
-        return unionReturnTypes;
-    }
-
-    public void setUnionReturnTypes(List<UnionType> unionReturnTypes) {
-        this.unionReturnTypes = unionReturnTypes;
-    }
 }
 

@@ -19,6 +19,7 @@ package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.PackageType;
+import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractInterfaceDefinitionVisitor;
 
 import java.util.Collections;
@@ -40,6 +41,12 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
             result.add("jsinterop.annotations.JsOverlay");
             result.add("jsinterop.annotations.JsType");
             result.add("jsinterop.base.Js");
+            result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
+                    .map(UnionType::getTypes)
+                    .flatMap(List::stream)
+                    .map(typeVisitor::accept)
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList()));
         }
         if (!interfaceDefinition.getMethods().isEmpty()) {
             result.add("jsinterop.annotations.JsMethod");

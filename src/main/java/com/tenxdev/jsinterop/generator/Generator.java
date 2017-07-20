@@ -25,6 +25,7 @@ import com.tenxdev.jsinterop.generator.logging.PrintStreamLogger;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.processing.*;
 import com.tenxdev.jsinterop.generator.processing.enumtypes.MethodEnumArgumentProcessor;
+import com.tenxdev.jsinterop.generator.processing.uniontypes.AttributeUnionTypeProcessor;
 import com.tenxdev.jsinterop.generator.processing.uniontypes.MethodUnionArgsExpander;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -89,6 +90,7 @@ class Generator {
         new MethodUnionArgsExpander(model, logger).processModel(); //must run after all interface merging
         new MethodOptionalArgsExpander(model, logger).processModel();//must run after union args expansion
         new MethodEnumArgumentProcessor(model, logger).process(); // must run after all method expansions
+        new AttributeUnionTypeProcessor(model, logger).process();
         new ImportResolver().processModel(model, logger); //must run after all type substitutions
         new SourceGenerator(logger).processModel(model, outputDirectory, basePackage);
     }

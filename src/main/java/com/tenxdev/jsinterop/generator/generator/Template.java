@@ -17,6 +17,9 @@
 package com.tenxdev.jsinterop.generator.generator;
 
 import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.model.types.NativeType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
+import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -52,6 +55,16 @@ abstract class Template {
                 .replace('/', '_')
                 .replace('+', '_');
     }
+
+    protected Type boxType(Type type) {
+        if (type instanceof NativeType) {
+            Type boxedType = TypeFactory.BOXED_TYPES.get(((NativeType) type).getTypeName());
+            return boxedType != null ? boxedType : type;
+        }
+        //TODO may need to box other types
+        return type;
+    }
+
 
     protected String getCallbackMethodName(Method method) {
         return method.getName() == null || method.getName().isEmpty() ? "callback" : method.getName();

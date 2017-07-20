@@ -57,8 +57,10 @@ import  «IF importName.startsWith(".")»«basePackageName»«ENDIF»«importNam
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.name.adjustJavaName»«
         IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF» {
-
-    «FOR unionType: definition.getUnionReturnTypes»
+/*
+«definition.unionReturnTypes»
+*/
+    «FOR unionType: definition.unionReturnTypes»
     @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
     public interface «unionType.name» {
         «FOR type: unionType.types»
@@ -71,7 +73,7 @@ public class «definition.name.adjustJavaName»«
         «FOR type: unionType.types»
         @JsOverlay
         default boolean is«type.displayValue.toFirstUpper»(){
-            return (Object) this instanceof «type.displayValue»;
+            return (Object) this instanceof «(boxType(type).displayValue)»;
         }
 
         «ENDFOR»
@@ -79,12 +81,12 @@ public class «definition.name.adjustJavaName»«
 
     «ENDFOR»
     «FOR attribute: definition.attributes»
-//        @JsProperty(name="«attribute.name»")
-//        public native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
+        @JsProperty(name="«attribute.name»")
+        public native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
         «IF !attribute.readOnly»
 
-//        @JsProperty(name="«attribute.name»")
-//        public native void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name»);
+        @JsProperty(name="«attribute.name»")
+        public native void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name»);
         «ENDIF»
 
     «ENDFOR»

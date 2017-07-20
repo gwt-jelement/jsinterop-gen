@@ -17,13 +17,15 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
 public class Attribute implements InterfaceMember {
     private final boolean staticAttribute;
     private final String name;
-    private final Type type;
     private final boolean readOnly;
+    private Type type;
+    private boolean overlay;
 
     public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute) {
         this.name = name;
@@ -42,6 +44,10 @@ public class Attribute implements InterfaceMember {
 
     public Type getType() {
         return type;
+    }
+
+    public void setType(NativeType type) {
+        this.type = type;
     }
 
     public boolean isReadOnly() {
@@ -78,5 +84,9 @@ public class Attribute implements InterfaceMember {
                 ", type='" + type + '\'' +
                 ", readOnly=" + readOnly +
                 '}';
+    }
+
+    public void setOverlay(boolean overlay) {
+        this.overlay = overlay;
     }
 }

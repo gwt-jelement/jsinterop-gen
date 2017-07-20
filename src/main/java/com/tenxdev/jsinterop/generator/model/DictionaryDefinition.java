@@ -17,6 +17,8 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.UnionType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class DictionaryDefinition implements Definition {
     private final String name;
     private final String parent;
     private List<DictionaryMember> members;
+    private List<UnionType> unionReturnTypes;
 
     public DictionaryDefinition(String name, String parent, List<DictionaryMember> members) {
         this.name = name;
@@ -45,6 +48,14 @@ public class DictionaryDefinition implements Definition {
             members = new ArrayList<>();
         }
         return members;
+    }
+
+    public List<UnionType> getUnionReturnTypes() {
+        return unionReturnTypes;
+    }
+
+    public void setUnionReturnTypes(List<UnionType> unionReturnTypes) {
+        this.unionReturnTypes = unionReturnTypes;
     }
 
     @Override
@@ -74,5 +85,4 @@ public class DictionaryDefinition implements Definition {
                 ", members=" + members +
                 '}';
     }
-
 }
