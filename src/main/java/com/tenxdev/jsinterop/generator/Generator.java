@@ -25,9 +25,11 @@ import com.tenxdev.jsinterop.generator.logging.PrintStreamLogger;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.processing.*;
 import com.tenxdev.jsinterop.generator.processing.enumtypes.AttributeEnumTypeProcessor;
+import com.tenxdev.jsinterop.generator.processing.enumtypes.DictionaryMemberEnumTypeProcessor;
 import com.tenxdev.jsinterop.generator.processing.enumtypes.MethodEnumArgumentProcessor;
 import com.tenxdev.jsinterop.generator.processing.packageusage.ImportResolver;
 import com.tenxdev.jsinterop.generator.processing.uniontypes.AttributeUnionTypeProcessor;
+import com.tenxdev.jsinterop.generator.processing.uniontypes.DictionaryMemberUnionTypeProcessor;
 import com.tenxdev.jsinterop.generator.processing.uniontypes.MethodUnionArgsExpander;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -96,6 +98,8 @@ class Generator {
         new AttributeUnionTypeProcessor(model, logger).process();
         new AttributeEnumTypeProcessor(model, logger).process();
         new RenameIncompatibleChildAttributes().process(model, logger); //anywhere after merging
+        new DictionaryMemberUnionTypeProcessor(model, logger).process();
+        new DictionaryMemberEnumTypeProcessor(model, logger).process();
         new ImportResolver().processModel(model, logger); //must run after all type substitutions
         new SourceGenerator(logger).processModel(model, outputDirectory, basePackage);
     }

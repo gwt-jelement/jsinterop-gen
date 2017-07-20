@@ -17,13 +17,38 @@
 
 package com.tenxdev.jsinterop.generator.processing.packageusage;
 
+import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
+import com.tenxdev.jsinterop.generator.model.types.ArrayType;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractDictionaryDefinitionVisitor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DictionaryDefinitionVisitor extends AbstractDictionaryDefinitionVisitor<List<String>> {
+public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefinitionVisitor<List<String>> {
+
+    @Override
+    public List<String> accept(DictionaryDefinition definition) {
+        List<String> result = super.accept(definition);
+        result.add("jsinterop.annotations.JsPackage");
+        result.add("jsinterop.annotations.JsProperty");
+        result.add("jsinterop.annotations.JsType");
+
+        if (definition.getUnionReturnTypes() != null) {
+            result.add("jsinterop.base.Js");
+            result.add("jsinterop.annotations.JsOverlay");
+        }
+        if (definition.getMembers().stream()
+                .anyMatch(member -> member.getEnumSubstitutionType() != null)) {
+            result.add("jsinterop.annotations.JsOverlay");
+        }
+        if (definition.getMembers().stream()
+                .anyMatch(member -> member.getEnumSubstitutionType() instanceof ArrayType)) {
+            result.add("java.util.Arrays");
+        }
+        return result;
+    }
+
     @Override
     protected List<String> visitMembers(List<DictionaryMember> members) {
         TypeVisitor typeVisitor = new TypeVisitor();

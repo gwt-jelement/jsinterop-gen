@@ -101,19 +101,22 @@ public class «definition.name.adjustJavaName»«
     '''
 
     def readableEnumAttribute(Attribute attribute)'''
-        @JsOverlay
-        public «staticModifier(attribute)» «attribute.type.displayValue» get«attribute.name.toFirstUpper»_(){
-            return «extractEnumType(attribute.type).displayValue».of(get«attribute.name.toFirstUpper»());
-        }
+        «IF attribute.type instanceof ArrayType»
+            @JsOverlay
+            public «staticModifier(attribute)» «attribute.type.displayValue» get«attribute.name.toFirstUpper»_(){
+                return «(attribute.type as ArrayType).type.displayValue».ofArray(get«attribute.name.toFirstUpper»());
+            }
+        «ELSE»
+            @JsOverlay
+            public «staticModifier(attribute)» «attribute.type.displayValue» get«attribute.name.toFirstUpper»_(){
+                return «attribute.type.displayValue».of(get«attribute.name.toFirstUpper»());
+            }
+        «ENDIF»
 
         @JsProperty(name="«attribute.name»")
         public «staticModifier(attribute)»native «attribute.enumSubstitutionType.displayValue» get«attribute.name.toFirstUpper»();
 
     '''
-
-    def extractEnumType(Type type){
-        if (type instanceof ArrayType) (type as ArrayType).type else type
-    }
 
     def writeableAttributes(InterfaceDefinition definition)'''
         «FOR attribute: definition.writeableAttributes»
@@ -152,13 +155,13 @@ public class «definition.name.adjustJavaName»«
     def nativeMethod(Method method)'''
         @JsMethod(name = "«method.name»")
         public native «method.returnType.displayValue» «IF method.privateMethod
-            »«ENDIF»«method.name.adjustJavaName»(«arguments(method)»);
+            »«ENDIF»«method.name.adjustJavaName»_(«arguments(method)»);
     '''
 
     def enumOverlayMethod(Method method)'''
         @JsOverlay
         public «method.returnType.displayValue» «method.name.adjustJavaName»(«arguments(method)»){
-            «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
+            «hasReturn(method)»«hasEnumReturnType(method)»«method.name»_(«enumMethodArguments(method)»);
         }
     '''
 

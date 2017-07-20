@@ -31,14 +31,14 @@ abstract class Template {
     private static final Set<String> JAVA_RESERVED_KEYWORDS = new TreeSet<>(
             Arrays.asList("abstract", "continue", "for", "new", "switch",
                     "assert", "default", "goto", "package", "synchronized",
-                    "boolean	", "do	", "if	", "private	", "this",
-                    "break	", "double	", "implements	", "protected	", "throw",
-                    "byte	", "else	", "import	", "public	", "throws",
-                    "case	", "enum	", "instanceof	", "return	", "transient",
-                    "catch	", "extends	", "int	", "short	", "try",
-                    "char	", "final	", "interface	", "static	", "void",
-                    "class	", "finally	", "long	", "strictfp", "volatile",
-                    "const	", "float	", "native	", "super	", "while", "_"));
+                    "boolean", "do", "if", "private", "this",
+                    "break", "double", "implements", "protected", "throw",
+                    "byte", "else", "import", "public", "throws",
+                    "case", "enum", "instanceof", "return", "transient",
+                    "catch", "extends", "int", "short", "try",
+                    "char", "final", "interface", "static", "void",
+                    "class", "finally", "long", "strictfp", "volatile",
+                    "const", "float", "native", "super", "while", "_"));
 
     protected String enumValueToJavaName(@Nonnull String value) {
         String result = value;
@@ -73,5 +73,5 @@ abstract class Template {
     protected String adjustJavaName(String name) {
         return JAVA_RESERVED_KEYWORDS.contains(name) ? name + "_" : name;
     }
-    
+
 }

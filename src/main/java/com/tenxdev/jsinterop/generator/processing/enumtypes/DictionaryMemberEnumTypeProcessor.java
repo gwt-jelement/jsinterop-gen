@@ -18,43 +18,44 @@
 package com.tenxdev.jsinterop.generator.processing.enumtypes;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.Attribute;
-import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
+import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
+import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
-public class AttributeEnumTypeProcessor {
+public class DictionaryMemberEnumTypeProcessor {
 
     private Model model;
     private Logger logger;
     private HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
     private EnumSubstitutionVisitor enumSubstitutionVisitor;
 
-    public AttributeEnumTypeProcessor(Model model, Logger logger) {
+    public DictionaryMemberEnumTypeProcessor(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
         this.enumSubstitutionVisitor = new EnumSubstitutionVisitor(model, logger);
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Processing enum type attributes");
+        logger.info(Logger.LEVEL_INFO, () -> "Processing enum types in dictionaries");
         model.getDefinitions().stream()
-                .filter(definitionInfo -> definitionInfo.getDefinition().getClass() == InterfaceDefinition.class)
-                .map(definitionInfo -> (InterfaceDefinition) definitionInfo.getDefinition())
-                .forEach(this::processInterfaceDefinition);
+                .filter(definitionInfo -> definitionInfo.getDefinition().getClass() == DictionaryDefinition.class)
+                .map(definitionInfo -> (DictionaryDefinition) definitionInfo.getDefinition())
+                .forEach(this::processDictionaryDefinition);
     }
 
-    private void processInterfaceDefinition(InterfaceDefinition definition) {
-        definition.getAttributes().stream()
-                .filter(attribute -> hasEnumTypeVisitor.accept(attribute.getType()))
-                .forEach(this::processAttribute);
+    private void processDictionaryDefinition(DictionaryDefinition definition) {
+        definition.getMembers().stream()
+                .filter(dictionaryMember -> hasEnumTypeVisitor.accept(dictionaryMember.getType()))
+                .forEach(this::processDictionaryMember);
     }
 
-    private void processAttribute(Attribute attribute) {
-        Type newType = enumSubstitutionVisitor.accept(attribute.getType());
+    private void processDictionaryMember(DictionaryMember member) {
+        Type newType = enumSubstitutionVisitor.accept(member.getType());
         if (!(newType instanceof UnionType)) {
-            attribute.setEnumSubstitutionType(newType);
+            member.setEnumSubstitutionType(newType);
         }
     }
+
 }

@@ -19,6 +19,15 @@ package com.tenxdev.jsinterop.generator.model.types;
 
 public interface Type {
 
+    default boolean is(String typeName) {
+        return this instanceof NativeType && typeName.equals(((NativeType) this).getTypeName());
+    }
+
+    default boolean isNumber() {
+        return is("int") || is("long") || is("byte") || is("double")
+                || is("float") || is("short");
+    }
+
     String displayValue();
 
     String getTypeName();

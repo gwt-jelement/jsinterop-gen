@@ -44,7 +44,7 @@ public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>>
 
     @Override
     protected List<String> visitDictionaryDefinition(DictionaryDefinition definition) {
-        return new DictionaryDefinitionVisitor().accept(definition);
+        return new DictionaryDefinitionUsageVisitor().accept(definition);
     }
 
     @Override

@@ -18,8 +18,9 @@
 package com.tenxdev.jsinterop.generator.processing.uniontypes;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.*;
-import com.tenxdev.jsinterop.generator.model.types.NativeType;
+import com.tenxdev.jsinterop.generator.model.Attribute;
+import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
+import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
@@ -49,16 +50,6 @@ public class AttributeUnionTypeProcessor {
                 .filter(definitionInfo -> definitionInfo.getDefinition().getClass() == InterfaceDefinition.class)
                 .map(definitionInfo -> (InterfaceDefinition) definitionInfo.getDefinition())
                 .forEach(this::processInterfaceDefinition);
-        model.getDefinitions().stream()
-                .filter(definitionInfo -> definitionInfo.getDefinition().getClass() == DictionaryDefinition.class)
-                .map(definitionInfo -> (DictionaryDefinition) definitionInfo.getDefinition())
-                .forEach(this::processDictionaryDefinition);
-    }
-
-    private void processDictionaryDefinition(DictionaryDefinition definition) {
-        definition.getMembers().stream()
-                .filter(dictionaryMember -> hasUnionTypeVisitor.accept(dictionaryMember.getType()))
-                .forEach(dictionaryMember -> processDictionaryMember(dictionaryMember, definition));
     }
 
     private void processInterfaceDefinition(InterfaceDefinition definition) {
@@ -99,29 +90,5 @@ public class AttributeUnionTypeProcessor {
         }
         return newAttributes;
     }
-
-    private void processDictionaryMember(DictionaryMember dictionaryMember, DictionaryDefinition definition) {
-        List<UnionType> unionTypes = getUnionTypesVisitor.accept(dictionaryMember.getType());
-        if (unionTypes.size() == 1) {
-            UnionType unionType = unionTypes.get(0);
-            if (unionType.getName() == null) {
-                unionType.setName(toFirstUpper(dictionaryMember.getName()) + "UnionType");
-
-            }
-            DictionaryMember newMember = new DictionaryMember(dictionaryMember.getName(),
-                    new NativeType(unionType.getName()),
-                    dictionaryMember.isRequired(), dictionaryMember.getDefaultValue());
-            int index = definition.getMembers().indexOf(dictionaryMember);
-            definition.getMembers().set(index, newMember);
-            if (definition.getUnionReturnTypes() == null) {
-                definition.setUnionReturnTypes(new ArrayList<>());
-            }
-            definition.getUnionReturnTypes().add(unionType);
-        } else {
-            logger.formatError("Unexpected number of union types (%d) for attribute %s in %s%n",
-                    unionTypes.size(), dictionaryMember.getName(), definition.getName());
-        }
-    }
-
 
 }

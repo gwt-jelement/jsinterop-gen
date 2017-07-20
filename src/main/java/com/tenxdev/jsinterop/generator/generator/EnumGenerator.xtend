@@ -54,7 +54,7 @@ public enum «definition.name»{
         }
     }
 
-    public static «definition.name»[] of(«enumMemberType(definition)»[] values) {
+    public static «definition.name»[] ofArray(«enumMemberType(definition)»[] values) {
         return Arrays.<«enumMemberType(definition)»>stream(values)
                 .map(«definition.name»::of)
                 .toArray(«definition.name»[]::new);

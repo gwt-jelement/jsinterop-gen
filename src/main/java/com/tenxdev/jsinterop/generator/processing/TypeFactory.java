@@ -76,7 +76,7 @@ public class TypeFactory {
         typeMap.put("Function", new ObjectType("Function", "elemental2.core"));
         typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
         typeMap.put("Dictionary", new NativeType("Object"));
-        typeMap.put("record", new NativeType("Object"));
+        typeMap.put("record", new ObjectType("JsPropertyMap", "jsinterop.base"));
     }
 
 

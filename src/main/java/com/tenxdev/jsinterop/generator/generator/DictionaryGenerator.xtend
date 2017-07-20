@@ -17,8 +17,13 @@
 package com.tenxdev.jsinterop.generator.generator
 
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo
-import com.tenxdev.jsinterop.generator.model.InterfaceDefinition
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition
+import com.tenxdev.jsinterop.generator.model.DictionaryMember
+import com.tenxdev.jsinterop.generator.model.types.Type
+import com.tenxdev.jsinterop.generator.model.types.EnumType
+import com.tenxdev.jsinterop.generator.model.types.UnionType
+import com.tenxdev.jsinterop.generator.model.types.ArrayType
+import com.tenxdev.jsinterop.generator.model.types.NativeType
 
 class DictionaryGenerator extends XtendTemplate{
 
@@ -26,18 +31,118 @@ class DictionaryGenerator extends XtendTemplate{
         var definition=definitionInfo.getDefinition() as DictionaryDefinition
         return '''
 «copyright»
- package «basePackageName»«definitionInfo.getPackageName()»;
-
-import jsinterop.annotations.JsPackage;
-import jsinterop.annotations.JsType;
+package «basePackageName»«definitionInfo.getPackageName()»;
 
 «imports(basePackageName, definitionInfo)»
+
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.getName»{
 
+    «unionTypes(definition)»
+    «FOR member: definition.members»
+        «IF member.enumSubstitutionType instanceof EnumType»
+            @JsProperty(name="«member.name»")
+            public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»«defaultValue(member)»;
 
+            @JsOverlay
+            public «member.type.displayValue» get«member.name.toFirstUpper»(){
+                return «member.type.displayValue».of(this.«member.name.adjustJavaName»);
+            }
+
+            @JsOverlay
+            public void set«member.name.toFirstUpper»(«member.type.displayValue» «member.name.adjustJavaName»){
+                this.«member.name.adjustJavaName» = «member.name.adjustJavaName».getInternalValue();
+            }
+
+        «ELSEIF member.enumSubstitutionType instanceof ArrayType»
+            @JsProperty(name="«member.name»")
+            public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»«defaultValue(member)»;
+
+            @JsOverlay
+            public «member.type.displayValue» get«member.name.toFirstUpper»(){
+                return «(member.type as ArrayType).type.displayValue».ofArray(this.«member.name.adjustJavaName»);
+            }
+
+            @JsOverlay
+            public void set«member.name.toFirstUpper»(«member.type.displayValue» «member.name.adjustJavaName»){
+                this.«member.name.adjustJavaName» = Arrays.stream(«member.name.adjustJavaName»)
+                    .map(«(member.type as ArrayType).type.displayValue»::getInternalValue)
+                    .toArray(«(member.enumSubstitutionType as ArrayType).type.displayValue»[]::new);
+            }
+
+        «ELSE»
+            @JsProperty(name="«member.name»")
+            public «member.type.displayValue» «member.name.adjustJavaName»«defaultValue(member)»;
+
+        «ENDIF»
+    «ENDFOR»
 
 }
     '''
     }
+
+    def enumType(Type type){
+        type instanceof EnumType
+    }
+
+    def defaultValue(DictionaryMember member){
+        if (member.defaultValue=="[]") {
+            if(member.enumSubstitutionType!=null)
+                return " = new " + member.enumSubstitutionType.displayValue.replace("[]","[0]")
+            else
+                return " = new " + member.type.displayValue.replace("[]","[0]")
+        }else if (member.defaultValue == "null"){
+            if (member.type.isNumber)
+                return " = 0"
+            else
+                return " = null"
+        } else if (member.defaultValue != null) {
+            if(member.type instanceof UnionType)
+                return " = Js.cast(" + member.defaultValue +")"
+            else if (member.type instanceof EnumType)
+                return " = "+member.type.displayValue+".of(" + member.defaultValue + ")"
+            else if (member.defaultValue.isDecimal){
+                if (member.type.is("float"))
+                    return " = " + member.defaultValue+"f"
+            }
+            " = " + member.defaultValue
+        }
+    }
+
+    def isDecimal(String value){
+        value.matches("-?[0-9]+\\.[0-9]+(e[0-9]+)?")
+    }
+
+    def unionTypes(DictionaryDefinition definition)'''
+        «IF definition.unionReturnTypes !== null»
+            «FOR unionType: definition.unionReturnTypes»
+                @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
+                public interface «unionType.name» {
+                    «FOR type: unionType.types»
+                    @JsOverlay
+                    default «type.displayValue» as«type.displayValue.toFirstUpper.adjust»(){
+                        return Js.cast(this);
+                    }
+
+                    «ENDFOR»
+                    «FOR type: unionType.types»
+                    @JsOverlay
+                    default boolean is«type.displayValue.toFirstUpper.adjust»(){
+                        return (Object) this instanceof «(boxType(type).displayValue).removeGeneric»;
+                    }
+
+                    «ENDFOR»
+                }
+            «ENDFOR»
+        «ENDIF»
+    '''
+
+    def removeGeneric(String value){
+        value.replaceAll("<.*?>","")
+    }
+
+    def adjust(String value){
+        value.replace("[]", "Array").removeGeneric;
+    }
+
 }

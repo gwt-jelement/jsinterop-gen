@@ -40,6 +40,9 @@ public class ParameterisedType implements Type {
 
     @Override
     public String displayValue() {
+        if ("JsPropertyMap".equals(baseType.displayValue()) && typeParameters.size() == 2) {
+            return "JsPropertyMap<" + typeParameters.get(1).displayValue() + ">";
+        }
         return baseType.displayValue() + (typeParameters.isEmpty() ? "" : (
                 "<" + typeParameters.stream()
                         .map(Type::displayValue)

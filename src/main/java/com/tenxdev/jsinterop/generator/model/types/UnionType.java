@@ -60,16 +60,17 @@ public class UnionType implements Type {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         UnionType unionType = (UnionType) o;
-        return types.equals(unionType.types);
+
+        if (!types.equals(unionType.types)) return false;
+        return name != null ? name.equals(unionType.name) : unionType.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + types.hashCode();
+        int result = types.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 
