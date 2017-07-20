@@ -30,13 +30,15 @@ import java.util.List;
 
 public class MethodEnumArgumentProcessor {
 
-    private final HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
+    private HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
+    private EnumSubstitutionVisitor enumSubstitutionVisitor;
     private Model model;
     private Logger logger;
 
     public MethodEnumArgumentProcessor(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
+        this.enumSubstitutionVisitor = new EnumSubstitutionVisitor(model, logger);
     }
 
     public void process() {
@@ -78,7 +80,7 @@ public class MethodEnumArgumentProcessor {
             }
         }
         if (hasEnumTypeVisitor.accept(method.getReturnType())) {
-            Type newReturnType = new EnumSubstitutionVisitor(model, logger).accept(method.getReturnType());
+            Type newReturnType = enumSubstitutionVisitor.accept(method.getReturnType());
             if (method.getReturnType() instanceof EnumType) {
                 hasEnumTypes = true;
                 newMethod.setReturnType(newReturnType);

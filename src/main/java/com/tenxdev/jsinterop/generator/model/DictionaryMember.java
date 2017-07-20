@@ -25,6 +25,7 @@ public class DictionaryMember {
     private final boolean required;
     private final String defaultValue;
     private final Type type;
+    private Type enumSubstitutionType;
 
     public DictionaryMember(String name, Type type, boolean required, String defaultValue) {
         this.name = name;
@@ -47,6 +48,14 @@ public class DictionaryMember {
 
     public String getDefaultValue() {
         return defaultValue;
+    }
+
+    public Type getEnumSubstitutionType() {
+        return enumSubstitutionType;
+    }
+
+    public void setEnumSubstitutionType(Type enumSubstitutionType) {
+        this.enumSubstitutionType = enumSubstitutionType;
     }
 
     @Override

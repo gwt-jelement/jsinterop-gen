@@ -50,7 +50,6 @@ public class AttributeUnionTypeProcessor {
                 .filter(definitionInfo -> definitionInfo.getDefinition().getClass() == DictionaryDefinition.class)
                 .map(definitionInfo -> (DictionaryDefinition) definitionInfo.getDefinition())
                 .forEach(this::processDictionaryDefinition);
-
     }
 
     private void processDictionaryDefinition(DictionaryDefinition definition) {

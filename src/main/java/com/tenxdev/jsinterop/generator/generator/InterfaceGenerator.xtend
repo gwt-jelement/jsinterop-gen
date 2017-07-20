@@ -88,10 +88,24 @@ public class «definition.name.adjustJavaName»«
 
     def readableAttributes(InterfaceDefinition definition)'''
         «FOR attribute: definition.readableAttributes»
-            @JsProperty(name="«attribute.name»")
-            public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.javaName.toFirstUpper»();
+            «IF attribute.enumSubstitutionType!==null»
+                «readableEnumAttribute(attribute)»
+            «ELSE»
+                @JsProperty(name="«attribute.name»")
+                public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.javaName.toFirstUpper»();
 
+            «ENDIF»
         «ENDFOR»
+    '''
+
+    def readableEnumAttribute(Attribute attribute)'''
+        public «staticModifier(attribute)» «attribute.type» get«attribute.name.toFirstUpper»(){
+            return «attribute.type».of(get«attribute.name.toFirstUpper»_());
+        }
+
+        @JsProperty(name="«attribute.name»")
+        private «staticModifier(attribute)» native «attribute.enumSubstitutionType» get«attribute.name.toFirstUpper»_();
+
     '''
 
     def writeableAttributes(InterfaceDefinition definition)'''

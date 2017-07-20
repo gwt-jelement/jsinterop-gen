@@ -26,8 +26,8 @@ public class Attribute implements InterfaceMember {
     private boolean readOnly;
     private boolean writeOnly;
     private Type type;
-    private boolean overlay;
     private String javaName;
+    private Type enumSubstitutionType;
 
     public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute) {
         this.name = name;
@@ -42,7 +42,6 @@ public class Attribute implements InterfaceMember {
         this.readOnly = attribute.readOnly;
         this.writeOnly = attribute.writeOnly;
         this.javaName = attribute.javaName;
-        this.overlay = attribute.overlay;
         this.staticAttribute = attribute.staticAttribute;
     }
 
@@ -70,14 +69,6 @@ public class Attribute implements InterfaceMember {
         this.readOnly = readOnly;
     }
 
-    public boolean isOverlay() {
-        return overlay;
-    }
-
-    public void setOverlay(boolean overlay) {
-        this.overlay = overlay;
-    }
-
     public String getJavaName() {
         return javaName == null ? name : javaName;
     }
@@ -92,6 +83,14 @@ public class Attribute implements InterfaceMember {
 
     public void setWriteOnly(boolean writeOnly) {
         this.writeOnly = writeOnly;
+    }
+
+    public Type getEnumSubstitutionType() {
+        return enumSubstitutionType;
+    }
+
+    public void setEnumSubstitutionType(Type enumSubstitutionType) {
+        this.enumSubstitutionType = enumSubstitutionType;
     }
 
     @Override
