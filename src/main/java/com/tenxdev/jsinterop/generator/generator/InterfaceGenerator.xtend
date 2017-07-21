@@ -28,8 +28,8 @@ import com.tenxdev.jsinterop.generator.model.types.ArrayType
 
 class InterfaceGenerator extends XtendTemplate{
 
-    def generate(String basePackageName, DefinitionInfo definitionInfo){
-        var definition=definitionInfo.getDefinition() as InterfaceDefinition
+    def generate(String basePackageName, DefinitionInfo<InterfaceDefinition> definitionInfo){
+        var definition=definitionInfo.getDefinition()
         Collections.sort(definition.methods)
         return '''
 «copyright»
@@ -68,23 +68,26 @@ public class «definition.name.adjustJavaName»«
 
     def unionTypes(InterfaceDefinition definition)'''
         «FOR unionType: definition.unionReturnTypes»
-            @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
-            public interface «unionType.name» {
-                «FOR type: unionType.types»
-                @JsOverlay
-                default «type.displayValue» as«type.displayValue.toFirstUpper»(){
-                    return Js.cast(this);
+            «IF true»
+                @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
+                public interface «unionType.name» {
+                    «FOR type: unionType.types»
+                    @JsOverlay
+                    default «type.displayValue» as«type.displayValue.toFirstUpper»(){
+                        return Js.cast(this);
+                    }
+
+                    «ENDFOR»
+                    «FOR type: unionType.types»
+                    @JsOverlay
+                    default boolean is«type.displayValue.toFirstUpper»(){
+                        return (Object) this instanceof «(boxType(type).displayValue)»;
+                    }
+
+                    «ENDFOR»
                 }
 
-                «ENDFOR»
-                «FOR type: unionType.types»
-                @JsOverlay
-                default boolean is«type.displayValue.toFirstUpper»(){
-                    return (Object) this instanceof «(boxType(type).displayValue)»;
-                }
-
-                «ENDFOR»
-            }
+            «ENDIF»
         «ENDFOR»
     '''
 

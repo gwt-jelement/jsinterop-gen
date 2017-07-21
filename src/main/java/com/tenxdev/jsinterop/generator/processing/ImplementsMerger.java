@@ -44,7 +44,7 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
     public void processModel() {
         logger.info(Logger.LEVEL_INFO, () -> "Merging 'implements' definitions");
         model.getDefinitions().forEach(definitionInfo ->
-                definitionInfo.getImplementsDefinitions().forEach(implementsDefinition -> {
+                definitionInfo.getImplementsDefinitions().forEach((ImplementsDefinition implementsDefinition) -> {
                     String definitionName = implementsDefinition.getName();
                     String implementsName = implementsDefinition.getParent();
                     implementsMap.computeIfAbsent(definitionName, key -> new ArrayList<>()).add(implementsName);

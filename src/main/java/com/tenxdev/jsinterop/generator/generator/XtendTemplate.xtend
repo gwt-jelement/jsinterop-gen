@@ -23,7 +23,7 @@ class XtendTemplate extends Template {
  */
     '''
 
-    def imports(String basePackageName, DefinitionInfo definitionInfo)'''
+    def imports(String basePackageName, DefinitionInfo<?> definitionInfo)'''
         «FOR importName: definitionInfo.getImportedPackages»
             import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
         «ENDFOR»

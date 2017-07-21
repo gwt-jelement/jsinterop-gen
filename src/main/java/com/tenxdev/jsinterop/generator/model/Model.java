@@ -25,10 +25,10 @@ import java.util.Map;
 
 public class Model {
 
-    private final Map<String, DefinitionInfo> definitions = new HashMap<>();
+    private final Map<String, DefinitionInfo<?>> definitions = new HashMap<>();
     private TypeFactory typeFactory;
 
-    public Collection<DefinitionInfo> getDefinitions() {
+    public Collection<DefinitionInfo<?>> getDefinitions() {
         return definitions.values();
     }
 
@@ -37,7 +37,7 @@ public class Model {
     }
 
     public void registerDefinition(Definition definition, String packageSuffix, String filename) throws ConflictingNameException {
-        DefinitionInfo definitionInfo = definitions.computeIfAbsent(definition.getName(), DefinitionInfo::new);
+        DefinitionInfo<Definition> definitionInfo = (DefinitionInfo<Definition>) definitions.computeIfAbsent(definition.getName(), DefinitionInfo::new);
         if (definition instanceof PartialDefinition) {
             definitionInfo.addPartialDefinition((PartialDefinition) definition);
         } else if (definition instanceof ImplementsDefinition) {

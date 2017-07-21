@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DefinitionInfo {
+public class DefinitionInfo<T extends Definition> {
 
     private final String name;
-    private Definition definition;
+    private T definition;
     private List<PartialDefinition> partialDefinitions;
     private List<ImplementsDefinition> implementsDefinitions;
     private String packageName;
@@ -55,11 +55,11 @@ public class DefinitionInfo {
         this.packageName = packageName;
     }
 
-    public Definition getDefinition() {
+    public T getDefinition() {
         return definition;
     }
 
-    public void setDefinition(Definition definition) {
+    public void setDefinition(T definition) {
         this.definition = definition;
     }
 

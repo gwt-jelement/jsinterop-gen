@@ -73,7 +73,10 @@ public class AttributeUnionTypeProcessor {
             if (definition.getUnionReturnTypes() == null) {
                 definition.setUnionReturnTypes(new ArrayList<>());
             }
-            definition.getUnionReturnTypes().add(removeEnumUnionTypeVisitor.visitUnionType(unionType));
+            UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
+            if (!definition.getUnionReturnTypes().contains(newUnionType)) {
+                definition.getUnionReturnTypes().add(removeEnumUnionTypeVisitor.visitUnionType(unionType));
+            }
             //writeable attribute
             if (!attribute.isReadOnly()) {
                 for (Type type : unionType.getTypes()) {

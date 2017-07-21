@@ -20,12 +20,14 @@ package com.tenxdev.jsinterop.generator.processing.packageusage;
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.types.ArrayType;
+import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractDictionaryDefinitionVisitor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefinitionVisitor<List<String>> {
+    private final TypeVisitor typeVisitor = new TypeVisitor();
 
     @Override
     public List<String> accept(DictionaryDefinition definition) {
@@ -37,6 +39,12 @@ public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefiniti
         if (definition.getUnionReturnTypes() != null) {
             result.add("jsinterop.base.Js");
             result.add("jsinterop.annotations.JsOverlay");
+            result.addAll(definition.getUnionReturnTypes().stream()
+                    .map(UnionType::getTypes)
+                    .flatMap(List::stream)
+                    .map(typeVisitor::accept)
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList()));
         }
         if (definition.getMembers().stream()
                 .anyMatch(member -> member.getEnumSubstitutionType() != null)) {

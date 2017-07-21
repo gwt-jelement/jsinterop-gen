@@ -21,8 +21,8 @@ import com.tenxdev.jsinterop.generator.model.EnumDefinition;
 
 class EnumGenerator extends XtendTemplate{
 
-    def generate(String basePackageName, DefinitionInfo definitionInfo){
-        var definition=definitionInfo.getDefinition() as EnumDefinition;
+    def generate(String basePackageName, DefinitionInfo<EnumDefinition> definitionInfo){
+        var definition=definitionInfo.getDefinition();
         return '''
 «copyright»
 package «basePackageName»«definitionInfo.getPackageName()»;

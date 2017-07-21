@@ -17,17 +17,31 @@
 
 package com.tenxdev.jsinterop.generator.model.types;
 
+import javax.annotation.Generated;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
 
 public class UnionType implements Type {
 
     private final List<Type> types;
     private String name;
+    private boolean shared;
+    private String packageName;
 
     public UnionType(String name, List<Type> types) {
         this.name = name;
         this.types = types;
+        checkName();
+    }
+
+    private void checkName() {
+        if (name == null && types != null) {
+            this.name = types.stream()
+                    .map(type -> toFirstUpper(type.displayValue()).replace("[]", "Array"))
+                    .collect(Collectors.joining("Or")) + "UnionType";
+        }
     }
 
     public String getName() {
@@ -36,6 +50,7 @@ public class UnionType implements Type {
 
     public void setName(String name) {
         this.name = name;
+        checkName();
     }
 
     public List<Type> getTypes() {
@@ -57,6 +72,7 @@ public class UnionType implements Type {
     }
 
     @Override
+    @Generated("IntelliJ")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
