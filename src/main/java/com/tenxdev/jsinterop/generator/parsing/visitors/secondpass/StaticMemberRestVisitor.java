@@ -31,8 +31,9 @@ class StaticMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> 
     @Override
     public InterfaceMember visitStaticMemberRest(WebIDLParser.StaticMemberRestContext ctx) {
         if (ctx.attributeRest() != null) {
-            boolean readOnly = !ctx.readOnly().isEmpty();
+            boolean readOnly = ctx.readOnly() != null && "readonly".equals(ctx.readOnly().getText());
             return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContext, readOnly, true));
+
         }
         if (ctx.operationRest() != null) {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));

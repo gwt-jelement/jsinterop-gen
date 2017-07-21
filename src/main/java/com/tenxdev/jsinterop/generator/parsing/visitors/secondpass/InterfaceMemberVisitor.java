@@ -55,7 +55,7 @@ class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
             return ctx.readonlyMember().readonlyMemberRest().accept(new ReadOlyMemberRestVisitor(parsingContext));
         }
         if (ctx.readWriteAttribute() != null) {
-            boolean readOnly = ctx.readWriteAttribute().readOnly() != null && ctx.readWriteAttribute().readOnly().getText() != null;
+            boolean readOnly = ctx.readWriteAttribute().readOnly() != null && "readonly".equals(ctx.readWriteAttribute().readOnly().getText());
             return ctx.readWriteAttribute().attributeRest().accept(new AttributeRestVisitor(parsingContext, readOnly, false));
         }
         if (ctx.readWriteMaplike() != null) {

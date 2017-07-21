@@ -34,7 +34,7 @@ class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
     @Override
     public InterfaceMember visitStringifierRest(WebIDLParser.StringifierRestContext ctx) {
         if (ctx.attributeRest() != null) {
-            boolean readOnly = !ctx.readOnly().isEmpty();
+            boolean readOnly = ctx.readOnly() != null && "readonly".equals(ctx.readOnly().getText());
             return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContext, readOnly, false));
         } else if (ctx.operationRest() != null) {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
