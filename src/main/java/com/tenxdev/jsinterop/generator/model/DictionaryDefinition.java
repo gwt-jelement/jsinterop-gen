@@ -17,16 +17,18 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
+import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DictionaryDefinition implements Definition {
+public class DictionaryDefinition implements Definition, HasUnionReturnTypes {
     private final String name;
     private final String parent;
     private List<DictionaryMember> members;
-    private List<UnionType> unionReturnTypes;
+    private List<UnionType> unionReturnTypes = new ArrayList<>();
 
     public DictionaryDefinition(String name, String parent, List<DictionaryMember> members) {
         this.name = name;
@@ -50,10 +52,12 @@ public class DictionaryDefinition implements Definition {
         return members;
     }
 
+    @Override
     public List<UnionType> getUnionReturnTypes() {
         return unionReturnTypes;
     }
 
+    @Override
     public void setUnionReturnTypes(List<UnionType> unionReturnTypes) {
         this.unionReturnTypes = unionReturnTypes;
     }

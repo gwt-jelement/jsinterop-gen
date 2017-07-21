@@ -15,19 +15,10 @@
  * the License.
  */
 
-package com.tenxdev.jsinterop.generator.model;
+package com.tenxdev.jsinterop.generator.model.interfaces;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
-
-import java.util.List;
-
-public class PartialDictionaryDefinition extends DictionaryDefinition implements PartialDefinition {
-
-    public PartialDictionaryDefinition(String name, String parent, List<DictionaryMember> members) {
-        super(name, parent, members);
-    }
-
-    public PartialDictionaryDefinition(DictionaryDefinition dictionaryDefinition) {
-        super(dictionaryDefinition.getName(), dictionaryDefinition.getParent(), dictionaryDefinition.getMembers());
-    }
+/**
+ * marker interface
+ */
+public interface PartialDefinition extends Definition {
 }

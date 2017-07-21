@@ -15,10 +15,24 @@
  * the License.
  */
 
-package com.tenxdev.jsinterop.generator.model;
+package com.tenxdev.jsinterop.generator.model.interfaces;
 
-public interface Definition {
+import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
-    String getName();
+import java.util.List;
 
+public interface HasUnionReturnTypes extends Definition {
+
+    List<UnionType> getUnionReturnTypes();
+
+    void setUnionReturnTypes(List<UnionType> unionReturnTypes);
+
+    default void addUnionReturnType(UnionType unionType) {
+        if (!getUnionReturnTypes().contains(unionType)) {
+            getUnionReturnTypes().add(unionType);
+        }
+        if (unionType.getOwner() == null) {
+            unionType.setOwner(getName());
+        }
+    }
 }

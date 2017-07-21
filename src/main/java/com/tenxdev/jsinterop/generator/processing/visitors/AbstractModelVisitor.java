@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.processing.visitors;
 
 import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 
 import java.util.HashMap;
 import java.util.Map;

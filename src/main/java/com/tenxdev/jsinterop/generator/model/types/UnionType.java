@@ -25,10 +25,11 @@ import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
 
 public class UnionType implements Type {
 
-    private final List<Type> types;
+    private List<Type> types;
     private String name;
     private boolean shared;
     private String packageName;
+    private String owner;
 
     public UnionType(String name, List<Type> types) {
         this.name = name;
@@ -57,11 +58,13 @@ public class UnionType implements Type {
         return types;
     }
 
+    public void setTypes(List<Type> types) {
+        this.types = types;
+    }
+
     @Override
     public String displayValue() {
-        return name != null ? name : types.stream()
-                .map(Type::displayValue)
-                .collect(Collectors.joining(" or ", "(", ")"));
+        return owner + "." + name;
     }
 
     @Override
@@ -69,6 +72,14 @@ public class UnionType implements Type {
         return types.stream()
                 .map(Type::getTypeName)
                 .collect(Collectors.joining()) + "UnionType";
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     @Override

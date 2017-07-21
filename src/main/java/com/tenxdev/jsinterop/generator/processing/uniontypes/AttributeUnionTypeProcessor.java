@@ -27,8 +27,6 @@ import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
-
 public class AttributeUnionTypeProcessor {
 
     private final Model model;
@@ -65,18 +63,8 @@ public class AttributeUnionTypeProcessor {
         List<UnionType> unionTypes = getUnionTypesVisitor.accept(attribute.getType());
         if (unionTypes.size() == 1) {
             UnionType unionType = unionTypes.get(0);
-            if (unionType.getName() == null) {
-                unionType.setName(toFirstUpper(attribute.getName()) + "UnionType");
-
-            }
-            //readable attribute
-            if (definition.getUnionReturnTypes() == null) {
-                definition.setUnionReturnTypes(new ArrayList<>());
-            }
             UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
-            if (!definition.getUnionReturnTypes().contains(newUnionType)) {
-                definition.getUnionReturnTypes().add(removeEnumUnionTypeVisitor.visitUnionType(unionType));
-            }
+            definition.addUnionReturnType(newUnionType);
             //writeable attribute
             if (!attribute.isReadOnly()) {
                 for (Type type : unionType.getTypes()) {

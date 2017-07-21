@@ -44,9 +44,10 @@ public class RemoveEnumUnionTypeVisitor extends AbstractTypeVisitor<Type> {
 
     @Override
     public UnionType visitUnionType(UnionType type) {
-        return new UnionType(type.getName(), type.getTypes().stream()
+        type.setTypes(type.getTypes().stream()
                 .map(this::accept)
                 .collect(Collectors.toList()));
+        return type;
     }
 
     public List<UnionType> visitUnionTypes(List<UnionType> unionTypes) {

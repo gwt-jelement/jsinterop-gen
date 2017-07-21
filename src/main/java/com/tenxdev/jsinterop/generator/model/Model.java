@@ -17,6 +17,8 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
+import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
 import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 
 import java.util.Collection;

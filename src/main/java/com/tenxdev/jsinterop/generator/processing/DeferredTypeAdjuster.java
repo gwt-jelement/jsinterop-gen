@@ -42,9 +42,10 @@ public class DeferredTypeAdjuster extends AbstractTypeVisitor<Type> {
 
     @Override
     protected Type visitUnionType(UnionType type) {
-        return new UnionType(type.getName(), type.getTypes().stream()
+        type.setTypes(type.getTypes().stream()
                 .map(this::accept)
                 .collect(Collectors.toList()));
+        return type;
     }
 
     @Override

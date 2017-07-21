@@ -17,6 +17,8 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
+
 public class ImplementsDefinition implements Definition {
 
     private final String name;

@@ -68,7 +68,7 @@ public class «definition.name.adjustJavaName»«
 
     def unionTypes(InterfaceDefinition definition)'''
         «FOR unionType: definition.unionReturnTypes»
-            «IF true»
+            «IF unionType.owner==definition.name»
                 @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
                 public interface «unionType.name» {
                     «FOR type: unionType.types»

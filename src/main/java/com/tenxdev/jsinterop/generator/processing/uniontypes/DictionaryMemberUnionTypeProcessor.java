@@ -24,10 +24,7 @@ import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
 
 public class DictionaryMemberUnionTypeProcessor {
 
@@ -62,17 +59,8 @@ public class DictionaryMemberUnionTypeProcessor {
         List<UnionType> unionTypes = getUnionTypesVisitor.accept(member.getType());
         if (unionTypes.size() == 1) {
             UnionType unionType = unionTypes.get(0);
-            if (unionType.getName() == null) {
-                unionType.setName(toFirstUpper(member.getName()) + "UnionType");
-            }
-            if (definition.getUnionReturnTypes() == null) {
-                definition.setUnionReturnTypes(new ArrayList<>());
-            }
-
             UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
-            if (!definition.getUnionReturnTypes().contains(newUnionType)) {
-                definition.getUnionReturnTypes().add(newUnionType);
-            }
+            definition.addUnionReturnType(newUnionType);
         } else {
             logger.formatError("Unexpected number of union types (%d) for attribute %s in %s%n",
                     unionTypes.size(), member.getName(), definition.getName());

@@ -19,6 +19,7 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 
 import java.util.ArrayList;
 import java.util.HashMap;

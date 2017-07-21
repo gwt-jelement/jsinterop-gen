@@ -15,7 +15,7 @@
  * the License.
  */
 
-package com.tenxdev.jsinterop.generator.model;
+package com.tenxdev.jsinterop.generator.model.interfaces;
 
 public interface InterfaceMember {
 }
