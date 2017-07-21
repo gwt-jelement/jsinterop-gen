@@ -17,7 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.model.Constructor;
 import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import com.tenxdev.jsinterop.generator.processing.ParserUtil;
@@ -39,7 +39,7 @@ public class DefinitionsVisitor extends ContextWebIDLBaseVisitor<List<Definition
 
         WebIDLParser.DefinitionsContext definitions = ctx;
         while (definitions != null && definitions.definition() != null) {
-            List<Method> constructors = definitions.extendedAttributeList() != null ?
+            List<Constructor> constructors = definitions.extendedAttributeList() != null ?
                     ctx.extendedAttributeList().accept(new ExtendedAttributeListVisitor(parsingContext))
                     : Collections.emptyList();
             Definition definition = definitions.definition().accept(new DefinitionVisitor(parsingContext, constructors));

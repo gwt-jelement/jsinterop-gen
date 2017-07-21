@@ -20,6 +20,7 @@ package com.tenxdev.jsinterop.generator.processing.packageusage;
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.types.ArrayType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractDictionaryDefinitionVisitor;
 
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefinitionVisitor<List<String>> {
-    private final TypeVisitor typeVisitor = new TypeVisitor();
+    private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
 
     @Override
     public List<String> accept(DictionaryDefinition definition) {
@@ -35,8 +36,7 @@ public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefiniti
         result.add("jsinterop.annotations.JsPackage");
         result.add("jsinterop.annotations.JsProperty");
         result.add("jsinterop.annotations.JsType");
-
-        if (definition.getUnionReturnTypes() != null) {
+        if (!definition.getUnionReturnTypes().isEmpty()) {
             result.add("jsinterop.base.Js");
             result.add("jsinterop.annotations.JsOverlay");
             result.addAll(definition.getUnionReturnTypes().stream()
@@ -58,13 +58,22 @@ public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefiniti
     }
 
     @Override
+    protected List<String> coallesce(List<List<String>> result) {
+        return result.stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    @Override
     protected List<String> visitMembers(List<DictionaryMember> members) {
-        TypeVisitor typeVisitor = new TypeVisitor();
         return members.stream()
                 .map(member -> typeVisitor.accept(member.getType()))
                 .flatMap(List::stream)
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    protected List<String> visitParent(Type parent) {
+        return typeVisitor.accept(parent);
     }
 }

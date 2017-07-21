@@ -34,7 +34,7 @@ public abstract class AbstractInterfaceDefinitionVisitor<T> {
         return coallesce(result);
     }
 
-    protected abstract T visitConstructors(List<Method> constructors);
+    protected abstract T visitConstructors(List<Constructor> constructors);
 
     protected abstract T visitFeatures(List<Feature> features);
 

@@ -18,10 +18,7 @@
 package com.tenxdev.jsinterop.generator.processing.uniontypes;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
-import com.tenxdev.jsinterop.generator.model.Method;
-import com.tenxdev.jsinterop.generator.model.MethodArgument;
-import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
@@ -73,7 +70,7 @@ public class MethodUnionArgsExpander {
     }
 
     private void expandConstructorArguments(InterfaceDefinition definition) {
-        List<Method> newConstructors = processMethods(definition.getConstructors());
+        List<Constructor> newConstructors = processMethods(definition.getConstructors());
         definition.getConstructors().clear();
         definition.getConstructors().addAll(newConstructors);
     }
@@ -88,13 +85,13 @@ public class MethodUnionArgsExpander {
                 .forEach(unionType -> definition.addUnionReturnType(unionType));
     }
 
-    private List<Method> processMethods(List<Method> methods) {
-        List<Method> newMethods = new ArrayList<>();
+    private <T extends Method> List<T> processMethods(List<T> methods) {
+        List<T> newMethods = new ArrayList<>();
         methods.forEach(method -> processMethod(method, newMethods));
         return newMethods;
     }
 
-    private void processMethod(Method method, List<Method> newMethods) {
+    private <T extends Method> void processMethod(T method, List<T> newMethods) {
         UnionTypeReplacementVisitor unionTypeVisitor = new UnionTypeReplacementVisitor();
         for (MethodArgument methodArgument : method.getArguments()) {
             List<Type> suggestedTypes = unionTypeVisitor.accept(methodArgument.getType());
@@ -106,13 +103,14 @@ public class MethodUnionArgsExpander {
         newMethods.add(method);
     }
 
-    private void processArgument(Method method, MethodArgument argument, List<Type> suggestedTypes, List<Method> newMethods) {
+    private <T extends Method> void processArgument(T method, MethodArgument argument,
+                                                    List<Type> suggestedTypes, List<T> newMethods) {
         int argumentIndex = method.getArguments().indexOf(argument);
         for (Type type : suggestedTypes) {
             List<MethodArgument> newArguments = new ArrayList<>(method.getArguments());
             newArguments.set(argumentIndex, new MethodArgument(argument.getName(), type, argument.isVararg(),
                     argument.isOptional(), argument.getDefaultValue()));
-            Method newMethod = method.newMethodWithArguments(newArguments);
+            T newMethod = method.newMethodWithArguments(newArguments);
             newMethod.setPrivate(method.isPrivateMethod());
             newMethod.setEnumOverlay(method.getEnumOverlay());
             processMethod(newMethod, newMethods);

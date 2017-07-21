@@ -100,6 +100,7 @@ class Generator {
         new RenameIncompatibleChildAttributes().process(model, logger); //anywhere after merging
         new DictionaryMemberUnionTypeProcessor(model, logger).process();
         new DictionaryMemberEnumTypeProcessor(model, logger).process();
+        new SuperCallConstructorProcessor(model, logger).process();//after method expansion
         new ImportResolver().processModel(model, logger); //must run after all type substitutions
         new SourceGenerator(logger).processModel(model, outputDirectory, basePackage);
     }

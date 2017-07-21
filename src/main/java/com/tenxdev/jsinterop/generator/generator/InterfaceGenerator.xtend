@@ -25,6 +25,7 @@ import com.tenxdev.jsinterop.generator.model.Method
 import com.tenxdev.jsinterop.generator.model.Attribute
 import com.tenxdev.jsinterop.generator.model.types.Type
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
+import com.tenxdev.jsinterop.generator.model.Constructor
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -38,10 +39,10 @@ package «basePackageName»«definitionInfo.getPackageName()»;
 «imports(basePackageName, definitionInfo)»
 
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
-public class «definition.name.adjustJavaName»«
-        IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF» {
+public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     «constants(definition)»
     «unionTypes(definition)»
+    «constructors(definition)»
     «readWriteAttributes(definition)»
     «readOnlyAttributes(definition)»
     «writeOnlyAttributes(definition)»
@@ -49,6 +50,22 @@ public class «definition.name.adjustJavaName»«
 }
 '''
     }
+
+    def extendsClass(InterfaceDefinition definition){
+        if (definition.parent!==null)  " extends "+definition.parent.displayValue
+    }
+
+    def constructors(InterfaceDefinition definition)'''
+        «FOR constructor: definition.constructors»
+            @JsConstructor
+            public «definition.name»(«arguments(constructor)»){
+                «IF definition.parent!==null»
+                    super(«superArguments(constructor)»);
+                «ENDIF»
+            }
+
+        «ENDFOR»
+    '''
 
     def enumMethodArgument(MethodArgument argument) {
         if(argument.enumSubstitution)
@@ -65,6 +82,7 @@ public class «definition.name.adjustJavaName»«
         «FOR constant: definition.constants AFTER "\n"»
             public static final «constant.type.displayValue» «constant.name» = «constant.value»;
         «ENDFOR»
+
     '''
 
     def unionTypes(InterfaceDefinition definition)'''
@@ -166,8 +184,7 @@ public class «definition.name.adjustJavaName»«
 
     def nativeMethod(Method method)'''
         @JsMethod(name = "«method.name»")
-        public native «method.returnType.displayValue» «IF method.privateMethod
-            »«ENDIF»«method.name.adjustJavaName»(«arguments(method)»);
+        public native «method.returnType.displayValue» «method.name.adjustJavaName»(«arguments(method)»);
     '''
 
     def enumOverlayMethod(Method method)'''
@@ -197,7 +214,12 @@ public class «definition.name.adjustJavaName»«
         «FOR argument: method.arguments SEPARATOR ", "
             »«argument.type.displayValue» «argument.name.adjustJavaName»«ENDFOR»'''
 
+    def argumentNames(Method method)'''
+        «FOR argument: method.arguments SEPARATOR ", "»«argument.name.adjustJavaName»«ENDFOR»'''
+
     def enumMethodArguments(Method method)'''«FOR argument: method.enumOverlay.arguments SEPARATOR ", "»«enumMethodArgument(argument)»«ENDFOR»«IF method.enumReturnType»)«ENDIF»'''
 
+    def superArguments(Constructor constructor)'''«
+        FOR argument: constructor.superArguments SEPARATOR ", "»(«argument.type.displayValue») null«ENDFOR»'''
 
 }

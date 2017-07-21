@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TypeVisitor extends AbstractTypeVisitor<List<String>> {
+public class PackageUsageTypeVisitor extends AbstractTypeVisitor<List<String>> {
 
     @Override
     public List<String> accept(Type type) {

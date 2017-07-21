@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.CallbackDefinition;
+import com.tenxdev.jsinterop.generator.model.Constructor;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
@@ -31,9 +32,9 @@ import java.util.List;
 
 class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
 
-    private final List<Method> constructors;
+    private final List<Constructor> constructors;
 
-    CallbackVisitor(ParsingContext context, List<Method> constructors) {
+    CallbackVisitor(ParsingContext context, List<Constructor> constructors) {
         super(context);
         this.constructors = constructors;
     }

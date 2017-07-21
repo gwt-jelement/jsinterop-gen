@@ -34,17 +34,17 @@ public abstract class AbstractModelVisitor<T> {
     }
 
     private T visitDefinition(Definition definition) {
-        if (definition instanceof InterfaceDefinition) {
+        if (definition.getClass() == InterfaceDefinition.class) {
             return visitInterfaceDefinition((InterfaceDefinition) definition);
-        } else if (definition instanceof DictionaryDefinition) {
+        } else if (definition.getClass() == DictionaryDefinition.class) {
             return visitDictionaryDefinition((DictionaryDefinition) definition);
-        } else if (definition instanceof EnumDefinition) {
+        } else if (definition.getClass() == EnumDefinition.class) {
             return visitEnumDefinition((EnumDefinition) definition);
-        } else if (definition instanceof TypeDefinition) {
+        } else if (definition.getClass() == TypeDefinition.class) {
             return visitTypeDefinition((TypeDefinition) definition);
-        } else if (definition instanceof ImplementsDefinition) {
+        } else if (definition.getClass() == ImplementsDefinition.class) {
             return visitImplementsDefinition((ImplementsDefinition) definition);
-        } else if (definition instanceof CallbackDefinition) {
+        } else if (definition.getClass() == CallbackDefinition.class) {
             return visitCallbackDefinition((CallbackDefinition) definition);
         } else {
             throw new IllegalStateException("Unexpected definition type " + definition.getClass().getSimpleName());

@@ -36,7 +36,8 @@ package «basePackageName»«definitionInfo.getPackageName()»;
 «imports(basePackageName, definitionInfo)»
 
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
-public class «definition.getName»{
+public class «definition.getName»«
+        IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF»{
 
     «unionTypes(definition)»
     «FOR member: definition.members»

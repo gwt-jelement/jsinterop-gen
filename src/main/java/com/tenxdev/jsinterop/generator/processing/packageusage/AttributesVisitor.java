@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 class AttributesVisitor {
 
-    private final TypeVisitor typeVisitor = new TypeVisitor();
+    private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
 
     List<String> accept(List<Attribute> attributes) {
         return attributes.stream()

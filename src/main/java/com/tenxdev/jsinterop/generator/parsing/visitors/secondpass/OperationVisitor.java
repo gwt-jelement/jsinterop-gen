@@ -35,7 +35,7 @@ class OperationVisitor extends ContextWebIDLBaseVisitor<Method> {
     public Method visitOperation(WebIDLParser.OperationContext ctx) {
         if (ctx.specialOperation() != null) {
             //FIXME, definition below is not correct
-//            Type returnType = ctx.specialOperation().returnType().accept(new TypeVisitor(parsingContext));
+//            Type returnType = ctx.specialOperation().returnType().accept(new PackageUsageTypeVisitor(parsingContext));
 //            String name =
 //                    ctx.specialOperation().IDENTIFIER_WEBIDL() != null &&
 //                            ctx.specialOperation().IDENTIFIER_WEBIDL().getText() != null ?

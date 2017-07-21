@@ -15,20 +15,7 @@
  * the License.
  */
 
-package com.tenxdev.jsinterop.generator.model;
+package com.tenxdev.jsinterop.generator.model.interfaces;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
-import com.tenxdev.jsinterop.generator.model.types.Type;
-
-import java.util.List;
-
-public class PartialDictionaryDefinition extends DictionaryDefinition implements PartialDefinition {
-
-    public PartialDictionaryDefinition(String name, Type parent, List<DictionaryMember> members) {
-        super(name, parent, members);
-    }
-
-    public PartialDictionaryDefinition(DictionaryDefinition dictionaryDefinition) {
-        super(dictionaryDefinition.getName(), dictionaryDefinition.getParent(), dictionaryDefinition.getMembers());
-    }
+public interface IsMethod<T> {
 }

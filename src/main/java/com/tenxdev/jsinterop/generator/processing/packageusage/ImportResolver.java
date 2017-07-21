@@ -36,6 +36,7 @@ public class ImportResolver {
     private void processPackagesForDefinition(DefinitionInfo definitionInfo, List<String> packages) {
         definitionInfo.setImportedPackages(packages.stream()
                 .filter(packageName -> needsImport(definitionInfo, packageName))
+                .distinct()
                 .sorted()
                 .collect(Collectors.toList()));
     }

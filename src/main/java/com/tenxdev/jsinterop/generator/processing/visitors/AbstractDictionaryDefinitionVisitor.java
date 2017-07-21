@@ -19,14 +19,23 @@ package com.tenxdev.jsinterop.generator.processing.visitors;
 
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDictionaryDefinitionVisitor<T> {
 
     public T accept(DictionaryDefinition definition) {
-        return visitMembers(definition.getMembers());
+        List<T> result = new ArrayList<>();
+        result.add(visitMembers(definition.getMembers()));
+        result.add(visitParent(definition.getParent()));
+        return coallesce(result);
     }
 
+    protected abstract T coallesce(List<T> result);
+
     protected abstract T visitMembers(List<DictionaryMember> members);
+
+    protected abstract T visitParent(Type parent);
 }

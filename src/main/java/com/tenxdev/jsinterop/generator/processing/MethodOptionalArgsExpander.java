@@ -18,10 +18,7 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
-import com.tenxdev.jsinterop.generator.model.Method;
-import com.tenxdev.jsinterop.generator.model.MethodArgument;
-import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,16 +57,16 @@ public class MethodOptionalArgsExpander {
         definition.getMethods().clear();
         definition.getMethods().addAll(newMethods);
 
-        List<Method> newConstructors = processMethods(definition.getConstructors());
+        List<Constructor> newConstructors = processMethods(definition.getConstructors());
         definition.getConstructors().clear();
         definition.getConstructors().addAll(newConstructors);
     }
 
-    private List<Method> processMethods(List<Method> methods) {
-        List<Method> newMethods = new ArrayList<>();
+    private <T extends Method> List<T> processMethods(List<T> methods) {
+        List<T> newMethods = new ArrayList<>();
         methods.forEach(method -> {
             if (hasOptionalArgs(method)) {
-                List<Method> expandedMethods = expandMethod(method);
+                List<T> expandedMethods = expandMethod(method);
                 expandedMethods.removeAll(newMethods);
                 newMethods.addAll(expandedMethods);
             } else {
@@ -83,18 +80,18 @@ public class MethodOptionalArgsExpander {
         return method.getArguments().stream().anyMatch(MethodArgument::isOptional);
     }
 
-    private List<Method> expandMethod(Method method) {
-        List<Method> expandedMethods = new ArrayList<>();
+    private <T extends Method> List<T> expandMethod(T method) {
+        List<T> expandedMethods = new ArrayList<>();
         expandMethod(method, expandedMethods);
         return expandedMethods;
     }
 
-    private void expandMethod(Method method, List<Method> expandedMethods) {
+    private <T extends Method> void expandMethod(T method, List<T> expandedMethods) {
         boolean hasOptions = false;
         List<MethodArgument> newArguments = new ArrayList<>();
         for (MethodArgument argument : method.getArguments()) {
             if (argument.isOptional() && !hasOptions) {
-                Method newMethod = method.newMethodWithArguments(new ArrayList<>(newArguments));
+                T newMethod = method.newMethodWithArguments(new ArrayList<>(newArguments));
                 expandedMethods.add(newMethod);
                 hasOptions = true;
                 newArguments.add(new MethodArgument(argument.getName(), argument.getType(), argument.isVararg(), false, argument.getDefaultValue()));
@@ -102,7 +99,7 @@ public class MethodOptionalArgsExpander {
                 newArguments.add(argument);
             }
         }
-        Method newMethod = method.newMethodWithArguments(newArguments);
+        T newMethod = method.newMethodWithArguments(newArguments);
         if (hasOptions) {
             expandMethod(newMethod, expandedMethods);
         } else {

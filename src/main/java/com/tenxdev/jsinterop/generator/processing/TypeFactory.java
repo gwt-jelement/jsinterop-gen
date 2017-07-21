@@ -119,7 +119,6 @@ public class TypeFactory {
         return new UnionType(null, Arrays.stream(typeNames)
                 .map(this::getType)
                 .collect(Collectors.toList()));
-                .collect(Collectors.toList()));
     }
 
     public void registerType(String name, Type type) {

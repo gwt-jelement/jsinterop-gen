@@ -28,7 +28,8 @@ import java.util.stream.Collectors;
 
 public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinitionVisitor<List<String>> {
 
-    private final TypeVisitor typeVisitor = new TypeVisitor();
+    private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
+    private MethodVisitor methodVisitor = new MethodVisitor();
 
     @Override
     public List<String> accept(InterfaceDefinition interfaceDefinition) {
@@ -38,6 +39,9 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         if (interfaceDefinition.getParent() instanceof PackageType) {
             PackageType packageType = (PackageType) interfaceDefinition.getParent();
             result.add(packageType.getPackageName() + "." + packageType.getTypeName());
+        }
+        if (!interfaceDefinition.getConstructors().isEmpty()) {
+            result.add("jsinterop.annotations.JsConstructor");
         }
         if (!interfaceDefinition.getUnionReturnTypes().isEmpty()) {
             result.add("jsinterop.annotations.JsOverlay");
@@ -69,8 +73,13 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
     }
 
     @Override
-    protected List<String> visitConstructors(List<Method> constructors) {
-        return visitMethods(constructors);
+    protected List<String> visitConstructors(List<Constructor> constructors) {
+        return constructors.stream()
+                .map(methodVisitor::accept)
+                .flatMap(List::stream)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -106,7 +115,6 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
 
     @Override
     protected List<String> visitMethods(List<Method> methods) {
-        MethodVisitor methodVisitor = new MethodVisitor();
         return methods.stream()
                 .map(methodVisitor::accept)
                 .flatMap(List::stream)

@@ -25,7 +25,7 @@ import java.util.List;
 
 public class PartialInterfaceDefinition extends InterfaceDefinition implements PartialDefinition {
 
-    public PartialInterfaceDefinition(String name, Type parent, List<Method> constructors, List<InterfaceMember> members) {
+    public PartialInterfaceDefinition(String name, Type parent, List<Constructor> constructors, List<InterfaceMember> members) {
         super(name, parent, constructors, members);
     }
 

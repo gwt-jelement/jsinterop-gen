@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 class MethodVisitor {
 
-    private final TypeVisitor typeVisitor = new TypeVisitor();
+    private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
 
     public List<String> accept(Method method) {
         ArrayList<String> packages = method.getArguments().stream()

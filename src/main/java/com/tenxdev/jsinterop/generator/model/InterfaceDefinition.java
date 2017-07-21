@@ -24,6 +24,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,15 +33,15 @@ public class InterfaceDefinition implements Definition, HasUnionReturnTypes {
     private final Type parent;
     private List<Constant> constants;
     private List<Feature> features;
-    private List<Method> constructors;
+    private List<Constructor> constructors = new ArrayList<>();
     private List<Method> methods;
     private List<Attribute> attributes;
     private List<UnionType> unionReturnTypes = new ArrayList<>();
 
-    public InterfaceDefinition(String name, Type parent, List<Method> constructors, List<InterfaceMember> members) {
+    public InterfaceDefinition(String name, Type parent, List<Constructor> constructors, List<InterfaceMember> members) {
         this.name = name;
         this.parent = parent;
-        this.constructors = constructors;
+        this.constructors = constructors == null ? Collections.emptyList() : constructors;
         this.methods = members.stream().filter(member -> member instanceof Method)
                 .map(member -> (Method) member).collect(Collectors.toList());
         this.attributes = members.stream().filter(member -> member instanceof Attribute)
@@ -84,10 +85,7 @@ public class InterfaceDefinition implements Definition, HasUnionReturnTypes {
         return attributes;
     }
 
-    public List<Method> getConstructors() {
-        if (constructors == null) {
-            constructors = new ArrayList<>();
-        }
+    public List<Constructor> getConstructors() {
         return constructors;
     }
 

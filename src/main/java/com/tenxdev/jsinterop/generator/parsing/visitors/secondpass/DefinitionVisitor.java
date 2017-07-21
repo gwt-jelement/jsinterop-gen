@@ -17,7 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.model.Constructor;
 import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -25,9 +25,9 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.List;
 
 class DefinitionVisitor extends ContextWebIDLBaseVisitor<Definition> {
-    private final List<Method> constructors;
+    private final List<Constructor> constructors;
 
-    public DefinitionVisitor(ParsingContext context, List<Method> constructors) {
+    public DefinitionVisitor(ParsingContext context, List<Constructor> constructors) {
         super(context);
         this.constructors = constructors;
     }

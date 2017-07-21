@@ -57,8 +57,8 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.javaName = method.javaName;
     }
 
-    public Method newMethodWithArguments(List<MethodArgument> newArguments) {
-        return new Method(name, returnType, newArguments, staticMethod,
+    public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
+        return (T) new Method(name, returnType, newArguments, staticMethod,
                 privateMethod, enumOverlay, javaName);
     }
 
