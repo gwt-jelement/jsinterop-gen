@@ -34,7 +34,7 @@ class ConstructorVisitor extends ContextWebIDLBaseVisitor<Method> {
     @Override
     public Method visitExtendedAttributeRest(WebIDLParser.ExtendedAttributeRestContext ctx) {
         if (ctx.extendedAttribute() == null) {
-            return new Method("", null, Collections.emptyList(), false, false, null);
+            return new Method("", null, Collections.emptyList(), false, false, null, null);
         }
         return ctx.extendedAttribute().accept(this);
     }
@@ -44,6 +44,6 @@ class ConstructorVisitor extends ContextWebIDLBaseVisitor<Method> {
         List<MethodArgument> arguments = ctx.extendedAttributeInner() != null ?
                 ctx.extendedAttributeInner().accept(new ConstructorArgumentsVisitor(parsingContext)) :
                 Collections.emptyList();
-        return new Method("", null, arguments, false, false, null);
+        return new Method("", null, arguments, false, false, null, null);
     }
 }

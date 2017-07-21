@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class SourceGenerator extends Template {
+public class SourceGenerator extends XtendTemplate {
 
     private static final String VERSION = "0.0.1-SNAPSHOT";
     private Logger logger;

@@ -43,7 +43,7 @@ class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
         }
         if (ctx.serializer() != null) {
             return new Method("toJSON", parsingContext.getTypeFactory().getType("any"),
-                    Collections.emptyList(), false, false, null);
+                    Collections.emptyList(), false, false, null, null);
         }
         if (ctx.stringifier() != null) {
             return ctx.stringifier().stringifierRest().accept(new StringifierRestVisitor(parsingContext));

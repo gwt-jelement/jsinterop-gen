@@ -42,8 +42,9 @@ public class «definition.name.adjustJavaName»«
         IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF» {
     «constants(definition)»
     «unionTypes(definition)»
-    «readableAttributes(definition)»
-    «writeableAttributes(definition)»
+    «readWriteAttributes(definition)»
+    «readOnlyAttributes(definition)»
+    «writeOnlyAttributes(definition)»
     «methods(definition)»
 }
 '''
@@ -91,10 +92,18 @@ public class «definition.name.adjustJavaName»«
         «ENDFOR»
     '''
 
-    def readableAttributes(InterfaceDefinition definition)'''
-        «FOR attribute: definition.readableAttributes»
+    def readWriteAttributes(InterfaceDefinition definition)'''
+        «FOR attribute: definition.readWriteAttributes»
+            @JsProperty(name="«attribute.name»")
+            public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
+
+        «ENDFOR»
+    '''
+
+    def readOnlyAttributes(InterfaceDefinition definition)'''
+        «FOR attribute: definition.readOnlyAttributes»
             «IF attribute.enumSubstitutionType!==null»
-                «readableEnumAttribute(attribute)»
+                «readOnlyEnumAttribute(attribute)»
             «ELSE»
                 @JsProperty(name="«attribute.name»")
                 public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.javaName.toFirstUpper»();
@@ -103,15 +112,15 @@ public class «definition.name.adjustJavaName»«
         «ENDFOR»
     '''
 
-    def readableEnumAttribute(Attribute attribute)'''
+    def readOnlyEnumAttribute(Attribute attribute)'''
         «IF attribute.type instanceof ArrayType»
             @JsOverlay
-            public «staticModifier(attribute)» «attribute.type.displayValue» get«attribute.name.toFirstUpper»_(){
+            public «staticModifier(attribute)» «attribute.type.displayValue» get«attribute.name.toFirstUpper»As«attribute.type.displayValue.sanitizeName»(){
                 return «(attribute.type as ArrayType).type.displayValue».ofArray(get«attribute.name.toFirstUpper»());
             }
         «ELSE»
             @JsOverlay
-            public «staticModifier(attribute)» «attribute.type.displayValue» get«attribute.name.toFirstUpper»_(){
+            public «staticModifier(attribute)» «attribute.type.displayValue» get«attribute.name.toFirstUpper»As«attribute.type.displayValue.sanitizeName»(){
                 return «attribute.type.displayValue».of(get«attribute.name.toFirstUpper»());
             }
         «ENDIF»
@@ -121,10 +130,10 @@ public class «definition.name.adjustJavaName»«
 
     '''
 
-    def writeableAttributes(InterfaceDefinition definition)'''
-        «FOR attribute: definition.writeableAttributes»
+    def writeOnlyAttributes(InterfaceDefinition definition)'''
+        «FOR attribute: definition.writeOnlyAttributes»
             «IF attribute.enumSubstitutionType!==null»
-                «writeableEnumAttribute(attribute)»
+                «writeOnlyEnumAttribute(attribute)»
             «ELSE»
                 @JsProperty(name="«attribute.name»")
                 public «staticModifier(attribute)»native void set«attribute.javaName.toFirstUpper»(«attribute.type.displayValue» «adjustJavaName(attribute.javaName)»);
@@ -133,9 +142,9 @@ public class «definition.name.adjustJavaName»«
         «ENDFOR»
     '''
 
-    def writeableEnumAttribute(Attribute attribute)'''
+    def writeOnlyEnumAttribute(Attribute attribute)'''
         @JsOverlay
-        public «staticModifier(attribute)» void set«attribute.name.toFirstUpper»_(«attribute.type.displayValue» «attribute.name»){
+        public «staticModifier(attribute)» void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name»){
             set«attribute.name.toFirstUpper»(«attribute.name».getInternalValue());
         }
 
@@ -158,13 +167,13 @@ public class «definition.name.adjustJavaName»«
     def nativeMethod(Method method)'''
         @JsMethod(name = "«method.name»")
         public native «method.returnType.displayValue» «IF method.privateMethod
-            »«ENDIF»«method.name.adjustJavaName»_(«arguments(method)»);
+            »«ENDIF»«method.name.adjustJavaName»(«arguments(method)»);
     '''
 
     def enumOverlayMethod(Method method)'''
         @JsOverlay
-        public «method.returnType.displayValue» «method.name.adjustJavaName»(«arguments(method)»){
-            «hasReturn(method)»«hasEnumReturnType(method)»«method.name»_(«enumMethodArguments(method)»);
+        public «method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»){
+            «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
         }
     '''
 
@@ -189,4 +198,6 @@ public class «definition.name.adjustJavaName»«
             »«argument.type.displayValue» «argument.name.adjustJavaName»«ENDFOR»'''
 
     def enumMethodArguments(Method method)'''«FOR argument: method.enumOverlay.arguments SEPARATOR ", "»«enumMethodArgument(argument)»«ENDFOR»«IF method.enumReturnType»)«ENDIF»'''
+
+
 }

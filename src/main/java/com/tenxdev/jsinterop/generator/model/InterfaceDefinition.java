@@ -116,15 +116,21 @@ public class InterfaceDefinition implements Definition, HasUnionReturnTypes {
         this.unionReturnTypes = unionReturnTypes;
     }
 
-    public List<Attribute> getReadableAttributes() {
+    public List<Attribute> getReadWriteAttributes() {
         return attributes.stream()
-                .filter(attribute -> !attribute.isWriteOnly())
+                .filter(attribute -> !attribute.isReadOnly() && !attribute.isWriteOnly())
                 .collect(Collectors.toList());
     }
 
-    public List<Attribute> getWriteableAttributes() {
+    public List<Attribute> getReadOnlyAttributes() {
         return attributes.stream()
-                .filter(attribute -> !attribute.isReadOnly())
+                .filter(attribute -> attribute.isReadOnly())
+                .collect(Collectors.toList());
+    }
+
+    public List<Attribute> getWriteOnlyAttributes() {
+        return attributes.stream()
+                .filter(attribute -> attribute.isWriteOnly())
                 .collect(Collectors.toList());
     }
 

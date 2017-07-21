@@ -34,15 +34,17 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private boolean privateMethod;
     private Method enumOverlay;
     private boolean enumReturnType;
+    private String javaName;
 
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
-                  boolean privateMethod, Method enumOverlay) {
+                  boolean privateMethod, Method enumOverlay, String javaName) {
         this.name = name;
         this.returnType = returnType;
         this.arguments = arguments;
         this.staticMethod = staticMethod;
         this.privateMethod = privateMethod;
         this.enumOverlay = enumOverlay;
+        this.javaName = javaName;
     }
 
     public Method(Method method) {
@@ -52,11 +54,12 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.arguments = method.arguments.stream().map(MethodArgument::new).collect(Collectors.toList());
         this.privateMethod = method.privateMethod;
         this.enumOverlay = method.enumOverlay;
+        this.javaName = method.javaName;
     }
 
     public Method newMethodWithArguments(List<MethodArgument> newArguments) {
         return new Method(name, returnType, newArguments, staticMethod,
-                privateMethod, enumOverlay);
+                privateMethod, enumOverlay, javaName);
     }
 
     public boolean isStatic() {
@@ -116,6 +119,14 @@ public class Method implements InterfaceMember, Comparable<Method> {
 
     public void setEnumReturnType(boolean enumReturnType) {
         this.enumReturnType = enumReturnType;
+    }
+
+    public String getJavaName() {
+        return javaName == null ? name : javaName;
+    }
+
+    public void setJavaName(String javaName) {
+        this.javaName = javaName;
     }
 
     @Override

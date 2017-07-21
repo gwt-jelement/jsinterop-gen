@@ -87,10 +87,18 @@ public class MethodEnumArgumentProcessor {
                 newMethod.setPrivate(true);
                 method.setEnumOverlay(newMethod);
                 method.setEnumReturnType(true);
+                if (sameSignature(method, newMethod)) {
+                    method.setJavaName(method.getName() + "As" + method.getReturnType().displayValue()
+                            .replace("[]", "Array").replace("<\\.?>", ""));
+                }
             } else {
                 method.setReturnType(newReturnType);
             }
         }
         return hasEnumTypes ? newMethod : null;
+    }
+
+    private boolean sameSignature(Method method, Method newMethod) {
+        return method.getArguments().equals(newMethod.getArguments());
     }
 }
