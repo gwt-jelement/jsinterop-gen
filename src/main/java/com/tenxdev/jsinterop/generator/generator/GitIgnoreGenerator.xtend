@@ -19,8 +19,15 @@ package com.tenxdev.jsinterop.generator.generator
 class GitIgnoreGenerator {
 
     def generate()'''
+log/
 target/
 .*/
+*.iml
+.classpath
+.project
+*.iml
+*.iws
+.DS_Store
     '''
 
 }
