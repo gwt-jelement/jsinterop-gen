@@ -72,7 +72,7 @@ public class TypeFactory {
         typeMap.put("DOMString", new NativeType("String"));
         typeMap.put("USVString", new NativeType("String"));
         typeMap.put("ByteString", new NativeType("String"));
-        typeMap.put("Date", new ObjectType("Date", "java.util"));
+        typeMap.put("Date", new ObjectType("Date", "elemental2.core"));
         typeMap.put("Function", new ObjectType("Function", "elemental2.core"));
         typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
         typeMap.put("Dictionary", new NativeType("Object"));
