@@ -18,6 +18,7 @@ package com.tenxdev.jsinterop.generator.generator
 
 import com.tenxdev.jsinterop.generator.model.CallbackDefinition
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo
+import com.tenxdev.jsinterop.generator.model.MethodArgument
 
 class CallbackGenerator extends XtendTemplate{
 
@@ -36,9 +37,13 @@ import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
 public interface «definition.name»{
     «definition.method.returnType.displayValue» «definition.method.callbackMethodName»(«
         FOR argument: definition.method.arguments SEPARATOR ", "
-        »«argument.type.displayValue» «argument.name»«ENDFOR»);
+        »«argument.type.displayValue»«vararg(argument)» «argument.name»«ENDFOR»);
 }
     '''
+    }
+
+    def vararg(MethodArgument argument){
+        if (argument.vararg) "..."
     }
 
 }

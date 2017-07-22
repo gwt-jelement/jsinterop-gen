@@ -55,7 +55,7 @@ public class TypeFactory {
         typeMap.put("int", new NativeType("int"));
         typeMap.put("byte", new NativeType("byte"));
         typeMap.put("octet", new NativeType("byte"));
-        typeMap.put("any", new ObjectType("Any", "jsinterop.base"));
+        typeMap.put("any", new NativeType("Object"));
         typeMap.put("SerializedScriptValue", new NativeType("Object"));
         typeMap.put("object", new NativeType("Object"));
         typeMap.put("void", new NativeType("void"));

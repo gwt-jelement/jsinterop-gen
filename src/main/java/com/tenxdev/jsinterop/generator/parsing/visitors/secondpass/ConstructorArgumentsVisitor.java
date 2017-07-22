@@ -15,6 +15,7 @@
  * the License.
  */
 
+
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
