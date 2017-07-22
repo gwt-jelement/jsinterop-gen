@@ -45,6 +45,7 @@ public class TypeFactory {
     private final TypeParser typeParser;
     private final Map<String, Type> typeMap = new HashMap<>();
     private final Map<String, Type> deferredTypeDefinitions = new HashMap<>();
+    private final Map<String, UnionType> anonymousUnionTypes = new HashMap<>();
 
     public TypeFactory(Logger logger) {
         this.typeParser = new TypeParser(this, logger);
@@ -116,9 +117,15 @@ public class TypeFactory {
     }
 
     public Type getUnionType(String[] typeNames) {
-        return new UnionType(null, Arrays.stream(typeNames)
-                .map(this::getType)
-                .collect(Collectors.toList()));
+        String key = String.join(",", typeNames);
+        UnionType unionType = anonymousUnionTypes.get(key);
+        if (unionType == null) {
+            unionType = new UnionType(null, Arrays.stream(typeNames)
+                    .map(this::getType)
+                    .collect(Collectors.toList()));
+            anonymousUnionTypes.put(key, unionType);
+        }
+        return unionType;
     }
 
     public void registerType(String name, Type type) {
