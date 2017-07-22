@@ -62,11 +62,11 @@ public class TypeFactory {
         typeMap.put("double", new NativeType("double"));
         typeMap.put("unrestrictedfloat", new NativeType("float"));
         typeMap.put("float", new NativeType("float"));
-        typeMap.put("unsignedlong", new NativeType("long"));
-        typeMap.put("unsignedlonglong", new NativeType("long"));
-        typeMap.put("EnforceRangeunsignedlong", new NativeType("long"));
-        typeMap.put("long", new NativeType("long"));
-        typeMap.put("longlong", new NativeType("long"));
+        typeMap.put("unsignedlong", new NativeType("double"));
+        typeMap.put("unsignedlonglong", new NativeType("double"));
+        typeMap.put("EnforceRangeunsignedlong", new NativeType("double"));
+        typeMap.put("long", new NativeType("double"));
+        typeMap.put("longlong", new NativeType("double"));
         typeMap.put("unsignedshort", new NativeType("short"));
         typeMap.put("short", new NativeType("short"));
         typeMap.put("DOMString", new NativeType("String"));
