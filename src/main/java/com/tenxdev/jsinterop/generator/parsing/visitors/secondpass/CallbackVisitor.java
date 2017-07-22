@@ -17,10 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.model.CallbackDefinition;
-import com.tenxdev.jsinterop.generator.model.Constructor;
-import com.tenxdev.jsinterop.generator.model.Method;
-import com.tenxdev.jsinterop.generator.model.MethodArgument;
+import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
@@ -42,7 +39,8 @@ class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
     @Override
     public Definition visitCallbackRestOrInterface(WebIDLParser.CallbackRestOrInterfaceContext ctx) {
         if (ctx.interface_() != null) {
-            return ctx.interface_().accept(new InterfaceVisitor(parsingContext, constructors));
+            InterfaceDefinition interfaceDefinition = ctx.interface_().accept(new InterfaceVisitor(parsingContext, constructors));
+            return new CallbackDefinition(interfaceDefinition.getName(), interfaceDefinition.getMethods().get(0));
         } else if (ctx.callbackRest() != null) {
             return ctx.callbackRest().accept(this);
         } else {
