@@ -18,12 +18,9 @@ package com.tenxdev.jsinterop.generator.generator
 
 import com.tenxdev.jsinterop.generator.model.DefinitionInfo
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition
-import com.tenxdev.jsinterop.generator.model.DictionaryMember
 import com.tenxdev.jsinterop.generator.model.types.Type
 import com.tenxdev.jsinterop.generator.model.types.EnumType
-import com.tenxdev.jsinterop.generator.model.types.UnionType
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
-import com.tenxdev.jsinterop.generator.model.types.NativeType
 
 class DictionaryGenerator extends XtendTemplate{
 
@@ -43,7 +40,7 @@ public class «definition.getName»«
     «FOR member: definition.members»
         «IF member.enumSubstitutionType instanceof EnumType»
             @JsProperty(name="«member.name»")
-            public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»«defaultValue(member)»;
+            public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»;
 
             @JsOverlay
             public «member.type.displayValue» get«member.name.toFirstUpper»(){
@@ -57,7 +54,7 @@ public class «definition.getName»«
 
         «ELSEIF member.enumSubstitutionType instanceof ArrayType»
             @JsProperty(name="«member.name»")
-            public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»«defaultValue(member)»;
+            public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»;
 
             @JsOverlay
             public «member.type.displayValue» get«member.name.toFirstUpper»(){
@@ -73,7 +70,7 @@ public class «definition.getName»«
 
         «ELSE»
             @JsProperty(name="«member.name»")
-            public «member.type.displayValue» «member.name.adjustJavaName»«defaultValue(member)»;
+            public «member.type.displayValue» «member.name.adjustJavaName»;
 
         «ENDIF»
     «ENDFOR»
@@ -84,30 +81,6 @@ public class «definition.getName»«
 
     def enumType(Type type){
         type instanceof EnumType
-    }
-
-    def defaultValue(DictionaryMember member){
-        if (member.defaultValue=="[]") {
-            if(member.enumSubstitutionType!=null)
-                return " = new " + member.enumSubstitutionType.displayValue.replace("[]","[0]")
-            else
-                return " = new " + member.type.displayValue.replace("[]","[0]")
-        }else if (member.defaultValue == "null"){
-            if (member.type.isNumber)
-                return " = 0"
-            else
-                return " = null"
-        } else if (member.defaultValue != null) {
-            if(member.type instanceof UnionType)
-                return " = Js.cast(" + member.defaultValue +")"
-            else if (member.type instanceof EnumType)
-                return " = "+member.type.displayValue+".of(" + member.defaultValue + ")"
-            else if (member.defaultValue.isDecimal){
-                if (member.type.is("float"))
-                    return " = " + member.defaultValue+"f"
-            }
-            " = " + member.defaultValue
-        }
     }
 
     def isDecimal(String value){

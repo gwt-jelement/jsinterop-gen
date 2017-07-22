@@ -80,7 +80,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     def constants(InterfaceDefinition definition)'''
         «FOR constant: definition.constants AFTER "\n"»
-            public static final «constant.type.displayValue» «constant.name» = «constant.value»;
+            public static «constant.type.displayValue» «constant.name»;
         «ENDFOR»
 
     '''
