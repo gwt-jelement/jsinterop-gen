@@ -203,6 +203,10 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         }
     '''
 
+    def vararg(MethodArgument argument){
+        if (argument.vararg) "..."
+    }
+
     def accessModifier(Method method){
         if (method.privateMethod) "private" else "public"
     }
@@ -221,7 +225,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     def arguments(Method method)'''
         «FOR argument: method.arguments SEPARATOR ", "
-            »«argument.type.displayValue» «argument.name.adjustJavaName»«ENDFOR»'''
+            »«argument.type.displayValue»«vararg(argument)» «argument.name.adjustJavaName»«ENDFOR»'''
 
     def argumentNames(Method method)'''
         «FOR argument: method.arguments SEPARATOR ", "»«argument.name.adjustJavaName»«ENDFOR»'''

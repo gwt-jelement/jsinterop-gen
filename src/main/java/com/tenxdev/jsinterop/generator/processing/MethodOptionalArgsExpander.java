@@ -77,7 +77,7 @@ public class MethodOptionalArgsExpander {
     }
 
     private boolean hasOptionalArgs(Method method) {
-        return method.getArguments().stream().anyMatch(MethodArgument::isOptional);
+        return method.getArguments().stream().anyMatch(argument -> argument.isOptional());
     }
 
     private <T extends Method> List<T> expandMethod(T method) {
@@ -90,7 +90,7 @@ public class MethodOptionalArgsExpander {
         boolean hasOptions = false;
         List<MethodArgument> newArguments = new ArrayList<>();
         for (MethodArgument argument : method.getArguments()) {
-            if (argument.isOptional() && !hasOptions) {
+            if ((argument.isOptional()) && !hasOptions) {
                 T newMethod = method.newMethodWithArguments(new ArrayList<>(newArguments));
                 expandedMethods.add(newMethod);
                 hasOptions = true;
