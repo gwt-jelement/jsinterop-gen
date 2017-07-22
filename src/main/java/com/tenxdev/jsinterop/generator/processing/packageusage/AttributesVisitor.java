@@ -19,6 +19,7 @@ package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.model.Attribute;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,12 @@ class AttributesVisitor {
     }
 
     private List<String> visitAttribute(Attribute attribute) {
-        return typeVisitor.accept(attribute.getType());
+        List<String> result = new ArrayList<>();
+        result.addAll(typeVisitor.accept(attribute.getType()));
+        if (attribute.isWriteOnly()) {
+            result.add("jsinterop.annotations.JsOverlay");
+            result.add("jsinterop.base.Js");
+        }
+        return result;
     }
 }

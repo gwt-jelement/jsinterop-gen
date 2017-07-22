@@ -21,7 +21,6 @@ import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.Attribute;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
-import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.ArrayList;
@@ -66,15 +65,15 @@ public class AttributeUnionTypeProcessor {
             UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
             definition.addUnionReturnType(newUnionType);
             //writeable attribute
-            if (!attribute.isReadOnly()) {
-                for (Type type : unionType.getTypes()) {
-                    Attribute newAttribute = new Attribute(attribute.getName(), type,
-                            false, attribute.isStatic());
-                    newAttribute.setWriteOnly(true);
-                    newAttributes.add(newAttribute);
-                }
-            }
-            attribute.setReadOnly(true);
+//            if (!attribute.isReadOnly()) {
+//                for (Type type : unionType.getTypes()) {
+//                    Attribute newAttribute = new Attribute(attribute.getName(), type,
+//                            false, attribute.isStatic());
+//                    newAttribute.setWriteOnly(true);
+//                    newAttribute.setReference(attribute);
+//                    newAttributes.add(newAttribute);
+//                }
+//            }
         } else {
             logger.formatError("Unexpected number of union types (%d) for attribute %s in %s%n",
                     unionTypes.size(), attribute.getName(), definition.getName());

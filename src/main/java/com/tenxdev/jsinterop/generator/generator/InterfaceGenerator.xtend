@@ -92,6 +92,13 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                 public interface «unionType.name» {
                     «FOR type: unionType.types»
                     @JsOverlay
+                    static «unionType.name» of(«type.displayValue» value){
+                        return Js.cast(value);
+                    }
+
+                    «ENDFOR»
+                    «FOR type: unionType.types»
+                    @JsOverlay
                     default «type.displayValue» as«type.displayValue.toFirstUpper»(){
                         return Js.cast(this);
                     }
@@ -153,8 +160,10 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
             «IF attribute.enumSubstitutionType!==null»
                 «writeOnlyEnumAttribute(attribute)»
             «ELSE»
-                @JsProperty(name="«attribute.name»")
-                public «staticModifier(attribute)»native void set«attribute.javaName.toFirstUpper»(«attribute.type.displayValue» «adjustJavaName(attribute.javaName)»);
+                @JsOverlay
+                public «staticModifier(attribute)»final void set«attribute.javaName.toFirstUpper»(«attribute.type.displayValue» «adjustJavaName(attribute.javaName)»){
+                    this.«(attribute.reference?:attribute).javaName» = Js.cast(«adjustJavaName(attribute.javaName)»);
+                }
 
             «ENDIF»
         «ENDFOR»

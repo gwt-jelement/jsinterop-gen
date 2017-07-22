@@ -34,8 +34,8 @@ public class InterfaceDefinition implements Definition, HasUnionReturnTypes {
     private List<Constant> constants;
     private List<Feature> features;
     private List<Constructor> constructors = new ArrayList<>();
-    private List<Method> methods;
-    private List<Attribute> attributes;
+    private List<Method> methods = new ArrayList<>();
+    private List<Attribute> attributes = new ArrayList<>();
     private List<UnionType> unionReturnTypes = new ArrayList<>();
 
     public InterfaceDefinition(String name, Type parent, List<Constructor> constructors, List<InterfaceMember> members) {
@@ -72,16 +72,10 @@ public class InterfaceDefinition implements Definition, HasUnionReturnTypes {
     }
 
     public List<Method> getMethods() {
-        if (methods == null) {
-            methods = new ArrayList<>();
-        }
         return methods;
     }
 
     public List<Attribute> getAttributes() {
-        if (attributes == null) {
-            attributes = new ArrayList<>();
-        }
         return attributes;
     }
 

@@ -27,9 +27,9 @@ public class Attribute implements InterfaceMember {
     private boolean readOnly;
     private boolean writeOnly;
     private Type type;
-    private boolean overlay;
     private String javaName;
     private Type enumSubstitutionType;
+    private Attribute reference;
 
     public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute) {
         this.name = name;
@@ -44,8 +44,16 @@ public class Attribute implements InterfaceMember {
         this.readOnly = attribute.readOnly;
         this.writeOnly = attribute.writeOnly;
         this.javaName = attribute.javaName;
-        this.overlay = attribute.overlay;
         this.staticAttribute = attribute.staticAttribute;
+        this.reference = reference;
+    }
+
+    public Attribute getReference() {
+        return reference;
+    }
+
+    public void setReference(Attribute reference) {
+        this.reference = reference;
     }
 
     public boolean isStatic() {

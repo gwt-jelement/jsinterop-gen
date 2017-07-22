@@ -97,7 +97,6 @@ class Generator {
         new MethodEnumArgumentProcessor(model, logger).process(); // must run after all method expansions
         new AttributeUnionTypeProcessor(model, logger).process();
         new AttributeEnumTypeProcessor(model, logger).process();
-        new RenameIncompatibleChildAttributes().process(model, logger); //anywhere after merging
         new DictionaryMemberUnionTypeProcessor(model, logger).process();
         new DictionaryMemberEnumTypeProcessor(model, logger).process();
         new SuperCallConstructorProcessor(model, logger).process();//after method expansion
