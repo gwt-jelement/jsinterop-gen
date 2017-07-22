@@ -43,24 +43,23 @@ public class DictionaryMemberUnionTypeProcessor {
     public void process() {
         logger.info(Logger.LEVEL_INFO, () -> "Processing union types in dictionaries");
         model.getDefinitions().stream()
-                .map(DefinitionInfo::getDefinition)
-                .filter(definition -> definition instanceof DictionaryDefinition)
-                .map(definition -> (DictionaryDefinition) definition)
-                .forEach(this::processDictionary);
+                .filter(definitionInfo -> definitionInfo.getDefinition() instanceof DictionaryDefinition)
+                .forEach(definitionInfo ->
+                        processDictionary((DictionaryDefinition) definitionInfo.getDefinition(), definitionInfo));
     }
 
-    private void processDictionary(DictionaryDefinition definition) {
+    private void processDictionary(DictionaryDefinition definition, DefinitionInfo definitionInfo) {
         definition.getMembers().stream()
                 .filter(member -> hasUnionTypeVisitor.accept(member.getType()))
-                .forEach(member -> processMember(member, definition));
+                .forEach(member -> processMember(member, definition, definitionInfo));
     }
 
-    private void processMember(DictionaryMember member, DictionaryDefinition definition) {
+    private void processMember(DictionaryMember member, DictionaryDefinition definition, DefinitionInfo definitionInfo) {
         List<UnionType> unionTypes = getUnionTypesVisitor.accept(member.getType());
         if (unionTypes.size() == 1) {
             UnionType unionType = unionTypes.get(0);
             UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
-            definition.addUnionReturnType(newUnionType);
+            definition.addUnionReturnType(definitionInfo, newUnionType);
         } else {
             logger.formatError("Unexpected number of union types (%d) for attribute %s in %s%n",
                     unionTypes.size(), member.getName(), definition.getName());

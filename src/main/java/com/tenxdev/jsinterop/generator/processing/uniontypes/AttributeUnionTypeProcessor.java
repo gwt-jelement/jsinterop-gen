@@ -19,6 +19,7 @@ package com.tenxdev.jsinterop.generator.processing.uniontypes;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.Attribute;
+import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
@@ -45,25 +46,26 @@ public class AttributeUnionTypeProcessor {
         logger.info(Logger.LEVEL_INFO, () -> "Processing union type attributes");
         model.getDefinitions().stream()
                 .filter(definitionInfo -> definitionInfo.getDefinition().getClass() == InterfaceDefinition.class)
-                .map(definitionInfo -> (InterfaceDefinition) definitionInfo.getDefinition())
-                .forEach(this::processInterfaceDefinition);
+                .forEach(definitionInfo ->
+                        processInterfaceDefinition(definitionInfo, (InterfaceDefinition) definitionInfo.getDefinition()));
     }
 
-    private void processInterfaceDefinition(InterfaceDefinition definition) {
+    private void processInterfaceDefinition(DefinitionInfo definitionInfo, InterfaceDefinition definition) {
         List<Attribute> newAttributes = new ArrayList<>();
         definition.getAttributes().stream()
                 .filter(attribute -> hasUnionTypeVisitor.accept(attribute.getType()))
-                .forEach(attribute -> newAttributes.addAll(processAttribute(attribute, definition)));
+                .forEach(attribute -> newAttributes.addAll(processAttribute(attribute, definitionInfo, definition)));
         definition.getAttributes().addAll(newAttributes);
     }
 
-    private List<Attribute> processAttribute(Attribute attribute, InterfaceDefinition definition) {
+    private List<Attribute> processAttribute(Attribute attribute, DefinitionInfo definitionInfo,
+                                             InterfaceDefinition definition) {
         List<Attribute> newAttributes = new ArrayList<>();
         List<UnionType> unionTypes = getUnionTypesVisitor.accept(attribute.getType());
         if (unionTypes.size() == 1) {
             UnionType unionType = unionTypes.get(0);
             UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
-            definition.addUnionReturnType(newUnionType);
+            definition.addUnionReturnType(definitionInfo, newUnionType);
             //writeable attribute
 //            if (!attribute.isReadOnly()) {
 //                for (Type type : unionType.getTypes()) {

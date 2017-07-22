@@ -36,7 +36,7 @@ package «basePackageName»«definitionInfo.getPackageName()»;
 public class «definition.getName»«
         IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF»{
 
-    «unionTypes(definition)»
+    «unionTypes(definitionInfo, definition)»
     «FOR member: definition.members»
         «IF member.enumSubstitutionType instanceof EnumType»
             @JsProperty(name="«member.name»")
@@ -87,10 +87,10 @@ public class «definition.getName»«
         value.matches("-?[0-9]+\\.[0-9]+(e[0-9]+)?")
     }
 
-    def unionTypes(DictionaryDefinition definition)'''
+    def unionTypes(DefinitionInfo definitionInfo, DictionaryDefinition definition)'''
         «IF definition.unionReturnTypes !== null»
             «FOR unionType: definition.unionReturnTypes»
-                «IF unionType.owner==definition.name»
+                «IF unionType.owner==definitionInfo»
                     @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
                     public interface «unionType.name» {
                         «FOR type: unionType.types»

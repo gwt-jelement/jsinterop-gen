@@ -41,7 +41,7 @@ package «basePackageName»«definitionInfo.getPackageName()»;
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     «constants(definition)»
-    «unionTypes(definition)»
+    «unionTypes(definitionInfo, definition)»
     «constructors(definition)»
     «readWriteAttributes(definition)»
     «readOnlyAttributes(definition)»
@@ -85,9 +85,9 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     '''
 
-    def unionTypes(InterfaceDefinition definition)'''
+    def unionTypes(DefinitionInfo definitionInfo, InterfaceDefinition definition)'''
         «FOR unionType: definition.unionReturnTypes»
-            «IF unionType.owner==definition.name»
+            «IF unionType.owner===definitionInfo»
                 @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
                 public interface «unionType.name» {
                     «FOR type: unionType.types»

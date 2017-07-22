@@ -17,6 +17,8 @@
 
 package com.tenxdev.jsinterop.generator.model.types;
 
+import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
+
 import javax.annotation.Generated;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ public class UnionType implements Type {
     private String name;
     private boolean shared;
     private String packageName;
-    private String owner;
+    private DefinitionInfo owner;
 
     public UnionType(String name, List<Type> types) {
         this.name = name;
@@ -64,7 +66,7 @@ public class UnionType implements Type {
 
     @Override
     public String displayValue() {
-        return owner + "." + name;
+        return owner == null ? name : (owner.getName() + "." + name);
     }
 
     @Override
@@ -74,11 +76,11 @@ public class UnionType implements Type {
                 .collect(Collectors.joining()) + "UnionType";
     }
 
-    public String getOwner() {
+    public DefinitionInfo getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(DefinitionInfo owner) {
         this.owner = owner;
     }
 

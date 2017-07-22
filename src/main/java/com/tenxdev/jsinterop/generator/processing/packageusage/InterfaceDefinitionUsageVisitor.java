@@ -69,6 +69,10 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
                 .anyMatch(attribute -> attribute.getEnumSubstitutionType() != null)) {
             result.add("jsinterop.annotations.JsOverlay");
         }
+        result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
+                .filter(unionType -> interfaceDefinition != unionType.getOwner().getDefinition())
+                .map(unionType -> unionType.getOwner().getPackageName() + "." + unionType.getOwner().getName())
+                .collect(Collectors.toList()));
         return result;
     }
 

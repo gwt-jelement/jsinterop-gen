@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.model.interfaces;
 
+import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.List;
@@ -27,12 +28,12 @@ public interface HasUnionReturnTypes extends Definition {
 
     void setUnionReturnTypes(List<UnionType> unionReturnTypes);
 
-    default void addUnionReturnType(UnionType unionType) {
+    default void addUnionReturnType(DefinitionInfo definitionInfo, UnionType unionType) {
         if (!getUnionReturnTypes().contains(unionType)) {
             getUnionReturnTypes().add(unionType);
         }
         if (unionType.getOwner() == null) {
-            unionType.setOwner(getName());
+            unionType.setOwner(definitionInfo);
         }
     }
 }
