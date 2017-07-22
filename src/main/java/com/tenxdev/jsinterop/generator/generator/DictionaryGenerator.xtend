@@ -43,12 +43,12 @@ public class «definition.getName»«
             public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»;
 
             @JsOverlay
-            public «member.type.displayValue» get«member.name.toFirstUpper»(){
+            public final «member.type.displayValue» get«member.name.toFirstUpper»(){
                 return «member.type.displayValue».of(this.«member.name.adjustJavaName»);
             }
 
             @JsOverlay
-            public void set«member.name.toFirstUpper»(«member.type.displayValue» «member.name.adjustJavaName»){
+            public final void set«member.name.toFirstUpper»(«member.type.displayValue» «member.name.adjustJavaName»){
                 this.«member.name.adjustJavaName» = «member.name.adjustJavaName».getInternalValue();
             }
 
@@ -57,12 +57,12 @@ public class «definition.getName»«
             public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»;
 
             @JsOverlay
-            public «member.type.displayValue» get«member.name.toFirstUpper»(){
+            public final «member.type.displayValue» get«member.name.toFirstUpper»(){
                 return «(member.type as ArrayType).type.displayValue».ofArray(this.«member.name.adjustJavaName»);
             }
 
             @JsOverlay
-            public void set«member.name.toFirstUpper»(«member.type.displayValue» «member.name.adjustJavaName»){
+            public final void set«member.name.toFirstUpper»(«member.type.displayValue» «member.name.adjustJavaName»){
                 this.«member.name.adjustJavaName» = Arrays.stream(«member.name.adjustJavaName»)
                     .map(«(member.type as ArrayType).type.displayValue»::getInternalValue)
                     .toArray(«(member.enumSubstitutionType as ArrayType).type.displayValue»[]::new);
