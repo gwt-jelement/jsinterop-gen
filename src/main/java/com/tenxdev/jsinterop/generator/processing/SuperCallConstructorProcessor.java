@@ -18,8 +18,8 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Constructor;
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 
@@ -40,9 +40,7 @@ public class SuperCallConstructorProcessor {
 
     public void process() {
         logger.info(Logger.LEVEL_INFO, () -> "Finding super call arguments for constructors of inherited classes");
-        model.getDefinitions().stream()
-                .filter(definitionInfo -> definitionInfo.getDefinition() instanceof InterfaceDefinition)
-                .map(definitionInfo -> (InterfaceDefinition) definitionInfo.getDefinition())
+        model.getInterfaceDefinitions().stream()
                 .filter(interfaceDefinition -> interfaceDefinition.getParent() != null)
                 .forEach(this::processInterfaceDefinition);
     }
@@ -57,13 +55,13 @@ public class SuperCallConstructorProcessor {
     }
 
     private InterfaceDefinition findParentInterface(InterfaceDefinition interfaceDefinition) {
-        DefinitionInfo parentDefinition = model.getDefinitionInfo(interfaceDefinition.getParent().getTypeName());
-        if (parentDefinition == null || !(parentDefinition.getDefinition() instanceof InterfaceDefinition)) {
+        AbstractDefinition parentDefinition = model.getDefinition(interfaceDefinition.getParent().getTypeName());
+        if (parentDefinition == null || !(parentDefinition instanceof InterfaceDefinition)) {
             logger.formatError("SuperCallConstructorProcessor: could not find parent for %s%n",
                     interfaceDefinition.getParent().getTypeName());
             return null;
         }
-        InterfaceDefinition parentInterface = (InterfaceDefinition) parentDefinition.getDefinition();
+        InterfaceDefinition parentInterface = (InterfaceDefinition) parentDefinition;
         if (parentInterface.getParent() != null && parentInterface.getConstructors().isEmpty()) {
             processInterfaceDefinition(parentInterface);
         }

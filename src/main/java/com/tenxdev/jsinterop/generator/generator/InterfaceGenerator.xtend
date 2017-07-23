@@ -16,32 +16,29 @@
  */
 package com.tenxdev.jsinterop.generator.generator
 
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition
 import java.util.Collections
 import com.tenxdev.jsinterop.generator.model.MethodArgument
 import com.tenxdev.jsinterop.generator.model.types.NativeType
 import com.tenxdev.jsinterop.generator.model.Method
 import com.tenxdev.jsinterop.generator.model.Attribute
-import com.tenxdev.jsinterop.generator.model.types.Type
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.Constructor
 
 class InterfaceGenerator extends XtendTemplate{
 
-    def generate(String basePackageName, DefinitionInfo<InterfaceDefinition> definitionInfo){
-        var definition=definitionInfo.getDefinition()
+    def generate(String basePackageName, InterfaceDefinition definition){
         Collections.sort(definition.methods)
         return '''
 «copyright»
-package «basePackageName»«definitionInfo.getPackageName()»;
+package «basePackageName»«definition.getPackageName()»;
 
-«imports(basePackageName, definitionInfo)»
+«imports(basePackageName, definition)»
 
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     «constants(definition)»
-    «unionTypes(definitionInfo, definition)»
+    «unionTypes(definition)»
     «constructors(definition)»
     «attributes(definition)»
     «methods(definition)»
@@ -83,9 +80,9 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     '''
 
-    def unionTypes(DefinitionInfo definitionInfo, InterfaceDefinition definition)'''
+    def unionTypes(InterfaceDefinition definition)'''
         «FOR unionType: definition.unionReturnTypes»
-            «IF unionType.owner===definitionInfo»
+            «IF unionType.owner===definition»
                 @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
                 public interface «unionType.name» {
                     «FOR type: unionType.types»
@@ -120,6 +117,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
             «IF attribute.enumSubstitutionType !== null»
                 @JsProperty(name="«attribute.name»")
                 public «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
+
                 «IF !attribute.writeOnly»
                     «IF attribute.type instanceof ArrayType»
                         @JsOverlay

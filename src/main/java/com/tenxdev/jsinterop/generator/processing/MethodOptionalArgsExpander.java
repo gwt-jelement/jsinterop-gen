@@ -45,11 +45,7 @@ public class MethodOptionalArgsExpander {
 
     public void processModel() {
         logger.info(Logger.LEVEL_INFO, () -> "Expanding methods with optional arguments");
-        model.getDefinitions().forEach(definitionInfo -> {
-            if (definitionInfo.getDefinition() instanceof InterfaceDefinition) {
-                processInterface((InterfaceDefinition) definitionInfo.getDefinition());
-            }
-        });
+        model.getInterfaceDefinitions().forEach(this::processInterface);
     }
 
     private void processInterface(InterfaceDefinition definition) {
@@ -77,7 +73,7 @@ public class MethodOptionalArgsExpander {
     }
 
     private boolean hasOptionalArgs(Method method) {
-        return method.getArguments().stream().anyMatch(argument -> argument.isOptional());
+        return method.getArguments().stream().anyMatch(MethodArgument::isOptional);
     }
 
     private <T extends Method> List<T> expandMethod(T method) {

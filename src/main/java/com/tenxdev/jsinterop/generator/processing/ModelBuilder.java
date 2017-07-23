@@ -18,8 +18,8 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.parsing.FileAwareANTLRErrorListener;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import com.tenxdev.jsinterop.generator.parsing.visitors.firstpass.DefinitionsScanner;
@@ -74,19 +74,19 @@ public class ModelBuilder {
         for (File file : fileList) {
             String packageSuffix = getPackageSuffix(offset, file);
             parsingContext.setPackageSuffix(packageSuffix);
-            List<Definition> definitions = parseFile(file, parsingContext);
-            for (Definition definition : definitions) {
+            List<AbstractDefinition> definitions = parseFile(file, parsingContext);
+            for (AbstractDefinition definition : definitions) {
                 try {
                     model.registerDefinition(definition, packageSuffix, file.getAbsolutePath());
                 } catch (Model.ConflictingNameException conflictingNameException) {
                     logger.formatError("Name collision detected:%n\t%s is defined in package %s in file %s%n" +
                                     "\t%s is also defined in package %s in file %s%n",
-                            conflictingNameException.getDefinitionInfo().getDefinition().getName(),
-                            conflictingNameException.getDefinitionInfo().getPackageName(),
-                            conflictingNameException.getDefinitionInfo().getFilename(),
+                            conflictingNameException.getDefinition().getName(),
+                            conflictingNameException.getDefinition().getPackageName(),
+                            conflictingNameException.getDefinition().getFilename(),
                             definition.getName(), packageSuffix, file.getAbsolutePath());
                     logger.reportError("Definition 1:");
-                    logger.reportError(conflictingNameException.getDefinitionInfo().getDefinition().toString());
+                    logger.reportError(conflictingNameException.getDefinition().toString());
                     logger.reportError("Definition 2:");
                     logger.reportError(definition.toString());
                     logger.reportError("");
@@ -110,7 +110,7 @@ public class ModelBuilder {
 
     }
 
-    private List<Definition> parseFile(File file, ParsingContext parsingContext) throws IOException {
+    private List<AbstractDefinition> parseFile(File file, ParsingContext parsingContext) throws IOException {
         try (FileReader reader = new FileReader(file)) {
             WebIDLLexer lexer = new WebIDLLexer(new ANTLRInputStream(reader));
             CommonTokenStream tokens = new CommonTokenStream(lexer);

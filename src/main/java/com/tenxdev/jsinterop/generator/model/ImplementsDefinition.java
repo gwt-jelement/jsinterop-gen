@@ -17,9 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
-
-public class ImplementsDefinition implements Definition {
+public class ImplementsDefinition extends AbstractDefinition {
 
     private final String name;
     private final String parent;

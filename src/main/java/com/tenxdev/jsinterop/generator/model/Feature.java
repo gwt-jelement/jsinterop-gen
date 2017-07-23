@@ -77,19 +77,9 @@ public class Feature implements InterfaceMember {
     public int hashCode() {
         int result = featureType != null ? featureType.hashCode() : 0;
         result = 31 * result + (readOnly ? 1 : 0);
-        result = 31 * result + valueType.hashCode();
-        result = 31 * result + keyType.hashCode();
+        result = 31 * result + (valueType != null ? valueType.hashCode() : 0);
+        result = 31 * result + (keyType != null ? keyType.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Feature{" +
-                "featureType=" + featureType +
-                ", readOnly=" + readOnly +
-                ", valueType='" + valueType + '\'' +
-                ", keyType='" + keyType + '\'' +
-                '}';
     }
 
     public enum FeatureType {VALUE_ITERATOR, MAP_ITERATOR, MAP_LIKE, SET_LIKE}

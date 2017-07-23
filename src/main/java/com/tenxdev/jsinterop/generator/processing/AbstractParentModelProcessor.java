@@ -17,17 +17,19 @@
 
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 
 public abstract class AbstractParentModelProcessor {
 
-    protected DefinitionInfo getParentDefinition(Model model, DefinitionInfo definitionInfo) {
-        if (definitionInfo.getDefinition() instanceof InterfaceDefinition &&
-                ((InterfaceDefinition) definitionInfo.getDefinition()).getParent() instanceof ObjectType) {
-            return model.getDefinitionInfo(((ObjectType) ((InterfaceDefinition) definitionInfo.getDefinition()).getParent()).getTypeName());
+    protected AbstractDefinition getParentDefinition(Model model, AbstractDefinition definition) {
+        if (definition instanceof InterfaceDefinition &&
+                ((InterfaceDefinition) definition).getParent() instanceof ObjectType) {
+            InterfaceDefinition interfaceDefinition = (InterfaceDefinition) definition;
+            ObjectType parentType = (ObjectType) interfaceDefinition.getParent();
+            return model.getDefinition(parentType.getTypeName());
         }
         return null;
     }

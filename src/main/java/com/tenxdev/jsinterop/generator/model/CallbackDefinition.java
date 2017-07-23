@@ -17,9 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
-
-public class CallbackDefinition implements Definition {
+public class CallbackDefinition extends AbstractDefinition {
     private final String name;
     private final Method method;
 

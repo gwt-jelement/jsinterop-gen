@@ -18,9 +18,9 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ abstract class AbstractDefinitionMerger {
         primaryDefinition.getFeatures().addAll(disjointList(primaryDefinition.getFeatures(), definition.getFeatures()));
     }
 
-    void reportTypeMismatch(Definition primaryDefinition, Definition secondaryDefinition) {
+    void reportTypeMismatch(AbstractDefinition primaryDefinition, AbstractDefinition secondaryDefinition) {
         logger.formatError("Do not know how to merge implements of %s %s and %s %s%n",
                 primaryDefinition.getClass().getSimpleName(), primaryDefinition.getName(),
                 secondaryDefinition.getClass().getSimpleName(), secondaryDefinition.getName());

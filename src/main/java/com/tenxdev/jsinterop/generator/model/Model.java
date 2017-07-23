@@ -17,40 +17,72 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
 import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Model {
 
-    private final Map<String, DefinitionInfo<?>> definitions = new HashMap<>();
+    private final Map<String, AbstractDefinition> definitions = new HashMap<>();
     private TypeFactory typeFactory;
+    private Map<String, List<PartialDefinition>> deferredPartials = new HashMap<>();
+    private Map<String, List<ImplementsDefinition>> deferredImplements = new HashMap<>();
 
-    public Collection<DefinitionInfo<?>> getDefinitions() {
+    public Collection<AbstractDefinition> getDefinitions() {
         return definitions.values();
     }
 
-    public DefinitionInfo getDefinitionInfo(String name) {
+    public AbstractDefinition getDefinition(String name) {
         return definitions.get(name);
     }
 
-    public void registerDefinition(Definition definition, String packageSuffix, String filename) throws ConflictingNameException {
-        DefinitionInfo<Definition> definitionInfo = (DefinitionInfo<Definition>) definitions.computeIfAbsent(definition.getName(), DefinitionInfo::new);
+    public List<InterfaceDefinition> getInterfaceDefinitions() {
+        return definitions.values().stream()
+                .filter(definition -> definition instanceof InterfaceDefinition)
+                .map(definition -> (InterfaceDefinition) definition)
+                .collect(Collectors.toList());
+    }
+
+    public List<DictionaryDefinition> getDictionaryDefinitions() {
+        return definitions.values().stream()
+                .filter(definition -> definition instanceof DictionaryDefinition)
+                .map(definition -> (DictionaryDefinition) definition)
+                .collect(Collectors.toList());
+    }
+
+    public void registerDefinition(AbstractDefinition definition, String packageSuffix, String filename) throws ConflictingNameException {
+        definition.setPackageName(packageSuffix);
+        definition.setFilename(filename);
+        AbstractDefinition exisitingDefinition = definitions.get(definition.getName());
         if (definition instanceof PartialDefinition) {
-            definitionInfo.addPartialDefinition((PartialDefinition) definition);
-        } else if (definition instanceof ImplementsDefinition) {
-            definitionInfo.addImplementsDefinition((ImplementsDefinition) definition);
-        } else {
-            if (definitionInfo.getDefinition() != null && !definitionInfo.getDefinition().equals(definition)) {
-                throw new ConflictingNameException(definitionInfo);
+            if (exisitingDefinition == null) {
+                deferredPartials.computeIfAbsent(definition.getName(), key -> new ArrayList<>())
+                        .add((PartialDefinition) definition);
+            } else {
+                exisitingDefinition.addPartialDefinition((PartialDefinition) definition);
             }
-            definitionInfo.setDefinition(definition);
-            definitionInfo.setPackageName(packageSuffix);
-            definitionInfo.setFilename(filename);
+        } else if (definition instanceof ImplementsDefinition) {
+            if (exisitingDefinition == null) {
+                deferredImplements.computeIfAbsent(definition.getName(), key -> new ArrayList<>())
+                        .add((ImplementsDefinition) definition);
+            } else {
+                definition.addImplementsDefinition((ImplementsDefinition) definition);
+            }
+        } else {
+            if (exisitingDefinition != null) {
+                throw new ConflictingNameException(definition);
+            }
+            definitions.put(definition.getName(), definition);
+            List<PartialDefinition> partials = deferredPartials.remove(definition.getName());
+            if (partials != null) {
+                partials.forEach(definition::addPartialDefinition);
+            }
+            List<ImplementsDefinition> implementsDefinitions = deferredImplements.remove(definition.getName());
+            if (implementsDefinitions != null) {
+                implementsDefinitions.forEach(definition::addImplementsDefinition);
+            }
         }
     }
 
@@ -63,14 +95,14 @@ public class Model {
     }
 
     public class ConflictingNameException extends Exception {
-        private final transient DefinitionInfo definitionInfo;
+        private final transient AbstractDefinition definition;
 
-        private ConflictingNameException(DefinitionInfo definitionInfo) {
-            this.definitionInfo = definitionInfo;
+        private ConflictingNameException(AbstractDefinition definition) {
+            this.definition = definition;
         }
 
-        public DefinitionInfo getDefinitionInfo() {
-            return definitionInfo;
+        public AbstractDefinition getDefinition() {
+            return definition;
         }
     }
 

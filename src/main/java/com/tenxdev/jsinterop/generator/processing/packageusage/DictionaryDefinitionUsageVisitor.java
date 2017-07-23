@@ -55,7 +55,7 @@ public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefiniti
             result.add("java.util.Arrays");
         }
         result.addAll(definition.getUnionReturnTypes().stream()
-                .filter(unionType -> definition != unionType.getOwner().getDefinition())
+                .filter(unionType -> definition != unionType.getOwner())
                 .map(unionType -> unionType.getOwner().getPackageName() + "." + unionType.getOwner().getName())
                 .collect(Collectors.toList()));
         return result;

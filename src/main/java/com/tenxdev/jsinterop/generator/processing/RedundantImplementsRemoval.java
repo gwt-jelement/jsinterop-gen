@@ -18,7 +18,7 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 
 /**
@@ -28,11 +28,11 @@ public class RedundantImplementsRemoval extends AbstractParentModelProcessor {
 
     public void process(Model model, Logger logger) {
         logger.info(Logger.LEVEL_INFO, () -> "Removing redundant implements definitions");
-        for (DefinitionInfo definitionInfo : model.getDefinitions()) {
-            DefinitionInfo parentDefinitionInfo = getParentDefinition(model, definitionInfo);
-            while (parentDefinitionInfo != null) {
-                definitionInfo.getImplementsDefinitions().removeAll(parentDefinitionInfo.getImplementsDefinitions());
-                parentDefinitionInfo = getParentDefinition(model, parentDefinitionInfo);
+        for (AbstractDefinition definition : model.getDefinitions()) {
+            AbstractDefinition parentAbstractDefinition = getParentDefinition(model, definition);
+            while (parentAbstractDefinition != null) {
+                definition.getImplementsDefinitions().removeAll(parentAbstractDefinition.getImplementsDefinitions());
+                parentAbstractDefinition = getParentDefinition(model, parentAbstractDefinition);
             }
         }
     }

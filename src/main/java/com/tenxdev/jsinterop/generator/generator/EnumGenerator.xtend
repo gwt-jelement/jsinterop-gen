@@ -16,16 +16,14 @@
  */
 package com.tenxdev.jsinterop.generator.generator
 
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.EnumDefinition;
 
 class EnumGenerator extends XtendTemplate{
 
-    def generate(String basePackageName, DefinitionInfo<EnumDefinition> definitionInfo){
-        var definition=definitionInfo.getDefinition();
+    def generate(String basePackageName, EnumDefinition definition){
         return '''
 «copyright»
-package «basePackageName»«definitionInfo.getPackageName()»;
+package «basePackageName»«definition.getPackageName()»;
 
 import java.util.Arrays;
 

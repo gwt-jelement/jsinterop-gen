@@ -20,5 +20,6 @@ package com.tenxdev.jsinterop.generator.model.interfaces;
 /**
  * marker interface
  */
-public interface PartialDefinition extends Definition {
+public interface PartialDefinition {
+    String getName();
 }

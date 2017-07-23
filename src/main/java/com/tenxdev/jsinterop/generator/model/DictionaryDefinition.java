@@ -17,7 +17,6 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
@@ -25,7 +24,7 @@ import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DictionaryDefinition implements Definition, HasUnionReturnTypes {
+public class DictionaryDefinition extends AbstractDefinition implements HasUnionReturnTypes {
     private final String name;
     private final Type parent;
     private List<DictionaryMember> members;

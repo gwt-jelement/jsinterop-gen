@@ -17,7 +17,6 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.types.Type;
@@ -28,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class InterfaceDefinition implements Definition, HasUnionReturnTypes {
+public class InterfaceDefinition extends AbstractDefinition implements HasUnionReturnTypes {
     private final String name;
     private final Type parent;
     private List<Constant> constants;

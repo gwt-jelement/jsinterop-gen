@@ -19,7 +19,6 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,8 +43,8 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
 
     public void processModel() {
         logger.info(Logger.LEVEL_INFO, () -> "Merging 'implements' definitions");
-        model.getDefinitions().forEach(definitionInfo ->
-                definitionInfo.getImplementsDefinitions().forEach((ImplementsDefinition implementsDefinition) -> {
+        model.getDefinitions().forEach(definition ->
+                definition.getImplementsDefinitions().forEach((ImplementsDefinition implementsDefinition) -> {
                     String definitionName = implementsDefinition.getName();
                     String implementsName = implementsDefinition.getParent();
                     implementsMap.computeIfAbsent(definitionName, key -> new ArrayList<>()).add(implementsName);
@@ -64,12 +63,12 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
         }
     }
 
-    private void getDefinitionByName(String name, Consumer<Definition> consumer) {
-        DefinitionInfo definitionInfo = model.getDefinitionInfo(name);
-        if (definitionInfo == null) {
+    private void getDefinitionByName(String name, Consumer<AbstractDefinition> consumer) {
+        AbstractDefinition definition = model.getDefinition(name);
+        if (definition == null) {
             logger.formatError("Unknown definition %s implements %n", name);
         } else {
-            consumer.accept(definitionInfo.getDefinition());
+            consumer.accept(definition);
         }
     }
 
