@@ -58,11 +58,6 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
     }
 
     @Override
-    public void setUnionReturnTypes(List<UnionType> unionReturnTypes) {
-        this.unionReturnTypes = unionReturnTypes;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

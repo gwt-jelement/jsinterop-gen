@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 public class InterfaceDefinition extends AbstractDefinition implements HasUnionReturnTypes {
     private final String name;
     private final Type parent;
-    private List<Constant> constants;
-    private List<Feature> features;
+    private List<Constant> constants = new ArrayList<>();
+    private List<Feature> features = new ArrayList<>();
     private List<Constructor> constructors = new ArrayList<>();
     private List<Method> methods = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
@@ -83,46 +83,16 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     }
 
     public List<Constant> getConstants() {
-        if (constants == null) {
-            constants = new ArrayList<>();
-        }
         return constants;
     }
 
     public List<Feature> getFeatures() {
-        if (features == null) {
-            features = new ArrayList<>();
-        }
-
         return features;
     }
 
     @Override
     public List<UnionType> getUnionReturnTypes() {
         return unionReturnTypes;
-    }
-
-    @Override
-    public void setUnionReturnTypes(List<UnionType> unionReturnTypes) {
-        this.unionReturnTypes = unionReturnTypes;
-    }
-
-    public List<Attribute> getReadWriteAttributes() {
-        return attributes.stream()
-                .filter(attribute -> !attribute.isReadOnly() && !attribute.isWriteOnly())
-                .collect(Collectors.toList());
-    }
-
-    public List<Attribute> getReadOnlyAttributes() {
-        return attributes.stream()
-                .filter(attribute -> attribute.isReadOnly())
-                .collect(Collectors.toList());
-    }
-
-    public List<Attribute> getWriteOnlyAttributes() {
-        return attributes.stream()
-                .filter(attribute -> attribute.isWriteOnly())
-                .collect(Collectors.toList());
     }
 
     @Override

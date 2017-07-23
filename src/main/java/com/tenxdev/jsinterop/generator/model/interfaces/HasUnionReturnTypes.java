@@ -26,8 +26,6 @@ public interface HasUnionReturnTypes {
 
     List<UnionType> getUnionReturnTypes();
 
-    void setUnionReturnTypes(List<UnionType> unionReturnTypes);
-
     default void addUnionReturnType(AbstractDefinition definition, UnionType unionType) {
         if (!getUnionReturnTypes().contains(unionType)) {
             getUnionReturnTypes().add(unionType);

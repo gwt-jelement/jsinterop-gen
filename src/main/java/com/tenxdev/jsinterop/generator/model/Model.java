@@ -61,14 +61,14 @@ public class Model {
                 deferredPartials.computeIfAbsent(definition.getName(), key -> new ArrayList<>())
                         .add((PartialDefinition) definition);
             } else {
-                exisitingDefinition.addPartialDefinition((PartialDefinition) definition);
+                exisitingDefinition.getPartialDefinitions().add((PartialDefinition) definition);
             }
         } else if (definition instanceof ImplementsDefinition) {
             if (exisitingDefinition == null) {
                 deferredImplements.computeIfAbsent(definition.getName(), key -> new ArrayList<>())
                         .add((ImplementsDefinition) definition);
             } else {
-                definition.addImplementsDefinition((ImplementsDefinition) definition);
+                exisitingDefinition.getImplementsDefinitions().add((ImplementsDefinition) definition);
             }
         } else {
             if (exisitingDefinition != null) {
@@ -77,11 +77,11 @@ public class Model {
             definitions.put(definition.getName(), definition);
             List<PartialDefinition> partials = deferredPartials.remove(definition.getName());
             if (partials != null) {
-                partials.forEach(definition::addPartialDefinition);
+                definition.getPartialDefinitions().addAll(partials);
             }
             List<ImplementsDefinition> implementsDefinitions = deferredImplements.remove(definition.getName());
             if (implementsDefinitions != null) {
-                implementsDefinitions.forEach(definition::addImplementsDefinition);
+                definition.getImplementsDefinitions().addAll(implementsDefinitions);
             }
         }
     }

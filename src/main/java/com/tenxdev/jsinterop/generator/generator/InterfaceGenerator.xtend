@@ -24,6 +24,7 @@ import com.tenxdev.jsinterop.generator.model.Method
 import com.tenxdev.jsinterop.generator.model.Attribute
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.Constructor
+import com.tenxdev.jsinterop.generator.model.types.UnionType
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -115,31 +116,9 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     def attributes(InterfaceDefinition definition)'''
         «FOR attribute: definition.attributes»
             «IF attribute.enumSubstitutionType !== null»
-                @JsProperty(name="«attribute.name»")
-                public «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
-
-                «IF !attribute.writeOnly»
-                    «IF attribute.type instanceof ArrayType»
-                        @JsOverlay
-                        public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
-                           return «attribute.type.displayValue.replace("[]","")».ofArray(«attribute.javaName.adjustJavaName»);
-                        }
-
-                    «ELSE»
-                        @JsOverlay
-                        public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
-                           return «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
-                        }
-
-                    «ENDIF»
-                «ENDIF»
-                «IF !attribute.readOnly»
-                    @JsOverlay
-                    public final «staticModifier(attribute)»void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»){
-                       «staticThis(attribute)».«attribute.javaName.adjustJavaName» = «attribute.javaName.adjustJavaName».getInternalValue();
-                    }
-
-                «ENDIF»
+                «enumTypeAttribute(attribute)»
+            «ELSEIF attribute.type instanceof UnionType»
+                «unionTypeAttribute(attribute)»
             «ELSE»
                 @JsProperty(name="«attribute.name»")
                 public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
@@ -148,64 +127,52 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         «ENDFOR»
     '''
 
-    def staticThis(Attribute attribute){
-        if (attribute.static) attribute.type.displayValue else "this"
-    }
-
-    def readOnlyAttributes(InterfaceDefinition definition)'''
-        «FOR attribute: definition.readOnlyAttributes»
-            «IF attribute.enumSubstitutionType!==null»
-                «readOnlyEnumAttribute(attribute)»
-            «ELSE»
-                @JsProperty(name="«attribute.name»")
-                public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.javaName.toFirstUpper»();
-
-            «ENDIF»
-        «ENDFOR»
-    '''
-
-    def readOnlyEnumAttribute(Attribute attribute)'''
-        «IF attribute.type instanceof ArrayType»
-            @JsOverlay
-            public «staticModifier(attribute)»final «attribute.type.displayValue» get«attribute.name.toFirstUpper»As«attribute.type.displayValue.sanitizeName»(){
-                return «(attribute.type as ArrayType).type.displayValue».ofArray(get«attribute.name.toFirstUpper»());
-            }
-        «ELSE»
-            @JsOverlay
-            public «staticModifier(attribute)»final «attribute.type.displayValue» get«attribute.name.toFirstUpper»As«attribute.type.displayValue.sanitizeName»(){
-                return «attribute.type.displayValue».of(get«attribute.name.toFirstUpper»());
-            }
-        «ENDIF»
-
+    def unionTypeAttribute(Attribute attribute)'''
         @JsProperty(name="«attribute.name»")
-        public «staticModifier(attribute)»native «attribute.enumSubstitutionType.displayValue» get«attribute.name.toFirstUpper»();
+        public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
 
+        «IF !attribute.readOnly»
+            «FOR type: (attribute.type as UnionType).types »
+                @JsOverlay
+                public «staticModifier(attribute)»final void set«attribute.name.toFirstUpper»(«type.displayValue» «attribute.javaName.adjustJavaName»){
+                    this.«attribute.javaName.adjustJavaName» = «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
+                }
+
+            «ENDFOR»
+        «ENDIF»
     '''
 
-    def writeOnlyAttributes(InterfaceDefinition definition)'''
-        «FOR attribute: definition.writeOnlyAttributes»
-            «IF attribute.enumSubstitutionType!==null»
-                «writeOnlyEnumAttribute(attribute)»
+    def enumTypeAttribute(Attribute attribute)'''
+        @JsProperty(name="«attribute.name»")
+        public «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
+
+        «IF !attribute.writeOnly»
+            «IF attribute.type instanceof ArrayType»
+                @JsOverlay
+                public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
+                   return «attribute.type.displayValue.replace("[]","")».ofArray(«attribute.javaName.adjustJavaName»);
+                }
+
             «ELSE»
                 @JsOverlay
-                public «staticModifier(attribute)»final void set«attribute.javaName.toFirstUpper»(«attribute.type.displayValue» «adjustJavaName(attribute.javaName)»){
-                    this.«(attribute.reference?:attribute).javaName» = Js.cast(«adjustJavaName(attribute.javaName)»);
+                public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
+                   return «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
                 }
 
             «ENDIF»
-        «ENDFOR»
+        «ENDIF»
+        «IF !attribute.readOnly»
+            @JsOverlay
+            public final «staticModifier(attribute)»void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»){
+               «staticThis(attribute)».«attribute.javaName.adjustJavaName» = «attribute.javaName.adjustJavaName».getInternalValue();
+            }
+
+        «ENDIF»
     '''
 
-    def writeOnlyEnumAttribute(Attribute attribute)'''
-        @JsOverlay
-        public «staticModifier(attribute)»final void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name»){
-            set«attribute.name.toFirstUpper»(«attribute.name».getInternalValue());
-        }
-
-        @JsProperty(name="«attribute.name»")
-        public «staticModifier(attribute)»native void set«attribute.name.toFirstUpper»(«attribute.enumSubstitutionType.displayValue» «attribute.name»);
-
-    '''
+    def staticThis(Attribute attribute){
+        if (attribute.static) attribute.type.displayValue else "this"
+    }
 
     def methods(InterfaceDefinition definition)'''
         «FOR method: definition.methods SEPARATOR "\n"»
