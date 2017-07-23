@@ -43,9 +43,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     «constants(definition)»
     «unionTypes(definitionInfo, definition)»
     «constructors(definition)»
-    «readWriteAttributes(definition)»
-    «readOnlyAttributes(definition)»
-    «writeOnlyAttributes(definition)»
+    «attributes(definition)»
     «methods(definition)»
 }
 '''
@@ -117,13 +115,44 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         «ENDFOR»
     '''
 
-    def readWriteAttributes(InterfaceDefinition definition)'''
-        «FOR attribute: definition.readWriteAttributes»
-            @JsProperty(name="«attribute.name»")
-            public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
+    def attributes(InterfaceDefinition definition)'''
+        «FOR attribute: definition.attributes»
+            «IF attribute.enumSubstitutionType !== null»
+                @JsProperty(name="«attribute.name»")
+                public «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
+                «IF !attribute.writeOnly»
+                    «IF attribute.type instanceof ArrayType»
+                        @JsOverlay
+                        public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
+                           return «attribute.type.displayValue.replace("[]","")».ofArray(«attribute.javaName.adjustJavaName»);
+                        }
 
+                    «ELSE»
+                        @JsOverlay
+                        public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
+                           return «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
+                        }
+
+                    «ENDIF»
+                «ENDIF»
+                «IF !attribute.readOnly»
+                    @JsOverlay
+                    public final «staticModifier(attribute)»void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»){
+                       «staticThis(attribute)».«attribute.javaName.adjustJavaName» = «attribute.javaName.adjustJavaName».getInternalValue();
+                    }
+
+                «ENDIF»
+            «ELSE»
+                @JsProperty(name="«attribute.name»")
+                public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
+
+            «ENDIF»
         «ENDFOR»
     '''
+
+    def staticThis(Attribute attribute){
+        if (attribute.static) attribute.type.displayValue else "this"
+    }
 
     def readOnlyAttributes(InterfaceDefinition definition)'''
         «FOR attribute: definition.readOnlyAttributes»
