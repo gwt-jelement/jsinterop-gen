@@ -24,11 +24,19 @@ import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.List;
 
 public class SourceGenerator extends XtendTemplate {
 
+    private static final List<String> JAVA_REOURCES = Arrays.asList(
+            "gwt/jelement/Browser.java"
+    );
     private static final String VERSION = "0.0.1-SNAPSHOT";
     private Logger logger;
 
@@ -38,6 +46,9 @@ public class SourceGenerator extends XtendTemplate {
 
     public void processModel(Model model, String outputDirectory, String basePackageName) throws IOException {
         logger.info(Logger.LEVEL_INFO, () -> "Generating Java source code");
+        for (String javaResourcePath : JAVA_REOURCES) {
+            outputResource(outputDirectory, javaResourcePath);
+        }
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
         outputFile(Paths.get(outputDirectory, ".gitignore"), new GitIgnoreGenerator().generate());
         outputFile(Paths.get(outputDirectory, "src", "main", "java", packageNameToPath(basePackageName),
@@ -58,6 +69,18 @@ public class SourceGenerator extends XtendTemplate {
             } else if (definition instanceof DictionaryDefinition) {
                 outputFile(filePath, dictionaryGenerator.generate(basePackageName, definitionInfo));
             }
+        }
+    }
+
+    private void outputResource(String outputDirectory, String javaResourcePath) throws IOException {
+        Path filePath = Paths.get(outputDirectory, "src", "main", "java",
+                javaResourcePath.replace("/", File.separator));
+        File parentDirectory = filePath.toFile().getParentFile();
+        if (!parentDirectory.exists() && !parentDirectory.mkdirs()) {
+            throw new IOException(String.format("Unable to create path %s", parentDirectory.getAbsolutePath()));
+        }
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(javaResourcePath)) {
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
