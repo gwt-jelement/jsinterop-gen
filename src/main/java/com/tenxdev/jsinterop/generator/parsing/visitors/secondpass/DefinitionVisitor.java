@@ -26,36 +26,38 @@ import java.util.List;
 
 class DefinitionVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
     private final List<Constructor> constructors;
+    private List<String> extendedAttributes;
 
-    public DefinitionVisitor(ParsingContext context, List<Constructor> constructors) {
+    public DefinitionVisitor(ParsingContext context, List<Constructor> constructors, List<String> extendedAttributes) {
         super(context);
         this.constructors = constructors;
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public AbstractDefinition visitDefinition(WebIDLParser.DefinitionContext ctx) {
         if (ctx.callbackOrInterface() != null) {
             if (ctx.callbackOrInterface().interface_() != null) {
-                return ctx.callbackOrInterface().interface_().accept(new InterfaceVisitor(parsingContext, constructors));
+                return ctx.callbackOrInterface().interface_().accept(new InterfaceVisitor(parsingContext, constructors, extendedAttributes));
             } else if (ctx.callbackOrInterface().callbackRestOrInterface() != null) {
-                return ctx.callbackOrInterface().callbackRestOrInterface().accept(new CallbackVisitor(parsingContext, constructors));
+                return ctx.callbackOrInterface().callbackRestOrInterface().accept(new CallbackVisitor(parsingContext, constructors, extendedAttributes));
             }
         } else if (ctx.dictionary() != null) {
-            return ctx.dictionary().accept(new DictionaryVisitor(parsingContext));
+            return ctx.dictionary().accept(new DictionaryVisitor(parsingContext, extendedAttributes));
         } else if (ctx.enum_() != null) {
-            return ctx.enum_().accept(new EnumVisitor(parsingContext));
+            return ctx.enum_().accept(new EnumVisitor(parsingContext, extendedAttributes));
         } else if (ctx.partial() != null && ctx.partial().partialDefinition() != null) {
             if (ctx.partial().partialDefinition().partialInterface() != null) {
                 return ctx.partial().partialDefinition().partialInterface()
-                        .accept(new PartialInterfaceVisitor(parsingContext));
+                        .accept(new PartialInterfaceVisitor(parsingContext, extendedAttributes));
             } else if ((ctx).partial().partialDefinition().partialDictionary() != null) {
                 return ctx.partial().partialDefinition().partialDictionary()
-                        .accept(new PartialDictionaryVisitor(parsingContext));
+                        .accept(new PartialDictionaryVisitor(parsingContext, extendedAttributes));
             }
         } else if (ctx.typedef() != null) {
-            return ctx.typedef().accept(new TypeDefVisitor(parsingContext));
+            return ctx.typedef().accept(new TypeDefVisitor(parsingContext, extendedAttributes));
         } else if (ctx.implementsStatement() != null) {
-            return ctx.implementsStatement().accept(new ImplementsVisitor(parsingContext));
+            return ctx.implementsStatement().accept(new ImplementsVisitor(parsingContext, extendedAttributes));
         }
         parsingContext.getlogger().reportError("Unexpected state in DefinitionVisitor");
         return null;

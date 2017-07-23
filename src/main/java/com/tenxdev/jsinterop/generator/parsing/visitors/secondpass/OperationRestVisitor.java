@@ -30,11 +30,13 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
 
     private final Type returnType;
     private final boolean staticMethod;
+    private List<String> extendedAttributes;
 
-    public OperationRestVisitor(ParsingContext context, Type returnType, boolean staticMethod) {
+    public OperationRestVisitor(ParsingContext context, Type returnType, boolean staticMethod, List<String> extendedAttributes) {
         super(context);
         this.returnType = returnType;
         this.staticMethod = staticMethod;
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
@@ -42,6 +44,6 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
         String name = ctx.optionalIdentifier().getText();
         List<MethodArgument> parameters = ctx.argumentList() == null || ctx.argumentList().argument() == null ? Collections.emptyList() :
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext));
-        return new Method(name, returnType, parameters, staticMethod, false, null, null);
+        return new Method(name, returnType, parameters, staticMethod, false, null, null, extendedAttributes);
     }
 }

@@ -27,15 +27,18 @@ import java.util.List;
 
 class PartialInterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
 
-    public PartialInterfaceVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    public PartialInterfaceVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public InterfaceDefinition visitPartialInterface(WebIDLParser.PartialInterfaceContext ctx) {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
         List<InterfaceMember> members = ctx.interfaceMembers().accept(new InterfaceMembersVisitor(parsingContext, name));
-        InterfaceDefinition partialInterface = new InterfaceDefinition(name, null, null, members);
+        InterfaceDefinition partialInterface = new InterfaceDefinition(name, null, null, members, extendedAttributes);
         return new PartialInterfaceDefinition(partialInterface);
     }
 }

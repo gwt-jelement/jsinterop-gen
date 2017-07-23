@@ -22,16 +22,21 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class TypeDefVisitor extends ContextWebIDLBaseVisitor<TypeDefinition> {
 
-    public TypeDefVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    public TypeDefVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public TypeDefinition visitTypedef(WebIDLParser.TypedefContext ctx) {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new TypeDefinition(name, type);
+        return new TypeDefinition(name, type, extendedAttributes);
     }
 }

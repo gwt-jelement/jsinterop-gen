@@ -17,22 +17,28 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.interfaces.HasExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
-public class MethodArgument {
+import java.util.List;
+
+public class MethodArgument implements HasExtendedAttributes {
     private final String defaultValue;
     private final Type type;
     private final String name;
     private final boolean vararg;
     private final boolean optional;
+    private final List<String> extendedAttributes;
     private boolean enumSubstitution;
 
-    public MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue) {
+    public MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue,
+                          List<String> extendedAttributes) {
         this.type = type;
         this.name = name;
         this.vararg = vararg;
         this.optional = optional;
         this.defaultValue = defaultValue;
+        this.extendedAttributes = extendedAttributes;
     }
 
     public MethodArgument(MethodArgument methodArgument) {
@@ -41,6 +47,17 @@ public class MethodArgument {
         this.name = methodArgument.name;
         this.vararg = methodArgument.vararg;
         this.optional = methodArgument.optional;
+        this.extendedAttributes = methodArgument.extendedAttributes;
+    }
+
+    public MethodArgument newMethodArgumentWithType(Type type) {
+        return new MethodArgument(this.name, type, this.vararg, this.optional, this.defaultValue,
+                this.extendedAttributes);
+    }
+
+    public MethodArgument newRequiredArgument() {
+        return new MethodArgument(this.name, this.type, this.vararg, false, this.defaultValue,
+                this.extendedAttributes);
     }
 
     public String getDefaultValue() {
@@ -104,5 +121,10 @@ public class MethodArgument {
                 ", vararg=" + vararg +
                 ", optional=" + optional +
                 '}';
+    }
+
+    @Override
+    public boolean hasExtendedAttribute(String name) {
+        return extendedAttributes != null && extendedAttributes.contains(name);
     }
 }

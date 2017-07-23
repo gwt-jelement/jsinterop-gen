@@ -22,22 +22,27 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class StaticMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
-    StaticMemberRestVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    StaticMemberRestVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public InterfaceMember visitStaticMemberRest(WebIDLParser.StaticMemberRestContext ctx) {
         if (ctx.attributeRest() != null) {
             boolean readOnly = ctx.readOnly() != null && "readonly".equals(ctx.readOnly().getText());
-            return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContext, readOnly, true));
+            return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContext, readOnly, true, extendedAttributes));
 
         }
         if (ctx.operationRest() != null) {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
-            return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, true));
+            return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, true, extendedAttributes));
         }
         parsingContext.getlogger().reportError("Unexpected state in StaticMemberRest");
         return null;

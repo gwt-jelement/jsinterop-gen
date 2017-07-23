@@ -20,22 +20,26 @@ package com.tenxdev.jsinterop.generator.model;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
+import java.util.List;
+
 public class Feature implements InterfaceMember {
 
     private final FeatureType featureType;
     private final boolean readOnly;
     private final Type valueType;
     private final Type keyType;
+    private List<String> extendedAttributes;
 
-    public Feature(FeatureType featureType, Type valueType, boolean readOnly) {
-        this(featureType, null, valueType, readOnly);
+    public Feature(FeatureType featureType, Type valueType, boolean readOnly, List<String> extendedAttributes) {
+        this(featureType, null, valueType, readOnly, extendedAttributes);
     }
 
-    public Feature(FeatureType featureType, Type keyType, Type valueType, boolean readOnly) {
+    public Feature(FeatureType featureType, Type keyType, Type valueType, boolean readOnly, List<String> extendedAttributes) {
         this.featureType = featureType;
         this.valueType = valueType;
         this.keyType = keyType;
         this.readOnly = readOnly;
+        this.extendedAttributes = extendedAttributes;
     }
 
     public FeatureType getFeatureType() {
@@ -80,6 +84,11 @@ public class Feature implements InterfaceMember {
         result = 31 * result + (valueType != null ? valueType.hashCode() : 0);
         result = 31 * result + (keyType != null ? keyType.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public boolean hasExtendedAttribute(String name) {
+        return extendedAttributes != null && extendedAttributes.contains(name);
     }
 
     public enum FeatureType {VALUE_ITERATOR, MAP_ITERATOR, MAP_LIKE, SET_LIKE}

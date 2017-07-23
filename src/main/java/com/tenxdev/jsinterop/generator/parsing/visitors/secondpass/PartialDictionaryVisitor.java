@@ -27,15 +27,18 @@ import java.util.List;
 
 class PartialDictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
 
-    public PartialDictionaryVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    public PartialDictionaryVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public DictionaryDefinition visitPartialDictionary(WebIDLParser.PartialDictionaryContext ctx) {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
         List<DictionaryMember> members = ctx.dictionaryMembers().accept(new DictionaryMemberVisitor(parsingContext));
-        DictionaryDefinition partialDictionary = new DictionaryDefinition(name, null, members);
+        DictionaryDefinition partialDictionary = new DictionaryDefinition(name, null, members, extendedAttributes);
         return new PartialDictionaryDefinition(partialDictionary);
 
     }

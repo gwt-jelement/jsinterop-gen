@@ -36,13 +36,14 @@ public class DefinitionsVisitor extends ContextWebIDLBaseVisitor<List<AbstractDe
     @Override
     public List<AbstractDefinition> visitDefinitions(WebIDLParser.DefinitionsContext ctx) {
         List<AbstractDefinition> definitionList = new ArrayList<>();
-
         WebIDLParser.DefinitionsContext definitions = ctx;
         while (definitions != null && definitions.definition() != null) {
             List<Constructor> constructors = definitions.extendedAttributeList() != null ?
                     ctx.extendedAttributeList().accept(new ExtendedAttributeListVisitor(parsingContext))
                     : Collections.emptyList();
-            AbstractDefinition definition = definitions.definition().accept(new DefinitionVisitor(parsingContext, constructors));
+            List<String> extendedAttributes = definitions.extendedAttributeList() != null ?
+                    definitions.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) : null;
+            AbstractDefinition definition = definitions.definition().accept(new DefinitionVisitor(parsingContext, constructors, extendedAttributes));
             if (definition != null) {
                 definitionList.add(definition);
             } else {

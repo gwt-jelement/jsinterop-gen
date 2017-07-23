@@ -23,49 +23,53 @@ import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.Collections;
+import java.util.List;
 
 class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
     private final String containingType;
+    private List<String> extendedAttributes;
 
-    public InterfaceMemberVisitor(ParsingContext context, String containingType) {
+    public InterfaceMemberVisitor(ParsingContext context, String containingType, List<String> extendedAttributes) {
         super(context);
         this.containingType = containingType;
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public InterfaceMember visitInterfaceMember(WebIDLParser.InterfaceMemberContext ctx) {
         if (ctx.operation() != null) {
-            return ctx.operation().accept(new OperationVisitor(parsingContext, containingType));
+            return ctx.operation().accept(new OperationVisitor(parsingContext, containingType, extendedAttributes));
         }
         if (ctx.const_() != null) {
-            return ctx.const_().accept(new ConstantVisitor(parsingContext));
+            return ctx.const_().accept(new ConstantVisitor(parsingContext, extendedAttributes));
         }
         if (ctx.serializer() != null) {
+            //TODO maybe handle as a feature
             return new Method("toJSON", parsingContext.getTypeFactory().getType("any"),
-                    Collections.emptyList(), false, false, null, null);
+                    Collections.emptyList(), false, false, null, null, extendedAttributes);
         }
         if (ctx.stringifier() != null) {
-            return ctx.stringifier().stringifierRest().accept(new StringifierRestVisitor(parsingContext));
+            return ctx.stringifier().stringifierRest().accept(new StringifierRestVisitor(parsingContext, extendedAttributes));
         }
         if (ctx.staticMember() != null) {
-            return ctx.staticMember().staticMemberRest().accept(new StaticMemberRestVisitor(parsingContext));
+            return ctx.staticMember().staticMemberRest().accept(new StaticMemberRestVisitor(parsingContext, extendedAttributes));
         }
         if (ctx.readonlyMember() != null) {
-            return ctx.readonlyMember().readonlyMemberRest().accept(new ReadOlyMemberRestVisitor(parsingContext));
+            return ctx.readonlyMember().readonlyMemberRest().accept(new ReadOlyMemberRestVisitor(parsingContext, extendedAttributes));
         }
         if (ctx.readWriteAttribute() != null) {
             boolean readOnly = ctx.readWriteAttribute().readOnly() != null && "readonly".equals(ctx.readWriteAttribute().readOnly().getText());
-            return ctx.readWriteAttribute().attributeRest().accept(new AttributeRestVisitor(parsingContext, readOnly, false));
+            return ctx.readWriteAttribute().attributeRest().accept(new AttributeRestVisitor(parsingContext, readOnly, false, extendedAttributes));
         }
         if (ctx.readWriteMaplike() != null) {
-            return ctx.readWriteMaplike().maplikeRest().accept(new MapLikeRestVisitor(parsingContext, false));
+            return ctx.readWriteMaplike().maplikeRest().accept(new MapLikeRestVisitor(parsingContext, false, extendedAttributes));
         }
         if (ctx.readWriteSetlike() != null) {
-            return ctx.readWriteSetlike().setlikeRest().accept(new SetLikeRestVisitor(parsingContext, false));
+            return ctx.readWriteSetlike().setlikeRest().accept(new SetLikeRestVisitor(parsingContext, false, extendedAttributes));
         }
         if (ctx.iterable() != null) {
-            return ctx.iterable().accept(new IterableVisitor(parsingContext));
+            return ctx.iterable().accept(new IterableVisitor(parsingContext, extendedAttributes));
         }
         parsingContext.getlogger().reportError("Unexpected state in InterfaceMembers");
         return null;

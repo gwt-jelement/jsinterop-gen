@@ -29,6 +29,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private final boolean staticMethod;
     private final String name;
     private final List<MethodArgument> arguments;
+    private final List<String> extendedAttributes;
     private Type returnType;
     private Method methodReferences;
     private boolean privateMethod;
@@ -37,7 +38,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private String javaName;
 
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
-                  boolean privateMethod, Method enumOverlay, String javaName) {
+                  boolean privateMethod, Method enumOverlay, String javaName, List<String> extendedAttributes) {
         this.name = name;
         this.returnType = returnType;
         this.arguments = arguments;
@@ -45,6 +46,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.privateMethod = privateMethod;
         this.enumOverlay = enumOverlay;
         this.javaName = javaName;
+        this.extendedAttributes = extendedAttributes;
     }
 
     public Method(Method method) {
@@ -55,11 +57,12 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.privateMethod = method.privateMethod;
         this.enumOverlay = method.enumOverlay;
         this.javaName = method.javaName;
+        this.extendedAttributes = method.extendedAttributes;
     }
 
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
         return (T) new Method(name, returnType, newArguments, staticMethod,
-                privateMethod, enumOverlay, javaName);
+                privateMethod, enumOverlay, javaName, extendedAttributes);
     }
 
     public boolean isStatic() {
@@ -86,6 +89,10 @@ public class Method implements InterfaceMember, Comparable<Method> {
         if (this.methodReferences == null) {
             this.methodReferences = methodReferences;
         }
+    }
+
+    public boolean hasExtendedAttribute(String name) {
+        return extendedAttributes != null && extendedAttributes.contains(name);
     }
 
     @Override

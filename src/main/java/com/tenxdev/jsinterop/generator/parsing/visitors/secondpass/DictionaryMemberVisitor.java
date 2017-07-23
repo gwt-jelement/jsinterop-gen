@@ -36,13 +36,15 @@ class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<DictionaryMe
         List<DictionaryMember> members = new ArrayList<>();
         WebIDLParser.DictionaryMembersContext context = ctx;
         while (context != null && context.dictionaryMember() != null) {
+            List<String> extendedAttributes = context.extendedAttributeList() != null ?
+                    context.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) : null;
             WebIDLParser.DictionaryMemberContext memberContext = context.dictionaryMember();
             boolean required = memberContext.required() != null && "required".equals(memberContext.required().getText());
             Type type = memberContext.type().accept(new TypeVisitor(parsingContext));
             String name = memberContext.IDENTIFIER_WEBIDL().getText();
             String defaultValue = memberContext.default_() == null || memberContext.default_().defaultValue() == null ? null :
                     memberContext.default_().defaultValue().getText();
-            members.add(new DictionaryMember(name, type, required, defaultValue));
+            members.add(new DictionaryMember(name, type, required, defaultValue, extendedAttributes));
             context = context.dictionaryMembers();
         }
         return members;

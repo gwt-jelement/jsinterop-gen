@@ -21,9 +21,12 @@ import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
+import java.util.List;
+
 public class Attribute implements InterfaceMember {
     private final boolean staticAttribute;
     private final String name;
+    private List<String> extendedAttributes;
     private boolean readOnly;
     private boolean writeOnly;
     private Type type;
@@ -31,11 +34,12 @@ public class Attribute implements InterfaceMember {
     private Type enumSubstitutionType;
     private Attribute reference;
 
-    public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute) {
+    public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute, List<String> extendedAttributes) {
         this.name = name;
         this.type = type;
         this.readOnly = readOnly;
         this.staticAttribute = staticAttribute;
+        this.extendedAttributes = extendedAttributes;
     }
 
     public Attribute(Attribute attribute) {
@@ -45,15 +49,7 @@ public class Attribute implements InterfaceMember {
         this.writeOnly = attribute.writeOnly;
         this.javaName = attribute.javaName;
         this.staticAttribute = attribute.staticAttribute;
-        this.reference = reference;
-    }
-
-    public Attribute getReference() {
-        return reference;
-    }
-
-    public void setReference(Attribute reference) {
-        this.reference = reference;
+        this.extendedAttributes = attribute.extendedAttributes;
     }
 
     public boolean isStatic() {
@@ -134,5 +130,10 @@ public class Attribute implements InterfaceMember {
                 ", type='" + type + '\'' +
                 ", readOnly=" + readOnly +
                 '}';
+    }
+
+    @Override
+    public boolean hasExtendedAttribute(String name) {
+        return extendedAttributes != null && extendedAttributes.contains(name);
     }
 }

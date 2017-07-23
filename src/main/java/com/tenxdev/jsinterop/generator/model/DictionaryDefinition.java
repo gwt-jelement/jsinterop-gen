@@ -30,7 +30,8 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
     private List<DictionaryMember> members;
     private List<UnionType> unionReturnTypes = new ArrayList<>();
 
-    public DictionaryDefinition(String name, Type parent, List<DictionaryMember> members) {
+    public DictionaryDefinition(String name, Type parent, List<DictionaryMember> members, List<String> extendedAttributes) {
+        super(extendedAttributes);
         this.name = name;
         this.parent = parent;
         this.members = members;

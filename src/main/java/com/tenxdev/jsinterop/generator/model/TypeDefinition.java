@@ -19,11 +19,14 @@ package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
+import java.util.List;
+
 public class TypeDefinition extends AbstractDefinition {
     private final String name;
     private final Type type;
 
-    public TypeDefinition(String name, Type type) {
+    public TypeDefinition(String name, Type type, List<String> extendedAttributes) {
+        super(extendedAttributes);
         this.name = name;
         this.type = type;
     }

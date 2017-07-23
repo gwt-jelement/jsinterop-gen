@@ -24,11 +24,13 @@ import java.util.List;
 
 public class PartialDictionaryDefinition extends DictionaryDefinition implements PartialDefinition {
 
-    public PartialDictionaryDefinition(String name, Type parent, List<DictionaryMember> members) {
-        super(name, parent, members);
+    public PartialDictionaryDefinition(String name, Type parent, List<DictionaryMember> members,
+                                       List<String> extendedAttributes) {
+        super(name, parent, members, extendedAttributes);
     }
 
     public PartialDictionaryDefinition(DictionaryDefinition dictionaryDefinition) {
-        super(dictionaryDefinition.getName(), dictionaryDefinition.getParent(), dictionaryDefinition.getMembers());
+        super(dictionaryDefinition.getName(), dictionaryDefinition.getParent(), dictionaryDefinition.getMembers(),
+                dictionaryDefinition.extendedAttributes);
     }
 }

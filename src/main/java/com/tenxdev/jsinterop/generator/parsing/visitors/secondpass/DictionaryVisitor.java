@@ -27,8 +27,11 @@ import java.util.List;
 
 class DictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
 
-    public DictionaryVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    public DictionaryVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
@@ -38,6 +41,6 @@ class DictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
                 ctx.inheritance().IDENTIFIER_WEBIDL().getText();
         List<DictionaryMember> members = ctx.dictionaryMembers().accept(new DictionaryMemberVisitor(parsingContext));
         Type parentType = parent == null ? null : parsingContext.getTypeFactory().getTypeNoParse(parent);
-        return new DictionaryDefinition(name, parentType, members);
+        return new DictionaryDefinition(name, parentType, members, extendedAttributes);
     }
 }

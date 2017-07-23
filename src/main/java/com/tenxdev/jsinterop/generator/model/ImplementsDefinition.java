@@ -17,12 +17,15 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import java.util.List;
+
 public class ImplementsDefinition extends AbstractDefinition {
 
     private final String name;
     private final String parent;
 
-    public ImplementsDefinition(String name, String parent) {
+    public ImplementsDefinition(String name, String parent, List<String> extendedAttributes) {
+        super(extendedAttributes);
         this.name = name;
         this.parent = parent;
     }

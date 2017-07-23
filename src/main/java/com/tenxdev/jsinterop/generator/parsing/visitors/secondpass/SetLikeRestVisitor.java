@@ -22,17 +22,21 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class SetLikeRestVisitor extends ContextWebIDLBaseVisitor<Feature> {
     private final boolean readOnly;
+    private List<String> extendedAttributes;
 
-    public SetLikeRestVisitor(ParsingContext context, boolean readOnly) {
+    public SetLikeRestVisitor(ParsingContext context, boolean readOnly, List<String> extendedAttributes) {
         super(context);
         this.readOnly = readOnly;
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public Feature visitSetlikeRest(WebIDLParser.SetlikeRestContext ctx) {
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new Feature(Feature.FeatureType.SET_LIKE, type, readOnly);
+        return new Feature(Feature.FeatureType.SET_LIKE, type, readOnly, extendedAttributes);
     }
 }

@@ -29,10 +29,12 @@ import java.util.List;
 class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
 
     private final List<Constructor> constructors;
+    private List<String> extendedAttributes;
 
-    public InterfaceVisitor(ParsingContext context, List<Constructor> constructors) {
+    public InterfaceVisitor(ParsingContext context, List<Constructor> constructors, List<String> extendedAttributes) {
         super(context);
         this.constructors = constructors;
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
@@ -41,6 +43,6 @@ class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
         Type parent = ctx.inheritance() == null || ctx.inheritance().IDENTIFIER_WEBIDL() == null
                 ? null : parsingContext.getTypeFactory().getTypeNoParse(ctx.inheritance().IDENTIFIER_WEBIDL().getText());
         List<InterfaceMember> members = ctx.interfaceMembers().accept(new InterfaceMembersVisitor(parsingContext, name));
-        return new InterfaceDefinition(name, parent, constructors, members);
+        return new InterfaceDefinition(name, parent, constructors, members, extendedAttributes);
     }
 }

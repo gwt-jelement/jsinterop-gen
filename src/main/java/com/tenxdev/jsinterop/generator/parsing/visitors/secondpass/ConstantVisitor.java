@@ -22,10 +22,15 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class ConstantVisitor extends ContextWebIDLBaseVisitor<Constant> {
 
-    public ConstantVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    public ConstantVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
@@ -33,6 +38,6 @@ class ConstantVisitor extends ContextWebIDLBaseVisitor<Constant> {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
         Type type = ctx.constType().accept(new TypeVisitor(parsingContext));
         String value = ctx.constValue().getText();
-        return new Constant(name, type, value);
+        return new Constant(name, type, value, extendedAttributes);
     }
 }

@@ -104,8 +104,7 @@ public class MethodUnionArgsExpander {
         int argumentIndex = method.getArguments().indexOf(argument);
         for (Type type : suggestedTypes) {
             List<MethodArgument> newArguments = new ArrayList<>(method.getArguments());
-            newArguments.set(argumentIndex, new MethodArgument(argument.getName(), type, argument.isVararg(),
-                    argument.isOptional(), argument.getDefaultValue()));
+            newArguments.set(argumentIndex, argument.newMethodArgumentWithType(type));
             T newMethod = method.newMethodWithArguments(newArguments);
             newMethod.setPrivate(method.isPrivateMethod());
             newMethod.setEnumOverlay(method.getEnumOverlay());

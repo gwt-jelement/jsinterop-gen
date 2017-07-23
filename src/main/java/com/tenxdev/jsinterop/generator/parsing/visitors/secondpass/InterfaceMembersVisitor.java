@@ -42,8 +42,11 @@ class InterfaceMembersVisitor extends ContextWebIDLBaseVisitor<List<InterfaceMem
         List<InterfaceMember> interfaceMembers = new ArrayList<>();
         for (WebIDLParser.InterfaceMembersContext members = ctx; members != null; members = members.interfaceMembers()) {
             InterfaceMember member = null;
+            List<String> extendedAttributes = members.extendedAttributeList() != null ?
+                    members.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) :
+                    null;
             if (members.interfaceMember() != null) {
-                member = members.interfaceMember().accept(new InterfaceMemberVisitor(parsingContext, containingType));
+                member = members.interfaceMember().accept(new InterfaceMemberVisitor(parsingContext, containingType, extendedAttributes));
             }
             if (member != null) {
                 interfaceMembers.add(member);

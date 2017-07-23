@@ -22,10 +22,15 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
 
-    ArgumentVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    ArgumentVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
@@ -34,21 +39,21 @@ class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
         String defaultValue = ctx.default_() == null || ctx.default_().defaultValue() == null ? null :
                 ctx.default_().defaultValue().getText();
-        return new MethodArgument(name, type, false, true, defaultValue);
+        return new MethodArgument(name, type, false, true, defaultValue, extendedAttributes);
     }
 
     @Override
     public MethodArgument visitRequiredArgument(WebIDLParser.RequiredArgumentContext ctx) {
         String name = ctx.argumentName().getText();
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new MethodArgument(name, type, false, false, null);
+        return new MethodArgument(name, type, false, false, null, extendedAttributes);
     }
 
     @Override
     public MethodArgument visitRequiredVarArgArgument(WebIDLParser.RequiredVarArgArgumentContext ctx) {
         String name = ctx.argumentName().getText();
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new MethodArgument(name, type, true, true, null);
+        return new MethodArgument(name, type, true, true, null, extendedAttributes);
     }
 
 }

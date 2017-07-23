@@ -21,21 +21,26 @@ import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class ReadOlyMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
-    public ReadOlyMemberRestVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    public ReadOlyMemberRestVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public InterfaceMember visitReadonlyMemberRest(WebIDLParser.ReadonlyMemberRestContext ctx) {
         if (ctx.attributeRest() != null) {
-            return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContext, true, false));
+            return ctx.attributeRest().accept(new AttributeRestVisitor(parsingContext, true, false, extendedAttributes));
         }
         if (ctx.readWriteMaplike() != null) {
-            return ctx.readWriteMaplike().maplikeRest().accept(new MapLikeRestVisitor(parsingContext, true));
+            return ctx.readWriteMaplike().maplikeRest().accept(new MapLikeRestVisitor(parsingContext, true, extendedAttributes));
         }
         if (ctx.readWriteSetlike() != null) {
-            return ctx.readWriteSetlike().setlikeRest().accept(new SetLikeRestVisitor(parsingContext, true));
+            return ctx.readWriteSetlike().setlikeRest().accept(new SetLikeRestVisitor(parsingContext, true, extendedAttributes));
         }
         parsingContext.getlogger().reportError("ReadOlyMemberRestVisitor: Unexpected state in ReadOnlyMemberRest");
         return null;

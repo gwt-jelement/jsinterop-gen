@@ -17,11 +17,14 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import java.util.List;
+
 public class CallbackDefinition extends AbstractDefinition {
     private final String name;
     private final Method method;
 
-    public CallbackDefinition(String name, Method method) {
+    public CallbackDefinition(String name, Method method, List<String> extendedAttributes) {
+        super(extendedAttributes);
         this.name = name;
         this.method = method;
     }

@@ -21,16 +21,21 @@ import com.tenxdev.jsinterop.generator.model.ImplementsDefinition;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class ImplementsVisitor extends ContextWebIDLBaseVisitor<ImplementsDefinition> {
 
-    public ImplementsVisitor(ParsingContext parsingContext) {
+    private List<String> extendedAttributes;
+
+    public ImplementsVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public ImplementsDefinition visitImplementsStatement(WebIDLParser.ImplementsStatementContext ctx) {
         String name = ctx.IDENTIFIER_WEBIDL(0).getText();
         String type = ctx.IDENTIFIER_WEBIDL(1).getText();
-        return new ImplementsDefinition(name, type);
+        return new ImplementsDefinition(name, type, extendedAttributes);
     }
 }

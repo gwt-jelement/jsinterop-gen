@@ -88,10 +88,10 @@ class ConstructorArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodAr
             String type = removeOptionalIndicator(typeBuilder.toString());
             if (type.indexOf('|') != -1) {
                 String[] types = type.split("\\|");
-                arguments.add(new MethodArgument(name, parsingContext.getTypeFactory().getUnionType(types), false, optional, defaultValue));
+                arguments.add(new MethodArgument(name, parsingContext.getTypeFactory().getUnionType(types), false, optional, defaultValue, null));
             } else {
                 arguments.add(new MethodArgument(name, parsingContext.getTypeFactory().getType(type),
-                        false, optional, defaultValue));
+                        false, optional, defaultValue, null));
             }
         }
     }

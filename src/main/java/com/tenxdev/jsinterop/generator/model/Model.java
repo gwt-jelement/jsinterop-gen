@@ -70,7 +70,7 @@ public class Model {
             } else {
                 exisitingDefinition.getImplementsDefinitions().add((ImplementsDefinition) definition);
             }
-        } else {
+        } else if (!definition.equals(exisitingDefinition)) {
             if (exisitingDefinition != null) {
                 throw new ConflictingNameException(definition);
             }
@@ -84,6 +84,7 @@ public class Model {
                 definition.getImplementsDefinitions().addAll(implementsDefinitions);
             }
         }
+        
     }
 
     public TypeFactory getTypeFactory() {

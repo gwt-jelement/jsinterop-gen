@@ -64,8 +64,7 @@ public class MethodEnumArgumentProcessor {
         for (MethodArgument argument : method.getArguments()) {
             if (hasEnumTypeVisitor.accept(argument.getType())) {
                 Type substitutionType = new EnumSubstitutionVisitor(model, logger).accept(argument.getType());
-                MethodArgument newMethodArgument = new MethodArgument(argument.getName(), substitutionType,
-                        argument.isVararg(), argument.isOptional(), argument.getDefaultValue());
+                MethodArgument newMethodArgument = argument.newMethodArgumentWithType(substitutionType);
                 newMethodArgument.setEnumSubstitution(true);
                 newArguments.add(newMethodArgument);
                 hasEnumTypes = true;

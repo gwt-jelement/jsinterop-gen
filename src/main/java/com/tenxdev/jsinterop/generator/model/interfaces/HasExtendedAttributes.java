@@ -17,5 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.model.interfaces;
 
-public interface InterfaceMember extends HasExtendedAttributes {
+public interface HasExtendedAttributes {
+
+    boolean hasExtendedAttribute(String name);
 }

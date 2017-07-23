@@ -22,22 +22,26 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class AttributeRestVisitor extends ContextWebIDLBaseVisitor<Attribute> {
 
     private final boolean readOnly;
     private final boolean staticAttribute;
+    private List<String> extendedAttributes;
 
-    AttributeRestVisitor(ParsingContext context, boolean readOnly, boolean staticAttribute) {
+    AttributeRestVisitor(ParsingContext context, boolean readOnly, boolean staticAttribute, List<String> extendedAttributes) {
         super(context);
         this.readOnly = readOnly;
         this.staticAttribute = staticAttribute;
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public Attribute visitAttributeRest(WebIDLParser.AttributeRestContext ctx) {
         String name = ctx.attributeName().getText();
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new Attribute(name, type, readOnly, staticAttribute);
+        return new Attribute(name, type, readOnly, staticAttribute, extendedAttributes);
     }
 
 }

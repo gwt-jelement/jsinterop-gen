@@ -22,13 +22,17 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.List;
+
 class OperationVisitor extends ContextWebIDLBaseVisitor<Method> {
 
     private final String containingType;
+    private List<String> extendedAttributes;
 
-    public OperationVisitor(ParsingContext context, String containingType) {
+    public OperationVisitor(ParsingContext context, String containingType, List<String> extendedAttributes) {
         super(context);
         this.containingType = containingType;
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
@@ -49,7 +53,7 @@ class OperationVisitor extends ContextWebIDLBaseVisitor<Method> {
             return null;
         } else if (ctx.operationRest() != null) {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
-            return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, false));
+            return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, false, extendedAttributes));
         } else {
             System.err.println("Unexpected condition in operation");
             return null;

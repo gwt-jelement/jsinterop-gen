@@ -29,17 +29,20 @@ import java.util.List;
 class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
 
     private final List<Constructor> constructors;
+    private List<String> extendedAttributes;
 
-    CallbackVisitor(ParsingContext context, List<Constructor> constructors) {
+    CallbackVisitor(ParsingContext context, List<Constructor> constructors, List<String> extendedAttributes) {
         super(context);
         this.constructors = constructors;
+        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
     public AbstractDefinition visitCallbackRestOrInterface(WebIDLParser.CallbackRestOrInterfaceContext ctx) {
         if (ctx.interface_() != null) {
-            InterfaceDefinition interfaceDefinition = ctx.interface_().accept(new InterfaceVisitor(parsingContext, constructors));
-            return new CallbackDefinition(interfaceDefinition.getName(), interfaceDefinition.getMethods().get(0));
+            InterfaceDefinition interfaceDefinition = ctx.interface_().accept(new InterfaceVisitor(parsingContext, constructors, extendedAttributes));
+            return new CallbackDefinition(interfaceDefinition.getName(),
+                    interfaceDefinition.getMethods().get(0), extendedAttributes);
         } else if (ctx.callbackRest() != null) {
             return ctx.callbackRest().accept(this);
         } else {
@@ -55,7 +58,7 @@ class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
         Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
         List<MethodArgument> arguments = ctx.argumentList() != null && ctx.argumentList().arguments() != null ?
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext)) : Collections.emptyList();
-        Method method = new Method(null, returnType, arguments, false, false, null, null);
-        return new CallbackDefinition(name, method);
+        Method method = new Method(null, returnType, arguments, false, false, null, null, extendedAttributes);
+        return new CallbackDefinition(name, method, extendedAttributes);
     }
 }

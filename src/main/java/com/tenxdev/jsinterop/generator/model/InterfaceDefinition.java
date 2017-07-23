@@ -37,7 +37,9 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     private List<Attribute> attributes = new ArrayList<>();
     private List<UnionType> unionReturnTypes = new ArrayList<>();
 
-    public InterfaceDefinition(String name, Type parent, List<Constructor> constructors, List<InterfaceMember> members) {
+    public InterfaceDefinition(String name, Type parent, List<Constructor> constructors,
+                               List<InterfaceMember> members, List<String> extendedAttributes) {
+        super(extendedAttributes);
         this.name = name;
         this.parent = parent;
         this.constructors = constructors == null ? Collections.emptyList() : constructors;
@@ -52,6 +54,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     }
 
     InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
+        super(interfaceDefinition.extendedAttributes);
         this.name = interfaceDefinition.name;
         this.parent = interfaceDefinition.parent;
         this.constructors = interfaceDefinition.constructors;

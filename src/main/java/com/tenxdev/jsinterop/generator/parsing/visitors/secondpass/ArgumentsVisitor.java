@@ -35,9 +35,12 @@ class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
     public List<MethodArgument> visitArguments(WebIDLParser.ArgumentsContext ctx) {
         List<MethodArgument> argumentList = new ArrayList<>();
         for (WebIDLParser.ArgumentsContext arguments = ctx; arguments != null && arguments.argument() != null; arguments = arguments.arguments()) {
-            boolean added = visitIfNotNull(arguments.argument().optionalOrRequiredArgument().optionalArgument(), argumentList) ||
-                    visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredArgument(), argumentList) ||
-                    visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList);
+            List<String> extendedAttributes = arguments.argument().extendedAttributeList() != null ?
+                    arguments.argument().extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) :
+                    null;
+            boolean added = visitIfNotNull(arguments.argument().optionalOrRequiredArgument().optionalArgument(), argumentList, extendedAttributes) ||
+                    visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredArgument(), argumentList, extendedAttributes) ||
+                    visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList, extendedAttributes);
             if (!added) {
                 parsingContext.getlogger().reportError("Invalid state in Arguments visitor");
             }
@@ -45,9 +48,9 @@ class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
         return argumentList;
     }
 
-    private boolean visitIfNotNull(ParserRuleContext context, List<MethodArgument> argumentList) {
+    private boolean visitIfNotNull(ParserRuleContext context, List<MethodArgument> argumentList, List<String> extendedAttributes) {
         if (context != null) {
-            argumentList.add(context.accept(new ArgumentVisitor(parsingContext)));
+            argumentList.add(context.accept(new ArgumentVisitor(parsingContext, extendedAttributes)));
             return true;
         }
         return false;
@@ -56,9 +59,12 @@ class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
     @Override
     public List<MethodArgument> visitArgumentList(WebIDLParser.ArgumentListContext ctx) {
         List<MethodArgument> argumentList = new ArrayList<>();
-        boolean added = visitIfNotNull(ctx.argument().optionalOrRequiredArgument().optionalArgument(), argumentList) ||
-                visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredArgument(), argumentList) ||
-                visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList);
+        List<String> extendedAttributes = ctx.argument().extendedAttributeList() != null ?
+                ctx.argument().extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) :
+                null;
+        boolean added = visitIfNotNull(ctx.argument().optionalOrRequiredArgument().optionalArgument(), argumentList, extendedAttributes) ||
+                visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredArgument(), argumentList, extendedAttributes) ||
+                visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList, extendedAttributes);
         if (!added) {
             parsingContext.getlogger().reportError("Invalid state in Arguments visitor");
         }
