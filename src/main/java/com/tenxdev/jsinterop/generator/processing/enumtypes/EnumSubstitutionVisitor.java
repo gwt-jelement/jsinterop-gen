@@ -18,7 +18,7 @@
 package com.tenxdev.jsinterop.generator.processing.enumtypes;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.EnumDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.*;
@@ -60,9 +60,9 @@ public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
 
     @Override
     protected Type visitEnumType(EnumType type) {
-        DefinitionInfo definitionInfo = model.getDefinitionInfo(type.getTypeName());
-        if (definitionInfo.getDefinition() instanceof EnumDefinition) {
-            return ((EnumDefinition) definitionInfo.getDefinition()).getJavaElementType();
+        AbstractDefinition definition = model.getDefinition(type.getTypeName());
+        if (definition instanceof EnumDefinition) {
+            return ((EnumDefinition) definition).getJavaElementType();
         } else {
             logger.formatError("Unexpected definition for enum type %s%n", type.getTypeName());
             return type;

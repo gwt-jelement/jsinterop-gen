@@ -17,26 +17,19 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DefinitionInfo<T extends Definition> {
+public abstract class AbstractDefinition {
 
-    private final String name;
-    private T definition;
     private List<PartialDefinition> partialDefinitions;
     private List<ImplementsDefinition> implementsDefinitions;
     private String packageName;
     private String filename;
     private List<String> importedPackages;
-
-    public DefinitionInfo(String name) {
-        this.name = name;
-    }
 
     public List<String> getImportedPackages() {
         return importedPackages;
@@ -46,24 +39,12 @@ public class DefinitionInfo<T extends Definition> {
         this.importedPackages = importedPackages;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getPackageName() {
         return packageName;
     }
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
-    }
-
-    public T getDefinition() {
-        return definition;
-    }
-
-    public void setDefinition(T definition) {
-        this.definition = definition;
     }
 
     public List<PartialDefinition> getPartialDefinitions() {
@@ -95,4 +76,6 @@ public class DefinitionInfo<T extends Definition> {
     public void setFilename(String filename) {
         this.filename = filename;
     }
+
+    public abstract String getName();
 }

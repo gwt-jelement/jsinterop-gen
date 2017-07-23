@@ -39,10 +39,7 @@ public class AttributeEnumTypeProcessor {
 
     public void process() {
         logger.info(Logger.LEVEL_INFO, () -> "Processing enum type attributes");
-        model.getDefinitions().stream()
-                .filter(definitionInfo -> definitionInfo.getDefinition().getClass() == InterfaceDefinition.class)
-                .map(definitionInfo -> (InterfaceDefinition) definitionInfo.getDefinition())
-                .forEach(this::processInterfaceDefinition);
+        model.getInterfaceDefinitions().forEach(this::processInterfaceDefinition);
     }
 
     private void processInterfaceDefinition(InterfaceDefinition definition) {

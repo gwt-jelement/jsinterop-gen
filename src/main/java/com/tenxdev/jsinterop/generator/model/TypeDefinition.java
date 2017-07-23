@@ -17,10 +17,9 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
-public class TypeDefinition implements Definition {
+public class TypeDefinition extends AbstractDefinition {
     private final String name;
     private final Type type;
 

@@ -39,10 +39,7 @@ public class DictionaryMemberEnumTypeProcessor {
 
     public void process() {
         logger.info(Logger.LEVEL_INFO, () -> "Processing enum types in dictionaries");
-        model.getDefinitions().stream()
-                .filter(definitionInfo -> definitionInfo.getDefinition().getClass() == DictionaryDefinition.class)
-                .map(definitionInfo -> (DictionaryDefinition) definitionInfo.getDefinition())
-                .forEach(this::processDictionaryDefinition);
+        model.getDictionaryDefinitions().forEach(this::processDictionaryDefinition);
     }
 
     private void processDictionaryDefinition(DictionaryDefinition definition) {

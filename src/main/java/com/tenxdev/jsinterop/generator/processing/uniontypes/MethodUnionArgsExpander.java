@@ -50,17 +50,13 @@ public class MethodUnionArgsExpander {
 
     public void processModel() {
         logger.info(Logger.LEVEL_INFO, () -> "Expanding methods with union type arguments");
-        model.getDefinitions().forEach(definitionInfo -> {
-            if (definitionInfo.getDefinition() instanceof InterfaceDefinition) {
-                processInterface(definitionInfo, (InterfaceDefinition) definitionInfo.getDefinition());
-            }
-        });
+        model.getInterfaceDefinitions().forEach(this::processInterface);
     }
 
-    private void processInterface(DefinitionInfo<?> definitionInfo, InterfaceDefinition definition) {
+    private void processInterface(InterfaceDefinition definition) {
         expandMethodArguments(definition);
         expandConstructorArguments(definition);
-        findUnionReturnTypes(definitionInfo, definition);
+        findUnionReturnTypes(definition);
     }
 
     private void expandMethodArguments(InterfaceDefinition definition) {
@@ -75,14 +71,14 @@ public class MethodUnionArgsExpander {
         definition.getConstructors().addAll(newConstructors);
     }
 
-    private void findUnionReturnTypes(DefinitionInfo definitionInfo, InterfaceDefinition definition) {
+    private void findUnionReturnTypes(InterfaceDefinition definition) {
         List<UnionType> unionReturnTypes = definition.getMethods().stream()
                 .map(method -> getUnionTypesVisitor.accept(method.getReturnType()))
                 .flatMap(List::stream)
                 .distinct()
                 .collect(Collectors.toList());
         removeEnumUnionTypeVisitor.visitUnionTypes(unionReturnTypes)
-                .forEach(unionType -> definition.addUnionReturnType(definitionInfo, unionType));
+                .forEach(unionType -> definition.addUnionReturnType(definition, unionType));
     }
 
     private <T extends Method> List<T> processMethods(List<T> methods) {

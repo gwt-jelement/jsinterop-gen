@@ -17,14 +17,14 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Constructor;
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.List;
 
-class DefinitionVisitor extends ContextWebIDLBaseVisitor<Definition> {
+class DefinitionVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
     private final List<Constructor> constructors;
 
     public DefinitionVisitor(ParsingContext context, List<Constructor> constructors) {
@@ -33,7 +33,7 @@ class DefinitionVisitor extends ContextWebIDLBaseVisitor<Definition> {
     }
 
     @Override
-    public Definition visitDefinition(WebIDLParser.DefinitionContext ctx) {
+    public AbstractDefinition visitDefinition(WebIDLParser.DefinitionContext ctx) {
         if (ctx.callbackOrInterface() != null) {
             if (ctx.callbackOrInterface().interface_() != null) {
                 return ctx.callbackOrInterface().interface_().accept(new InterfaceVisitor(parsingContext, constructors));

@@ -1,6 +1,6 @@
 package com.tenxdev.jsinterop.generator.generator
 
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition
 import java.util.Set
 import java.util.TreeSet
 import java.util.Arrays
@@ -43,8 +43,8 @@ class XtendTemplate {
  */
     '''
 
-    def imports(String basePackageName, DefinitionInfo<?> definitionInfo)'''
-        «FOR importName: definitionInfo.getImportedPackages»
+    def imports(String basePackageName, AbstractDefinition definition)'''
+        «FOR importName: definition.getImportedPackages»
             import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
         «ENDFOR»
     '''
@@ -63,7 +63,7 @@ class XtendTemplate {
 
     def boxType(Type type) {
         if (type instanceof NativeType) {
-            var boxedType = TypeFactory.BOXED_TYPES.get((type as NativeType).getTypeName());
+            var boxedType = TypeFactory.BOXED_TYPES.get(type.getTypeName());
             return if (boxedType != null)  boxedType else type;
         }
         //TODO may need to box other types

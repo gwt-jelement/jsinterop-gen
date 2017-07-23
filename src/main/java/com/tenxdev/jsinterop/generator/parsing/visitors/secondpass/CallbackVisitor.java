@@ -18,7 +18,6 @@
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.*;
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import com.tenxdev.jsinterop.generator.processing.ParserUtil;
@@ -27,7 +26,7 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.Collections;
 import java.util.List;
 
-class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
+class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
 
     private final List<Constructor> constructors;
 
@@ -37,7 +36,7 @@ class CallbackVisitor extends ContextWebIDLBaseVisitor<Definition> {
     }
 
     @Override
-    public Definition visitCallbackRestOrInterface(WebIDLParser.CallbackRestOrInterfaceContext ctx) {
+    public AbstractDefinition visitCallbackRestOrInterface(WebIDLParser.CallbackRestOrInterfaceContext ctx) {
         if (ctx.interface_() != null) {
             InterfaceDefinition interfaceDefinition = ctx.interface_().accept(new InterfaceVisitor(parsingContext, constructors));
             return new CallbackDefinition(interfaceDefinition.getName(), interfaceDefinition.getMethods().get(0));

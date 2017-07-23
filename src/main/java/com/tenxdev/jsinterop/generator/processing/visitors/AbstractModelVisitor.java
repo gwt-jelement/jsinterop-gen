@@ -18,22 +18,21 @@
 package com.tenxdev.jsinterop.generator.processing.visitors;
 
 import com.tenxdev.jsinterop.generator.model.*;
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractModelVisitor<T> {
 
-    public Map<DefinitionInfo, T> accept(Model model) {
-        Map<DefinitionInfo, T> result = new HashMap<>();
-        for (DefinitionInfo definitionInfo : model.getDefinitions()) {
-            result.put(definitionInfo, visitDefinition(definitionInfo.getDefinition()));
+    public Map<AbstractDefinition, T> accept(Model model) {
+        Map<AbstractDefinition, T> result = new HashMap<>();
+        for (AbstractDefinition definition : model.getDefinitions()) {
+            result.put(definition, visitDefinition(definition));
         }
         return result;
     }
 
-    private T visitDefinition(Definition definition) {
+    private T visitDefinition(AbstractDefinition definition) {
         if (definition.getClass() == InterfaceDefinition.class) {
             return visitInterfaceDefinition((InterfaceDefinition) definition);
         } else if (definition.getClass() == DictionaryDefinition.class) {

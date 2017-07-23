@@ -18,7 +18,6 @@
 package com.tenxdev.jsinterop.generator.processing.uniontypes;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.Model;
@@ -42,24 +41,21 @@ public class DictionaryMemberUnionTypeProcessor {
 
     public void process() {
         logger.info(Logger.LEVEL_INFO, () -> "Processing union types in dictionaries");
-        model.getDefinitions().stream()
-                .filter(definitionInfo -> definitionInfo.getDefinition() instanceof DictionaryDefinition)
-                .forEach(definitionInfo ->
-                        processDictionary((DictionaryDefinition) definitionInfo.getDefinition(), definitionInfo));
+        model.getDictionaryDefinitions().forEach(this::processDictionary);
     }
 
-    private void processDictionary(DictionaryDefinition definition, DefinitionInfo definitionInfo) {
+    private void processDictionary(DictionaryDefinition definition) {
         definition.getMembers().stream()
                 .filter(member -> hasUnionTypeVisitor.accept(member.getType()))
-                .forEach(member -> processMember(member, definition, definitionInfo));
+                .forEach(member -> processMember(member, definition));
     }
 
-    private void processMember(DictionaryMember member, DictionaryDefinition definition, DefinitionInfo definitionInfo) {
+    private void processMember(DictionaryMember member, DictionaryDefinition definition) {
         List<UnionType> unionTypes = getUnionTypesVisitor.accept(member.getType());
         if (unionTypes.size() == 1) {
             UnionType unionType = unionTypes.get(0);
             UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
-            definition.addUnionReturnType(definitionInfo, newUnionType);
+            definition.addUnionReturnType(definition, newUnionType);
         } else {
             logger.formatError("Unexpected number of union types (%d) for attribute %s in %s%n",
                     unionTypes.size(), member.getName(), definition.getName());

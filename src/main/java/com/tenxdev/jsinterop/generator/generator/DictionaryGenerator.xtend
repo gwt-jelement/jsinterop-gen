@@ -16,7 +16,7 @@
  */
 package com.tenxdev.jsinterop.generator.generator
 
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition
 import com.tenxdev.jsinterop.generator.model.types.Type
 import com.tenxdev.jsinterop.generator.model.types.EnumType
@@ -24,19 +24,18 @@ import com.tenxdev.jsinterop.generator.model.types.ArrayType
 
 class DictionaryGenerator extends XtendTemplate{
 
-    def generate(String basePackageName, DefinitionInfo<DictionaryDefinition> definitionInfo){
-        var definition=definitionInfo.getDefinition()
+    def generate(String basePackageName, DictionaryDefinition definition){
         return '''
 «copyright»
-package «basePackageName»«definitionInfo.getPackageName()»;
+package «basePackageName»«definition.getPackageName()»;
 
-«imports(basePackageName, definitionInfo)»
+«imports(basePackageName, definition)»
 
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
 public class «definition.getName»«
         IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF»{
 
-    «unionTypes(definitionInfo, definition)»
+    «unionTypes(definition)»
     «FOR member: definition.members»
         «IF member.enumSubstitutionType instanceof EnumType»
             @JsProperty(name="«member.name»")
@@ -87,10 +86,10 @@ public class «definition.getName»«
         value.matches("-?[0-9]+\\.[0-9]+(e[0-9]+)?")
     }
 
-    def unionTypes(DefinitionInfo definitionInfo, DictionaryDefinition definition)'''
+    def unionTypes(DictionaryDefinition definition)'''
         «IF definition.unionReturnTypes !== null»
             «FOR unionType: definition.unionReturnTypes»
-                «IF unionType.owner==definitionInfo»
+                «IF unionType.owner==definition»
                     @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
                     public interface «unionType.name» {
                         «FOR type: unionType.types»

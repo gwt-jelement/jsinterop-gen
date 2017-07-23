@@ -18,8 +18,8 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Attribute;
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 
@@ -39,20 +39,20 @@ public class AttributeConflictingOverlayRemover {
 
     public void process() {
         model.getDefinitions().stream()
-                .filter(definitionInfo -> definitionInfo.getDefinition() instanceof InterfaceDefinition)
-                .map(definitionInfo -> (InterfaceDefinition) definitionInfo.getDefinition())
+                .filter(definition -> definition instanceof InterfaceDefinition)
+                .map(definition -> (InterfaceDefinition) definition)
                 .filter(definition -> definition.getParent() != null)
                 .forEach(this::process);
     }
 
     private void process(InterfaceDefinition definition) {
         String parentTypeName = definition.getParent().getTypeName();
-        DefinitionInfo parentDefinition = model.getDefinitionInfo(parentTypeName);
-        if (parentDefinition == null || !(parentDefinition.getDefinition() instanceof InterfaceDefinition)) {
+        AbstractDefinition parentDefinition = model.getDefinition(parentTypeName);
+        if (parentDefinition == null || !(parentDefinition instanceof InterfaceDefinition)) {
             logger.formatError("AttributeConflictingOverlayRemover: inconsistent parent %s for %s%n",
                     parentTypeName, definition.getName());
         } else {
-            process(definition, (InterfaceDefinition) parentDefinition.getDefinition());
+            process(definition, (InterfaceDefinition) parentDefinition);
         }
     }
 

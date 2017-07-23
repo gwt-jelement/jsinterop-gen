@@ -18,7 +18,7 @@
 package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 
 import java.util.List;
@@ -29,19 +29,19 @@ public class ImportResolver {
 
     public void processModel(Model model, Logger logger) {
         logger.info(Logger.LEVEL_INFO, () -> "Resolving Java package imports");
-        Map<DefinitionInfo, List<String>> packagesMap = new PackageUsageModelVisitor().accept(model);
+        Map<AbstractDefinition, List<String>> packagesMap = new PackageUsageModelVisitor().accept(model);
         packagesMap.entrySet().forEach(entry -> processPackagesForDefinition(entry.getKey(), entry.getValue()));
     }
 
-    private void processPackagesForDefinition(DefinitionInfo definitionInfo, List<String> packages) {
-        definitionInfo.setImportedPackages(packages.stream()
-                .filter(packageName -> needsImport(definitionInfo, packageName))
+    private void processPackagesForDefinition(AbstractDefinition definition, List<String> packages) {
+        definition.setImportedPackages(packages.stream()
+                .filter(packageName -> needsImport(definition, packageName))
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList()));
     }
 
-    private boolean needsImport(DefinitionInfo definitionInfo, String packageName) {
-        return packageName != null && !definitionInfo.getPackageName().equals(packageName);
+    private boolean needsImport(AbstractDefinition definition, String packageName) {
+        return packageName != null && !definition.getPackageName().equals(packageName);
     }
 }

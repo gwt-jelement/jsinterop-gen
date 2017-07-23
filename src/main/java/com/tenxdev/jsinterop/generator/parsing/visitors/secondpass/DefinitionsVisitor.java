@@ -17,8 +17,8 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Constructor;
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import com.tenxdev.jsinterop.generator.processing.ParserUtil;
 import org.antlr4.webidl.WebIDLParser;
@@ -27,22 +27,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DefinitionsVisitor extends ContextWebIDLBaseVisitor<List<Definition>> {
+public class DefinitionsVisitor extends ContextWebIDLBaseVisitor<List<AbstractDefinition>> {
 
     public DefinitionsVisitor(ParsingContext parsingContext) {
         super(parsingContext);
     }
 
     @Override
-    public List<Definition> visitDefinitions(WebIDLParser.DefinitionsContext ctx) {
-        List<Definition> definitionList = new ArrayList<>();
+    public List<AbstractDefinition> visitDefinitions(WebIDLParser.DefinitionsContext ctx) {
+        List<AbstractDefinition> definitionList = new ArrayList<>();
 
         WebIDLParser.DefinitionsContext definitions = ctx;
         while (definitions != null && definitions.definition() != null) {
             List<Constructor> constructors = definitions.extendedAttributeList() != null ?
                     ctx.extendedAttributeList().accept(new ExtendedAttributeListVisitor(parsingContext))
                     : Collections.emptyList();
-            Definition definition = definitions.definition().accept(new DefinitionVisitor(parsingContext, constructors));
+            AbstractDefinition definition = definitions.definition().accept(new DefinitionVisitor(parsingContext, constructors));
             if (definition != null) {
                 definitionList.add(definition);
             } else {

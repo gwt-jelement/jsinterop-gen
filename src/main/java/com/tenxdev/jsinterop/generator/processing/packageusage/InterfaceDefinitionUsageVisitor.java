@@ -70,7 +70,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
             result.add("jsinterop.annotations.JsOverlay");
         }
         result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
-                .filter(unionType -> interfaceDefinition != unionType.getOwner().getDefinition())
+                .filter(unionType -> interfaceDefinition != unionType.getOwner())
                 .map(unionType -> unionType.getOwner().getPackageName() + "." + unionType.getOwner().getName())
                 .collect(Collectors.toList()));
         return result;

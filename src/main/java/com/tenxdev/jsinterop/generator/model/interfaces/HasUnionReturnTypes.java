@@ -17,23 +17,23 @@
 
 package com.tenxdev.jsinterop.generator.model.interfaces;
 
-import com.tenxdev.jsinterop.generator.model.DefinitionInfo;
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.List;
 
-public interface HasUnionReturnTypes extends Definition {
+public interface HasUnionReturnTypes {
 
     List<UnionType> getUnionReturnTypes();
 
     void setUnionReturnTypes(List<UnionType> unionReturnTypes);
 
-    default void addUnionReturnType(DefinitionInfo definitionInfo, UnionType unionType) {
+    default void addUnionReturnType(AbstractDefinition definition, UnionType unionType) {
         if (!getUnionReturnTypes().contains(unionType)) {
             getUnionReturnTypes().add(unionType);
         }
         if (unionType.getOwner() == null) {
-            unionType.setOwner(definitionInfo);
+            unionType.setOwner(definition);
         }
     }
 }

@@ -43,11 +43,7 @@ public class MethodEnumArgumentProcessor {
 
     public void process() {
         logger.info(Logger.LEVEL_INFO, () -> "Processing methods with enum arguments");
-        model.getDefinitions().stream()
-                .filter(definitionInfo -> definitionInfo.getDefinition() instanceof InterfaceDefinition)
-                .map(definitionInfo -> (InterfaceDefinition) definitionInfo.getDefinition())
-                .forEach(interfaceDefinition ->
-                        processInterfaceDefinition(interfaceDefinition));
+        model.getInterfaceDefinitions().forEach(this::processInterfaceDefinition);
     }
 
     private void processInterfaceDefinition(InterfaceDefinition interfaceDefinition) {

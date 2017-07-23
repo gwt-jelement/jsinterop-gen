@@ -19,7 +19,6 @@ package com.tenxdev.jsinterop.generator.generator;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
-import com.tenxdev.jsinterop.generator.model.interfaces.Definition;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -57,17 +56,16 @@ public class SourceGenerator extends XtendTemplate {
         CallbackGenerator callbackGenerator = new CallbackGenerator();
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator();
         DictionaryGenerator dictionaryGenerator = new DictionaryGenerator();
-        for (DefinitionInfo definitionInfo : model.getDefinitions()) {
-            Definition definition = definitionInfo.getDefinition();
-            Path filePath = getSourcePath(outputDirectory, definitionInfo, basePackageName);
+        for (AbstractDefinition definition : model.getDefinitions()) {
+            Path filePath = getSourcePath(outputDirectory, definition, basePackageName);
             if (definition instanceof EnumDefinition) {
-                outputFile(filePath, enumGenerator.generate(basePackageName, definitionInfo));
+                outputFile(filePath, enumGenerator.generate(basePackageName, (EnumDefinition) definition));
             } else if (definition instanceof CallbackDefinition) {
-                outputFile(filePath, callbackGenerator.generate(basePackageName, definitionInfo));
+                outputFile(filePath, callbackGenerator.generate(basePackageName, (CallbackDefinition) definition));
             } else if (definition instanceof InterfaceDefinition) {
-                outputFile(filePath, interfaceGenerator.generate(basePackageName, definitionInfo));
+                outputFile(filePath, interfaceGenerator.generate(basePackageName, (InterfaceDefinition) definition));
             } else if (definition instanceof DictionaryDefinition) {
-                outputFile(filePath, dictionaryGenerator.generate(basePackageName, definitionInfo));
+                outputFile(filePath, dictionaryGenerator.generate(basePackageName, (DictionaryDefinition) definition));
             }
         }
     }
@@ -84,10 +82,10 @@ public class SourceGenerator extends XtendTemplate {
         }
     }
 
-    private Path getSourcePath(String outputDirectory, DefinitionInfo definitionInfo, String basePackageName) {
+    private Path getSourcePath(String outputDirectory, AbstractDefinition definition, String basePackageName) {
         return Paths.get(outputDirectory, "src", "main", "java",
-                packageNameToPath(basePackageName + definitionInfo.getPackageName()),
-                definitionInfo.getName() + ".java");
+                packageNameToPath(basePackageName + definition.getPackageName()),
+                definition.getName() + ".java");
     }
 
     private String packageNameToPath(String packageName) {
