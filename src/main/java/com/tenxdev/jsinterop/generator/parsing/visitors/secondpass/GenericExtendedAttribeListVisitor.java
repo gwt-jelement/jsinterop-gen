@@ -30,7 +30,7 @@ public class GenericExtendedAttribeListVisitor extends WebIDLBaseVisitor<List<St
     public List<String> visitExtendedAttributeList(WebIDLParser.ExtendedAttributeListContext ctx) {
         List<String> extendedAttributes = new ArrayList<>();
         if (ctx.extendedAttribute() != null) {
-            extendedAttributes.add(ParserUtil.getText(ctx.extendedAttribute()));
+            extendedAttributes.add(ParserUtil.getText(ctx.extendedAttribute()).trim());
         }
         processRest(ctx.extendedAttributes(), extendedAttributes);
         return extendedAttributes.isEmpty() ? null : extendedAttributes;
@@ -41,7 +41,7 @@ public class GenericExtendedAttribeListVisitor extends WebIDLBaseVisitor<List<St
         WebIDLParser.ExtendedAttributesContext ctx = extendedAttributesContext;
         while (ctx != null) {
             if (ctx.extendedAttribute() != null) {
-                extendedAttributes.add(ParserUtil.getText(ctx.extendedAttribute()));
+                extendedAttributes.add(ParserUtil.getText(ctx.extendedAttribute()).trim());
             }
             ctx = ctx.extendedAttributes();
         }

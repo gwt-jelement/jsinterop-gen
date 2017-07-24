@@ -25,6 +25,7 @@ import com.tenxdev.jsinterop.generator.model.Attribute
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.Constructor
 import com.tenxdev.jsinterop.generator.model.types.UnionType
+import com.tenxdev.jsinterop.generator.model.interfaces.ExtendedAttribute
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -187,15 +188,23 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     def nativeMethod(Method method)'''
         @JsMethod(name = "«method.name»")
-        public native «method.returnType.displayValue» «method.name.adjustJavaName»(«arguments(method)»);
+        public native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
     '''
 
     def enumOverlayMethod(Method method)'''
         @JsOverlay
-        public final «method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»){
+        public final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
             «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
         }
     '''
+
+    def returnType(Method method){
+        if (method.hasExtendedAttribute(ExtendedAttribute.GENERIC_RETURN))
+            "<T extends "+method.returnType.displayValue+"> T"
+        else
+            method.returnType.displayValue
+    }
+
 
     def vararg(MethodArgument argument){
         if (argument.vararg) "..."

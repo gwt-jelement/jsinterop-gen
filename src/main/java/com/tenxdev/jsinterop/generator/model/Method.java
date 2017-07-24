@@ -91,6 +91,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
         }
     }
 
+    @Override
     public boolean hasExtendedAttribute(String name) {
         return extendedAttributes != null && extendedAttributes.contains(name);
     }
@@ -134,6 +135,14 @@ public class Method implements InterfaceMember, Comparable<Method> {
 
     public void setJavaName(String javaName) {
         this.javaName = javaName;
+    }
+
+    public boolean hasReturnType() {
+        if (returnType instanceof NativeType) {
+            String returnTypeName = ((NativeType) returnType).getTypeName();
+            return !"void".equals(returnTypeName);
+        }
+        return returnType != null;
     }
 
     @Override
