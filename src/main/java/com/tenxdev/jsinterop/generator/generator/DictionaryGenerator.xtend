@@ -33,16 +33,34 @@ package «basePackageName»«definition.getPackageName()»;
 public class «definition.name»«
         IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF»{
 
-    public «definition.name»(){
-    }
-
-    «unionTypes(definition)»
     «FOR member: definition.members»
         «IF member.enumSubstitutionType !== null»
             «IF member.enumSubstitutionType instanceof ArrayType»
                 @JsProperty(name="«member.name»")
-                public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»;
+                private «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»;
 
+            «ELSE»
+                @JsProperty(name="«member.name»")
+                private «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»;
+
+            «ENDIF»
+        «ELSEIF member.type instanceof UnionType »
+            @JsProperty(name="«member.name»")
+            private «member.type.unionTypeName(definition)» «member.name.adjustJavaName»;
+
+        «ELSE»
+            @JsProperty(name="«member.name»")
+            private «member.type.displayValue» «member.name.adjustJavaName»;
+
+        «ENDIF»
+    «ENDFOR»
+    «unionTypes(definition)»
+    public «definition.name»(){
+    }
+
+    «FOR member: definition.members»
+        «IF member.enumSubstitutionType !== null»
+            «IF member.enumSubstitutionType instanceof ArrayType»
                 @JsOverlay
                 public final «member.type.displayValue» get«member.name.toFirstUpper»(){
                     return «(member.type as ArrayType).type.displayValue».ofArray(this.«member.name.adjustJavaName»);
@@ -56,9 +74,6 @@ public class «definition.name»«
                 }
 
             «ELSE»
-                @JsProperty(name="«member.name»")
-                public «member.enumSubstitutionType.displayValue» «member.name.adjustJavaName»;
-
                 @JsOverlay
                 public final «member.type.displayValue» get«member.name.toFirstUpper»(){
                     return «member.type.displayValue».of(this.«member.name.adjustJavaName»);
@@ -71,9 +86,6 @@ public class «definition.name»«
 
             «ENDIF»
         «ELSEIF member.type instanceof UnionType »
-            @JsProperty(name="«member.name»")
-            public «member.type.unionTypeName(definition)» «member.name.adjustJavaName»;
-
             «FOR type: (member.type as UnionType).types»
                 @JsOverlay
                 public final void set«member.name.toFirstUpper»(«type.displayValue» «member.name.adjustJavaName»){
@@ -82,9 +94,6 @@ public class «definition.name»«
 
             «ENDFOR»
         «ELSE»
-            @JsProperty(name="«member.name»")
-            public «member.type.displayValue» «member.name.adjustJavaName»;
-
             @JsOverlay
             public final «member.type.displayValue» get«member.name.toFirstUpper»(){
                 return this.«member.name.adjustJavaName»;
@@ -97,7 +106,6 @@ public class «definition.name»«
 
         «ENDIF»
     «ENDFOR»
-
 }
     '''
     }

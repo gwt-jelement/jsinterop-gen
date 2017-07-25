@@ -47,10 +47,6 @@ public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefiniti
                     .collect(Collectors.toList()));
         }
         if (definition.getMembers().stream()
-                .anyMatch(member -> member.getEnumSubstitutionType() != null)) {
-            result.add("jsinterop.annotations.JsOverlay");
-        }
-        if (definition.getMembers().stream()
                 .anyMatch(member -> member.getEnumSubstitutionType() instanceof ArrayType)) {
             result.add("java.util.Arrays");
         }

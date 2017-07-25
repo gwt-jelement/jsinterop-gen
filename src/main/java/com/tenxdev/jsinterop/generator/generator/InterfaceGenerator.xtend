@@ -41,8 +41,9 @@ package «basePackageName»«definition.getPackageName()»;
 public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     «constants(definition)»
     «unionTypes(definition)»
+    «fields(definition)»
     «constructors(definition)»
-    «attributes(definition)»
+    «nonFieldAttributes(definition)»
     «methods(definition)»
 }
 '''
@@ -71,12 +72,27 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         «ENDFOR»
     '''
 
-    def attributes(InterfaceDefinition definition)'''
+    def fields(InterfaceDefinition definition)'''
         «FOR attribute: definition.attributes»
             «IF attribute.enumSubstitutionType !== null»
                 @JsProperty(name="«attribute.name»")
-                public «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
+                private «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
 
+            «ELSEIF attribute.type instanceof UnionType»
+                @JsProperty(name="«attribute.name»")
+                private «staticModifier(attribute)»«attribute.type.unionTypeName(definition)» «attribute.javaName.adjustJavaName»;
+
+            «ELSEIF attribute.eventHandler»
+                @JsProperty(name="«attribute.name»")
+                private «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
+
+            «ENDIF»
+        «ENDFOR»
+    '''
+
+    def nonFieldAttributes(InterfaceDefinition definition)'''
+        «FOR attribute: definition.attributes»
+            «IF attribute.enumSubstitutionType !== null»
                 «IF !attribute.writeOnly»
                     «IF attribute.type instanceof ArrayType»
                         @JsOverlay
@@ -100,22 +116,44 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
                 «ENDIF»
             «ELSEIF attribute.type instanceof UnionType»
-                @JsProperty(name="«attribute.name»")
-                public «staticModifier(attribute)»«attribute.type.unionTypeName(definition)» «attribute.javaName.adjustJavaName»;
+                «IF !attribute.writeOnly»
+                    @JsOverlay
+                    public «staticModifier(attribute)»final «attribute.type.unionTypeName(definition)» get«attribute.name.toFirstUpper»(){
+                        return «staticThis(attribute)».«attribute.javaName.adjustJavaName»;
+                    }
 
+                «ENDIF»
                 «IF !attribute.readOnly»
                     «FOR type: (attribute.type as UnionType).types »
                         @JsOverlay
                         public «staticModifier(attribute)»final void set«attribute.name.toFirstUpper»(«type.displayValue» «attribute.javaName.adjustJavaName»){
-                            this.«attribute.javaName.adjustJavaName» = «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
+                            «staticThis(attribute)».«attribute.javaName.adjustJavaName» = «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
                         }
 
                     «ENDFOR»
                 «ENDIF»
-            «ELSE»
-                @JsProperty(name="«attribute.name»")
-                public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
+            «ELSEIF attribute.eventHandler»
+                @JsOverlay
+                public «staticModifier(attribute)»final «attribute.type.displayValue» get«attribute.eventHandlerName»(){
+                    return «staticThis(attribute)».«attribute.name.adjustJavaName»;
+                }
 
+                @JsOverlay
+                public «staticModifier(attribute)»final void set«attribute.eventHandlerName»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»){
+                    «staticThis(attribute)».«attribute.name.adjustJavaName» = «attribute.name.adjustJavaName»;
+                }
+
+            «ELSE»
+                «IF !attribute.writeOnly»
+                    @JsProperty(name="«attribute.name»")
+                    public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
+
+                «ENDIF»
+                «IF !attribute.readOnly»
+                    @JsProperty(name="«attribute.name»")
+                    public «staticModifier(attribute)»native void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»);
+
+                «ENDIF»
             «ENDIF»
         «ENDFOR»
     '''
@@ -125,6 +163,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
             «IF method.enumOverlay===null»
                 @JsMethod(name = "«method.name»")
                 public native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
+
             «ELSE»
                 @JsOverlay
                 public final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
@@ -186,4 +225,11 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     def superArguments(Constructor constructor)'''«
         FOR argument: constructor.superArguments SEPARATOR ", "»(«argument.type.displayValue») null«ENDFOR»'''
 
+    def eventHandler(Attribute attribute){
+        attribute.name.startsWith("on") && attribute.type.displayValue.startsWith("EventHandler")
+    }
+
+    def eventHandlerName(Attribute attribute){
+        attribute.name.substring(0,2).toFirstUpper + attribute.name.substring(2).toFirstUpper
+    }
 }

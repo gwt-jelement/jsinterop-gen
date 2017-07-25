@@ -36,6 +36,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         List<String> result = super.accept(interfaceDefinition);
         result.add("jsinterop.annotations.JsPackage");
         result.add("jsinterop.annotations.JsType");
+        result.add("jsinterop.annotations.JsOverlay");
         if (interfaceDefinition.getParent() instanceof PackageType) {
             PackageType packageType = (PackageType) interfaceDefinition.getParent();
             result.add(packageType.getPackageName() + "." + packageType.getTypeName());
@@ -44,7 +45,6 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
             result.add("jsinterop.annotations.JsConstructor");
         }
         if (!interfaceDefinition.getUnionReturnTypes().isEmpty()) {
-            result.add("jsinterop.annotations.JsOverlay");
             result.add("jsinterop.annotations.JsType");
             result.add("jsinterop.base.Js");
             result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
@@ -62,12 +62,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         }
         if (interfaceDefinition.getMethods().stream()
                 .anyMatch(method -> method.getEnumOverlay() != null)) {
-            result.add("jsinterop.annotations.JsOverlay");
             result.add("jsinterop.base.Any");
-        }
-        if (interfaceDefinition.getAttributes().stream()
-                .anyMatch(attribute -> attribute.getEnumSubstitutionType() != null)) {
-            result.add("jsinterop.annotations.JsOverlay");
         }
         result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
                 .filter(unionType -> interfaceDefinition != unionType.getOwner())
