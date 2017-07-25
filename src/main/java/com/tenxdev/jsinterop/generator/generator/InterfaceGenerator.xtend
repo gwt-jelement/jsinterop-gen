@@ -26,7 +26,6 @@ import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.Constructor
 import com.tenxdev.jsinterop.generator.model.types.UnionType
 import com.tenxdev.jsinterop.generator.model.interfaces.ExtendedAttribute
-import com.tenxdev.jsinterop.generator.model.AbstractDefinition
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -53,6 +52,13 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         if (definition.parent!==null)  " extends "+definition.parent.displayValue
     }
 
+    def constants(InterfaceDefinition definition)'''
+        «FOR constant: definition.constants AFTER "\n"»
+            public static «constant.type.displayValue» «constant.name»;
+        «ENDFOR»
+
+    '''
+
     def constructors(InterfaceDefinition definition)'''
         «FOR constructor: definition.constructors»
             @JsConstructor
@@ -63,6 +69,70 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
             }
 
         «ENDFOR»
+    '''
+
+    def attributes(InterfaceDefinition definition)'''
+        «FOR attribute: definition.attributes»
+            «IF attribute.enumSubstitutionType !== null»
+                @JsProperty(name="«attribute.name»")
+                public «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
+
+                «IF !attribute.writeOnly»
+                    «IF attribute.type instanceof ArrayType»
+                        @JsOverlay
+                        public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
+                           return «attribute.type.displayValue.replace("[]","")».ofArray(«attribute.javaName.adjustJavaName»);
+                        }
+
+                    «ELSE»
+                        @JsOverlay
+                        public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
+                           return «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
+                        }
+
+                    «ENDIF»
+                «ENDIF»
+                «IF !attribute.readOnly»
+                    @JsOverlay
+                    public final «staticModifier(attribute)»void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»){
+                       «staticThis(attribute)».«attribute.javaName.adjustJavaName» = «attribute.javaName.adjustJavaName».getInternalValue();
+                    }
+
+                «ENDIF»
+            «ELSEIF attribute.type instanceof UnionType»
+                @JsProperty(name="«attribute.name»")
+                public «staticModifier(attribute)»«attribute.type.unionTypeName(definition)» «attribute.javaName.adjustJavaName»;
+
+                «IF !attribute.readOnly»
+                    «FOR type: (attribute.type as UnionType).types »
+                        @JsOverlay
+                        public «staticModifier(attribute)»final void set«attribute.name.toFirstUpper»(«type.displayValue» «attribute.javaName.adjustJavaName»){
+                            this.«attribute.javaName.adjustJavaName» = «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
+                        }
+
+                    «ENDFOR»
+                «ENDIF»
+            «ELSE»
+                @JsProperty(name="«attribute.name»")
+                public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
+
+            «ENDIF»
+        «ENDFOR»
+    '''
+
+    def methods(InterfaceDefinition definition)'''
+        «FOR method: definition.methods SEPARATOR "\n"»
+            «IF method.enumOverlay===null»
+                @JsMethod(name = "«method.name»")
+                public native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
+            «ELSE»
+                @JsOverlay
+                public final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
+                    «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
+                }
+            «ENDIF»
+         «ENDFOR»
+
     '''
 
     def enumMethodArgument(MethodArgument argument) {
@@ -76,128 +146,9 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         !(method.returnType instanceof NativeType && (method.returnType as NativeType).typeName === "void")
     }
 
-    def constants(InterfaceDefinition definition)'''
-        «FOR constant: definition.constants AFTER "\n"»
-            public static «constant.type.displayValue» «constant.name»;
-        «ENDFOR»
-
-    '''
-
-    def unionTypes(InterfaceDefinition definition)'''
-        «FOR unionType: definition.unionReturnTypes»
-            «IF unionType.owner===definition»
-                @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
-                public interface «unionType.name» {
-                    «FOR type: unionType.types»
-                        @JsOverlay
-                        static «unionType.name» of(«type.displayValue» value){
-                            return Js.cast(value);
-                        }
-
-                    «ENDFOR»
-                    «FOR type: unionType.types»
-                        @JsOverlay
-                        default «type.displayValue» as«type.displayValue.toFirstUpper»(){
-                            return Js.cast(this);
-                        }
-
-                    «ENDFOR»
-                    «FOR type: unionType.types»
-                        @JsOverlay
-                        default boolean is«type.displayValue.toFirstUpper»(){
-                            return (Object) this instanceof «(boxType(type).displayValue)»;
-                        }
-
-                    «ENDFOR»
-                }
-
-            «ENDIF»
-        «ENDFOR»
-    '''
-
-    def attributes(InterfaceDefinition definition)'''
-        «FOR attribute: definition.attributes»
-            «IF attribute.enumSubstitutionType !== null»
-                «enumTypeAttribute(attribute)»
-            «ELSEIF attribute.type instanceof UnionType»
-                «unionTypeAttribute(attribute, definition)»
-            «ELSE»
-                @JsProperty(name="«attribute.name»")
-                public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
-
-            «ENDIF»
-        «ENDFOR»
-    '''
-
-    def unionTypeAttribute(Attribute attribute, AbstractDefinition definition)'''
-        @JsProperty(name="«attribute.name»")
-        public «staticModifier(attribute)»«attribute.type.unionTypeName(definition)» «attribute.javaName.adjustJavaName»;
-
-        «IF !attribute.readOnly»
-            «FOR type: (attribute.type as UnionType).types »
-                @JsOverlay
-                public «staticModifier(attribute)»final void set«attribute.name.toFirstUpper»(«type.displayValue» «attribute.javaName.adjustJavaName»){
-                    this.«attribute.javaName.adjustJavaName» = «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
-                }
-
-            «ENDFOR»
-        «ENDIF»
-    '''
-
-    def enumTypeAttribute(Attribute attribute)'''
-        @JsProperty(name="«attribute.name»")
-        public «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
-
-        «IF !attribute.writeOnly»
-            «IF attribute.type instanceof ArrayType»
-                @JsOverlay
-                public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
-                   return «attribute.type.displayValue.replace("[]","")».ofArray(«attribute.javaName.adjustJavaName»);
-                }
-
-            «ELSE»
-                @JsOverlay
-                public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
-                   return «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
-                }
-
-            «ENDIF»
-        «ENDIF»
-        «IF !attribute.readOnly»
-            @JsOverlay
-            public final «staticModifier(attribute)»void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»){
-               «staticThis(attribute)».«attribute.javaName.adjustJavaName» = «attribute.javaName.adjustJavaName».getInternalValue();
-            }
-
-        «ENDIF»
-    '''
-
     def staticThis(Attribute attribute){
         if (attribute.static) attribute.type.displayValue else "this"
     }
-
-    def methods(InterfaceDefinition definition)'''
-        «FOR method: definition.methods SEPARATOR "\n"»
-            «IF method.enumOverlay===null»
-                «nativeMethod(method)»
-            «ELSE»
-                «enumOverlayMethod(method)»
-            «ENDIF»
-         «ENDFOR»
-
-    '''
-
-    def nativeMethod(Method method)'''
-        @JsMethod(name = "«method.name»")
-        public native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
-    '''
-
-    def enumOverlayMethod(Method method)'''
-        @JsOverlay
-        public final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
-            «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
-        }
-    '''
 
     def returnType(Method method){
         if (method.hasExtendedAttribute(ExtendedAttribute.GENERIC_RETURN))

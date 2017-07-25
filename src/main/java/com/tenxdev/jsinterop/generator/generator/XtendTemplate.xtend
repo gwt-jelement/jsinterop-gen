@@ -9,6 +9,7 @@ import com.tenxdev.jsinterop.generator.model.types.NativeType
 import com.tenxdev.jsinterop.generator.model.types.Type
 import com.tenxdev.jsinterop.generator.processing.TypeFactory
 import javax.annotation.Nonnull
+import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes
 
 class XtendTemplate {
 
@@ -87,5 +88,50 @@ class XtendTemplate {
     def unionTypeName(Type type, AbstractDefinition definition){
         type.displayValue.replace(definition.name+".","")
     }
+
+    def unionTypes(HasUnionReturnTypes definition)'''
+        «FOR unionType: definition.unionReturnTypes»
+            «IF unionType.owner===definition»
+                @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
+                public interface «unionType.name» {
+                    «FOR type: unionType.types»
+                        @JsOverlay
+                        static «unionType.name» of(«type.displayValue» value){
+                            return Js.cast(value);
+                        }
+
+                    «ENDFOR»
+                    «FOR type: unionType.types»
+                        @JsOverlay
+                        default «type.displayValue» as«type.displayValue.toFirstUpper.adjustName»(){
+                            return Js.cast(this);
+                        }
+
+                    «ENDFOR»
+                    «FOR type: unionType.types»
+                        @JsOverlay
+                        default boolean is«type.displayValue.toFirstUpper.adjustName»(){
+                            return (Object) this instanceof «(boxType(type).displayValue.removeGeneric)»;
+                        }
+
+                    «ENDFOR»
+                }
+
+            «ENDIF»
+        «ENDFOR»
+    '''
+
+    def adjustName(String value){
+        value.removeGeneric.adjustArray;
+    }
+
+    def removeGeneric(String value){
+        value.replaceAll("<.*?>","")
+    }
+
+    def adjustArray(String value){
+        value.replace("[]", "Array").removeGeneric;
+    }
+
 
 }

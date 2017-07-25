@@ -16,10 +16,7 @@
  */
 package com.tenxdev.jsinterop.generator.generator
 
-import com.tenxdev.jsinterop.generator.model.AbstractDefinition
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition
-import com.tenxdev.jsinterop.generator.model.types.Type
-import com.tenxdev.jsinterop.generator.model.types.EnumType
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.types.UnionType
 
@@ -103,56 +100,6 @@ public class «definition.name»«
 
 }
     '''
-    }
-
-    def enumType(Type type){
-        type instanceof EnumType
-    }
-
-    def isDecimal(String value){
-        value.matches("-?[0-9]+\\.[0-9]+(e[0-9]+)?")
-    }
-
-    def unionTypes(DictionaryDefinition definition)'''
-        «IF definition.unionReturnTypes !== null»
-            «FOR unionType: definition.unionReturnTypes»
-                «IF unionType.owner==definition»
-                    @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
-                    public interface «unionType.name» {
-                        «FOR type: unionType.types»
-                            @JsOverlay
-                            static «unionType.name» of(«type.displayValue» value){
-                                return Js.cast(value);
-                            }
-
-                        «ENDFOR»
-                        «FOR type: unionType.types»
-                            @JsOverlay
-                            default «type.displayValue» as«type.displayValue.toFirstUpper.adjust»(){
-                                return Js.cast(this);
-                            }
-
-                        «ENDFOR»
-                        «FOR type: unionType.types»
-                            @JsOverlay
-                            default boolean is«type.displayValue.toFirstUpper.adjust»(){
-                                return (Object) this instanceof «(boxType(type).displayValue).removeGeneric»;
-                            }
-
-                        «ENDFOR»
-                    }
-
-                «ENDIF»
-            «ENDFOR»
-        «ENDIF»
-    '''
-
-    def removeGeneric(String value){
-        value.replaceAll("<.*?>","")
-    }
-
-    def adjust(String value){
-        value.replace("[]", "Array").removeGeneric;
     }
 
 }
