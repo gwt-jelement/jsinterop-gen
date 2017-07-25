@@ -84,7 +84,7 @@ public class Model {
                 definition.getImplementsDefinitions().addAll(implementsDefinitions);
             }
         }
-        
+
     }
 
     public TypeFactory getTypeFactory() {
@@ -95,7 +95,16 @@ public class Model {
         this.typeFactory = typeFactory;
     }
 
+    @Override
+    public String toString() {
+        return "Model{" +
+                "definitions=" + definitions +
+                ", typeFactory=" + typeFactory +
+                '}';
+    }
+
     public class ConflictingNameException extends Exception {
+
         private final transient AbstractDefinition definition;
 
         private ConflictingNameException(AbstractDefinition definition) {

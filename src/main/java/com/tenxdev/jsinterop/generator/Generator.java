@@ -92,13 +92,20 @@ class Generator {
         new PartialsMerger(model, logger).processModel();
         new RedundantImplementsRemoval().process(model, logger); //before implements merger
         new ImplementsMerger(model, logger).processModel(); //must run after partials merger
+
+        new DuplicateInheritedDictionaryMemberRemover(model, logger).process();
+        new DuplicateInheritedInterfaceAttributeRemover(model, logger).process();
+
         new MethodUnionArgsExpander(model, logger).processModel(); //must run after all interface merging
         new MethodOptionalArgsExpander(model, logger).processModel();//must run after union args expansion
         new MethodEnumArgumentProcessor(model, logger).process(); // must run after all method expansions
+
         new AttributeUnionTypeProcessor(model, logger).process();
         new AttributeEnumTypeProcessor(model, logger).process();
+
         new DictionaryMemberUnionTypeProcessor(model, logger).process();
         new DictionaryMemberEnumTypeProcessor(model, logger).process();
+
         new SuperCallConstructorProcessor(model, logger).process();//after method expansion
         new AttributeConflictingOverlayRemover(model, logger).process();
         new ImportResolver().processModel(model, logger); //must run after all type substitutions
