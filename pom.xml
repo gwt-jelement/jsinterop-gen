@@ -16,7 +16,7 @@
     </properties>
 
     <build>
-        <finalName>w3c-dom-gwt-jsinterop-${project.version}</finalName>
+        <finalName>gwt-jelement-generator-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
