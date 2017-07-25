@@ -84,4 +84,8 @@ class XtendTemplate {
         return result.replace('-', '_').replace('/', '_').replace('+', '_');
     }
 
+    def unionTypeName(Type type, AbstractDefinition definition){
+        type.displayValue.replace(definition.name+".","")
+    }
+
 }

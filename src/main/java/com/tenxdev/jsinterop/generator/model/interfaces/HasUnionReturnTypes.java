@@ -22,16 +22,21 @@ import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 import java.util.List;
 
+import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
+
 public interface HasUnionReturnTypes {
 
     List<UnionType> getUnionReturnTypes();
 
-    default void addUnionReturnType(AbstractDefinition definition, UnionType unionType) {
+    default void addUnionReturnType(AbstractDefinition definition, UnionType unionType, String userName) {
         if (!getUnionReturnTypes().contains(unionType)) {
             getUnionReturnTypes().add(unionType);
         }
         if (unionType.getOwner() == null) {
             unionType.setOwner(definition);
+        }
+        if (unionType.getName() == null) {
+            unionType.setName(toFirstUpper(userName) + "Union");
         }
     }
 }

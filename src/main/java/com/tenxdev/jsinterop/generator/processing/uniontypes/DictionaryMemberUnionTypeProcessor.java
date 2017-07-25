@@ -55,7 +55,7 @@ public class DictionaryMemberUnionTypeProcessor {
         if (unionTypes.size() == 1) {
             UnionType unionType = unionTypes.get(0);
             UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
-            definition.addUnionReturnType(definition, newUnionType);
+            definition.addUnionReturnType(definition, newUnionType, member.getName());
         } else {
             logger.formatError("Unexpected number of union types (%d) for attribute %s in %s%n",
                     unionTypes.size(), member.getName(), definition.getName());

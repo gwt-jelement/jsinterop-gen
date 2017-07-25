@@ -26,6 +26,7 @@ import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.Constructor
 import com.tenxdev.jsinterop.generator.model.types.UnionType
 import com.tenxdev.jsinterop.generator.model.interfaces.ExtendedAttribute
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -119,7 +120,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
             «IF attribute.enumSubstitutionType !== null»
                 «enumTypeAttribute(attribute)»
             «ELSEIF attribute.type instanceof UnionType»
-                «unionTypeAttribute(attribute)»
+                «unionTypeAttribute(attribute, definition)»
             «ELSE»
                 @JsProperty(name="«attribute.name»")
                 public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
@@ -128,9 +129,9 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         «ENDFOR»
     '''
 
-    def unionTypeAttribute(Attribute attribute)'''
+    def unionTypeAttribute(Attribute attribute, AbstractDefinition definition)'''
         @JsProperty(name="«attribute.name»")
-        public «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
+        public «staticModifier(attribute)»«attribute.type.unionTypeName(definition)» «attribute.javaName.adjustJavaName»;
 
         «IF !attribute.readOnly»
             «FOR type: (attribute.type as UnionType).types »
@@ -208,10 +209,6 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     def vararg(MethodArgument argument){
         if (argument.vararg) "..."
-    }
-
-    def accessModifier(Method method){
-        if (method.privateMethod) "private" else "public"
     }
 
     def staticModifier(Attribute attribute){

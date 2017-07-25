@@ -78,7 +78,7 @@ public class MethodUnionArgsExpander {
                 .distinct()
                 .collect(Collectors.toList());
         removeEnumUnionTypeVisitor.visitUnionTypes(unionReturnTypes)
-                .forEach(unionType -> definition.addUnionReturnType(definition, unionType));
+                .forEach(unionType -> definition.addUnionReturnType(definition, unionType, unionType.getName()));
     }
 
     private <T extends Method> List<T> processMethods(List<T> methods) {

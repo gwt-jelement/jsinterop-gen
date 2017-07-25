@@ -75,7 +75,7 @@ public class «definition.name»«
             «ENDIF»
         «ELSEIF member.type instanceof UnionType »
             @JsProperty(name="«member.name»")
-            public «member.type.displayValue» «member.name.adjustJavaName»;
+            public «member.type.unionTypeName(definition)» «member.name.adjustJavaName»;
 
             «FOR type: (member.type as UnionType).types»
                 @JsOverlay
