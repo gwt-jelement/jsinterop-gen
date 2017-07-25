@@ -36,9 +36,9 @@ public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefiniti
         result.add("jsinterop.annotations.JsPackage");
         result.add("jsinterop.annotations.JsProperty");
         result.add("jsinterop.annotations.JsType");
+        result.add("jsinterop.annotations.JsOverlay");
         if (!definition.getUnionReturnTypes().isEmpty()) {
             result.add("jsinterop.base.Js");
-            result.add("jsinterop.annotations.JsOverlay");
             result.addAll(definition.getUnionReturnTypes().stream()
                     .map(UnionType::getTypes)
                     .flatMap(List::stream)

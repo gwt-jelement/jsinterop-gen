@@ -106,7 +106,6 @@ public class MethodUnionArgsExpander {
             List<MethodArgument> newArguments = new ArrayList<>(method.getArguments());
             newArguments.set(argumentIndex, argument.newMethodArgumentWithType(type));
             T newMethod = method.newMethodWithArguments(newArguments);
-            newMethod.setPrivate(method.isPrivateMethod());
             newMethod.setEnumOverlay(method.getEnumOverlay());
             processMethod(newMethod, newMethods);
         }

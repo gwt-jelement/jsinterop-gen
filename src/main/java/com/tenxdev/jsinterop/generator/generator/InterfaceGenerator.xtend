@@ -88,24 +88,24 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                 @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
                 public interface «unionType.name» {
                     «FOR type: unionType.types»
-                    @JsOverlay
-                    static «unionType.name» of(«type.displayValue» value){
-                        return Js.cast(value);
-                    }
+                        @JsOverlay
+                        static «unionType.name» of(«type.displayValue» value){
+                            return Js.cast(value);
+                        }
 
                     «ENDFOR»
                     «FOR type: unionType.types»
-                    @JsOverlay
-                    default «type.displayValue» as«type.displayValue.toFirstUpper»(){
-                        return Js.cast(this);
-                    }
+                        @JsOverlay
+                        default «type.displayValue» as«type.displayValue.toFirstUpper»(){
+                            return Js.cast(this);
+                        }
 
                     «ENDFOR»
                     «FOR type: unionType.types»
-                    @JsOverlay
-                    default boolean is«type.displayValue.toFirstUpper»(){
-                        return (Object) this instanceof «(boxType(type).displayValue)»;
-                    }
+                        @JsOverlay
+                        default boolean is«type.displayValue.toFirstUpper»(){
+                            return (Object) this instanceof «(boxType(type).displayValue)»;
+                        }
 
                     «ENDFOR»
                 }

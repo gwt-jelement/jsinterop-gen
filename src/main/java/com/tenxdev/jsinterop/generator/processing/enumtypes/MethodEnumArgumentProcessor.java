@@ -68,7 +68,6 @@ public class MethodEnumArgumentProcessor {
                 newMethodArgument.setEnumSubstitution(true);
                 newArguments.add(newMethodArgument);
                 hasEnumTypes = true;
-                newMethod.setPrivate(true);
                 method.setEnumOverlay(newMethod);
             } else {
                 newArguments.add(argument);
@@ -79,7 +78,6 @@ public class MethodEnumArgumentProcessor {
             if (method.getReturnType() instanceof EnumType) {
                 hasEnumTypes = true;
                 newMethod.setReturnType(newReturnType);
-                newMethod.setPrivate(true);
                 method.setEnumOverlay(newMethod);
                 method.setEnumReturnType(true);
                 if (sameSignature(method, newMethod)) {

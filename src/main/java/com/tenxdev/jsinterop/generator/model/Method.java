@@ -32,18 +32,16 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private final List<String> extendedAttributes;
     private Type returnType;
     private Method methodReferences;
-    private boolean privateMethod;
     private Method enumOverlay;
     private boolean enumReturnType;
     private String javaName;
 
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
-                  boolean privateMethod, Method enumOverlay, String javaName, List<String> extendedAttributes) {
+                  Method enumOverlay, String javaName, List<String> extendedAttributes) {
         this.name = name;
         this.returnType = returnType;
         this.arguments = arguments;
         this.staticMethod = staticMethod;
-        this.privateMethod = privateMethod;
         this.enumOverlay = enumOverlay;
         this.javaName = javaName;
         this.extendedAttributes = extendedAttributes;
@@ -54,7 +52,6 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.returnType = method.returnType;
         this.staticMethod = method.staticMethod;
         this.arguments = method.arguments.stream().map(MethodArgument::new).collect(Collectors.toList());
-        this.privateMethod = method.privateMethod;
         this.enumOverlay = method.enumOverlay;
         this.javaName = method.javaName;
         this.extendedAttributes = method.extendedAttributes;
@@ -62,7 +59,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
 
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
         return (T) new Method(name, returnType, newArguments, staticMethod,
-                privateMethod, enumOverlay, javaName, extendedAttributes);
+                enumOverlay, javaName, extendedAttributes);
     }
 
     public boolean isStatic() {
@@ -103,14 +100,6 @@ public class Method implements InterfaceMember, Comparable<Method> {
             result = arguments.size() - o.arguments.size();
         }
         return result;
-    }
-
-    public boolean isPrivateMethod() {
-        return privateMethod;
-    }
-
-    public void setPrivate(boolean privateMethod) {
-        this.privateMethod = privateMethod;
     }
 
     public Method getEnumOverlay() {
@@ -176,7 +165,6 @@ public class Method implements InterfaceMember, Comparable<Method> {
                 ", name='" + name + '\'' +
                 ", returnType='" + returnType + '\'' +
                 ", arguments=" + arguments +
-                (privateMethod ? ", PRIVATE" : "") +
                 (enumOverlay != null ? ("EnumOverlay='" + enumOverlay + "'") : "") +
                 '}';
     }

@@ -76,7 +76,7 @@ public class SuperCallConstructorProcessor {
 
     private Constructor getDefaultConstructor() {
         return new Constructor(null, null, Collections.emptyList(),
-                false, false, null, null);
+                false, null, null);
     }
 
     private void findSuperCallArguments(Constructor constructor, InterfaceDefinition parentInterface) {

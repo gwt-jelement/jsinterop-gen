@@ -26,8 +26,8 @@ public class Constructor extends Method {
 
     List<MethodArgument> superArguments = new ArrayList<>();
 
-    public Constructor(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod, boolean privateMethod, Method enumOverlay, String javaName) {
-        super(name, returnType, arguments, staticMethod, privateMethod, enumOverlay, javaName, null);
+    public Constructor(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod, Method enumOverlay, String javaName) {
+        super(name, returnType, arguments, staticMethod, enumOverlay, javaName, null);
     }
 
     public Constructor(Method method) {
@@ -37,7 +37,7 @@ public class Constructor extends Method {
     @Override
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
         return (T) new Constructor(getName(), getReturnType(), newArguments, isStatic(),
-                isPrivateMethod(), getEnumOverlay(), getJavaName());
+                getEnumOverlay(), getJavaName());
     }
 
     public List<MethodArgument> getSuperArguments() {

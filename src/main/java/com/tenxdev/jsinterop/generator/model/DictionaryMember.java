@@ -92,7 +92,9 @@ public class DictionaryMember implements HasExtendedAttributes {
                 "name='" + name + '\'' +
                 ", required=" + required +
                 ", defaultValue='" + defaultValue + '\'' +
-                ", type=" + type.toString() +
+                ", type=" + type +
+                ", extendedAttributes=" + extendedAttributes +
+                ", enumSubstitutionType=" + enumSubstitutionType +
                 '}';
     }
 

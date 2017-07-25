@@ -46,7 +46,7 @@ class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
         } else {
             //TODO maybe add as feature
             return new Method("toString", parsingContext.getTypeFactory().getType("DOMString"),
-                    Collections.emptyList(), false, false, null, null, extendedAttributes);
+                    Collections.emptyList(), false, null, null, extendedAttributes);
         }
     }
 }
