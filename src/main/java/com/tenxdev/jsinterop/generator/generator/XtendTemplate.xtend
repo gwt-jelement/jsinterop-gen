@@ -10,6 +10,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type
 import com.tenxdev.jsinterop.generator.processing.TypeFactory
 import javax.annotation.Nonnull
 import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes
+import com.tenxdev.jsinterop.generator.model.types.UnionType
 
 class XtendTemplate {
 
@@ -59,13 +60,13 @@ class XtendTemplate {
     }
 
     def getCallbackMethodName(Method method) {
-        if (method.getName() == null || method.getName().isEmpty() ) "callback" else method.getName()
+        if (method.getName() === null || method.getName().isEmpty() ) "callback" else method.getName()
     }
 
     def boxType(Type type) {
         if (type instanceof NativeType) {
             var boxedType = TypeFactory.BOXED_TYPES.get(type.getTypeName());
-            return if (boxedType != null)  boxedType else type;
+            return if (boxedType !== null)  boxedType else type;
         }
         //TODO may need to box other types
         return type;
@@ -91,24 +92,24 @@ class XtendTemplate {
 
     def unionTypes(HasUnionReturnTypes definition)'''
         «FOR unionType: definition.unionReturnTypes»
-            «IF unionType.owner===definition»
+            «IF (unionType as UnionType).owner === definition»
                 @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
-                public interface «unionType.name» {
-                    «FOR type: unionType.types»
+                public interface «(unionType as UnionType).name» {
+                    «FOR type: (unionType as UnionType).types»
                         @JsOverlay
-                        static «unionType.name» of(«type.displayValue» value){
+                        static «(unionType as UnionType).name» of(«type.displayValue» value){
                             return Js.cast(value);
                         }
 
                     «ENDFOR»
-                    «FOR type: unionType.types»
+                    «FOR type: (unionType as UnionType).types»
                         @JsOverlay
                         default «type.displayValue» as«type.displayValue.toFirstUpper.adjustName»(){
                             return Js.cast(this);
                         }
 
                     «ENDFOR»
-                    «FOR type: unionType.types»
+                    «FOR type: (unionType as UnionType).types»
                         @JsOverlay
                         default boolean is«type.displayValue.toFirstUpper.adjustName»(){
                             return (Object) this instanceof «(boxType(type).displayValue.removeGeneric)»;
