@@ -19,22 +19,48 @@ package gwt.jelement;
 
 import gwt.jelement.frame.Location;
 import gwt.jelement.frame.Navigator;
-import gwt.jelement.frame.Screen;
 import gwt.jelement.frame.Window;
 import gwt.jelement.html.HTMLDocument;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
+
 @JsType(name = "window", isNative = true, namespace = JsPackage.GLOBAL)
 public class Browser {
+    public static Navigator navigator;
+    public static Window window;
     public static HTMLDocument document;
     public static Location location;
-    public static Navigator navigator;
-    public static Screen screen;
     public static Window self;
     public static Window top;
-    public static Window window;
     public static double Infinity;
     public static double NaN;
     public static Object undefined;
+    public static gwt.jelement.core.Math JsMath;
+
+    public static native Object eval(String code);
+
+    public static native String uneval(Object object);
+
+    public static native boolean isFinite(Object object);
+
+    public static native boolean isNaN(Object object);
+
+    public static native double parseFloat(Object object);
+
+    public static native double parseInt(Object object);
+
+    public static native String decodeURI(String value);
+
+    public static native String decodeURIComponent(String component);
+
+    public static native String encodeURI(String uri);
+
+    public static native String encodeURIComponent(String uriComponent);
+
+    @Deprecated
+    public static native String escape(String value);
+
+    @Deprecated
+    public static native String unescape(String value);
 }

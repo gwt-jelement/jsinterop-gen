@@ -159,7 +159,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     '''
 
     def methods(InterfaceDefinition definition)'''
-        «FOR method: definition.methods SEPARATOR "\n"»
+        «FOR method: definition.methods»
             «IF method.enumOverlay===null»
                 @JsMethod(name = "«method.name»")
                 public native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
@@ -169,9 +169,9 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                 public final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
                     «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
                 }
+
             «ENDIF»
          «ENDFOR»
-
     '''
 
     def enumMethodArgument(MethodArgument argument) {
