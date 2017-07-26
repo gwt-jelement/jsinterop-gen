@@ -28,6 +28,17 @@ class TypeVisitor extends ContextWebIDLBaseVisitor<Type> {
     }
 
     @Override
+    public Type visitConstType(WebIDLParser.ConstTypeContext ctx) {
+        if (ctx.primitiveType() != null) {
+            return parsingContext.getTypeFactory().getType(ctx.primitiveType().getText());
+        }
+        if (ctx.IDENTIFIER_WEBIDL() != null) {
+            return parsingContext.getTypeFactory().getType(ctx.IDENTIFIER_WEBIDL().getText());
+        }
+        return null;
+    }
+
+    @Override
     public Type visitType(WebIDLParser.TypeContext ctx) {
         if (ctx.singleType() != null) {
             return parsingContext.getTypeFactory().getType(ctx.singleType().getText());
