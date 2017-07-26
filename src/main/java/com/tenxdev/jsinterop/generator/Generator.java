@@ -52,10 +52,10 @@ class Generator {
     @Option(name = "-package", usage = "the base package into which to place the IDL files", metaVar = "basePackage")
     private String basePackage = "gwt.jelement";
 
-    @Option(name = "-force", usage = "remove the output folder if it exists", metaVar = "force")
+    @Option(name = "-force", usage = "remove the output folder if it exists", metaVar = "")
     private boolean force;
 
-    @Option(name = "-overwrite", usage = "overwrite the output folder if it exists", metaVar = "overwrite")
+    @Option(name = "-overwrite", usage = "overwrite the output folder if it exists", metaVar = "")
     private boolean overwrite;
 
     @Option(name = "-logLevel", usage = "logging level: 0-no logging 1-mimum logging", metaVar = "logLevel")

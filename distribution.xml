@@ -1,0 +1,26 @@
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+    <id>distribution</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <files>
+        <file>
+            <source>distribution/jsinterop-gen.cmd</source>
+            <outputDirectory>./</outputDirectory>
+        </file>
+        <file>
+            <source>distribution/jsinterop-gen.sh</source>
+            <outputDirectory>./</outputDirectory>
+        </file>
+        <file>
+            <source>distribution/LICENSE.txt</source>
+            <outputDirectory>./</outputDirectory>
+        </file>
+        <file>
+            <source>target/jsinterop-gen-app.jar</source>
+            <outputDirectory>./</outputDirectory>
+        </file>
+    </files>
+</assembly>
