@@ -25,7 +25,6 @@ import com.tenxdev.jsinterop.generator.model.Attribute
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.Constructor
 import com.tenxdev.jsinterop.generator.model.types.UnionType
-import com.tenxdev.jsinterop.generator.model.interfaces.ExtendedAttribute
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -37,7 +36,7 @@ package «basePackageName»«definition.getPackageName()»;
 
 «imports(basePackageName, definition)»
 
-@JsType(namespace = JsPackage.GLOBAL, isNative = true)
+@JsType(namespace = JsPackage.GLOBAL, name="«definition.jsTypeName»", isNative = true)
 public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     «constants(definition)»
     «unionTypes(definition)»
@@ -76,15 +75,19 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         «FOR attribute: definition.attributes»
             «IF attribute.enumSubstitutionType !== null»
                 @JsProperty(name="«attribute.name»")
-                private «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.javaName.adjustJavaName»;
+                private «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.name.adjustJavaName»;
 
             «ELSEIF attribute.type instanceof UnionType»
                 @JsProperty(name="«attribute.name»")
-                private «staticModifier(attribute)»«attribute.type.unionTypeName(definition)» «attribute.javaName.adjustJavaName»;
+                private «staticModifier(attribute)»«attribute.type.unionTypeName(definition)» «attribute.name.adjustJavaName»;
+
+            «ELSEIF attribute.isStatic»
+                @JsProperty(name="«attribute.jsPropertyName»")
+                public static «attribute.type.displayValue» «attribute.name.adjustJavaName»;
 
             «ELSEIF attribute.eventHandler»
                 @JsProperty(name="«attribute.name»")
-                private «staticModifier(attribute)»«attribute.type.displayValue» «attribute.javaName.adjustJavaName»;
+                private «staticModifier(attribute)»«attribute.type.displayValue» «attribute.name.adjustJavaName»;
 
             «ENDIF»
         «ENDFOR»
@@ -97,21 +100,21 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                     «IF attribute.type instanceof ArrayType»
                         @JsOverlay
                         public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
-                           return «attribute.type.displayValue.replace("[]","")».ofArray(«attribute.javaName.adjustJavaName»);
+                           return «attribute.type.displayValue.replace("[]","")».ofArray(«attribute.name.adjustJavaName»);
                         }
 
                     «ELSE»
                         @JsOverlay
                         public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
-                           return «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
+                           return «attribute.type.displayValue».of(«attribute.name.adjustJavaName»);
                         }
 
                     «ENDIF»
                 «ENDIF»
                 «IF !attribute.readOnly»
                     @JsOverlay
-                    public final «staticModifier(attribute)»void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»){
-                       «staticThis(attribute)».«attribute.javaName.adjustJavaName» = «attribute.javaName.adjustJavaName».getInternalValue();
+                    public final «staticModifier(attribute)»void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name.adjustJavaName»){
+                       «staticThis(attribute)».«attribute.name.adjustJavaName» = «attribute.name.adjustJavaName».getInternalValue();
                     }
 
                 «ENDIF»
@@ -119,15 +122,15 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                 «IF !attribute.writeOnly»
                     @JsOverlay
                     public «staticModifier(attribute)»final «attribute.type.unionTypeName(definition)» get«attribute.name.toFirstUpper»(){
-                        return «staticThis(attribute)».«attribute.javaName.adjustJavaName»;
+                        return «staticThis(attribute)».«attribute.name.adjustJavaName»;
                     }
 
                 «ENDIF»
                 «IF !attribute.readOnly»
                     «FOR type: (attribute.type as UnionType).types »
                         @JsOverlay
-                        public «staticModifier(attribute)»final void set«attribute.name.toFirstUpper»(«type.displayValue» «attribute.javaName.adjustJavaName»){
-                            «staticThis(attribute)».«attribute.javaName.adjustJavaName» = «attribute.type.displayValue».of(«attribute.javaName.adjustJavaName»);
+                        public «staticModifier(attribute)»final void set«attribute.name.toFirstUpper»(«type.displayValue» «attribute.name.adjustJavaName»){
+                            «staticThis(attribute)».«attribute.name.adjustJavaName» = «attribute.type.displayValue».of(«attribute.name.adjustJavaName»);
                         }
 
                     «ENDFOR»
@@ -139,11 +142,11 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                 }
 
                 @JsOverlay
-                public «staticModifier(attribute)»final void set«attribute.eventHandlerName»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»){
+                public «staticModifier(attribute)»final void set«attribute.eventHandlerName»(«attribute.type.displayValue» «attribute.name.adjustJavaName»){
                     «staticThis(attribute)».«attribute.name.adjustJavaName» = «attribute.name.adjustJavaName»;
                 }
 
-            «ELSE»
+            «ELSEIF !attribute.isStatic»
                 «IF !attribute.writeOnly»
                     @JsProperty(name="«attribute.name»")
                     public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
@@ -151,7 +154,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                 «ENDIF»
                 «IF !attribute.readOnly»
                     @JsProperty(name="«attribute.name»")
-                    public «staticModifier(attribute)»native void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.javaName.adjustJavaName»);
+                    public «staticModifier(attribute)»native void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name.adjustJavaName»);
 
                 «ENDIF»
             «ENDIF»
@@ -190,7 +193,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     }
 
     def returnType(Method method){
-        if (method.hasExtendedAttribute(ExtendedAttribute.GENERIC_RETURN))
+        if (method.genericReturn)
             "<T extends "+method.returnType.displayValue+"> T"
         else
             method.returnType.displayValue

@@ -24,6 +24,9 @@ import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AttributeEnumTypeProcessor {
 
     private Model model;
@@ -43,15 +46,24 @@ public class AttributeEnumTypeProcessor {
     }
 
     private void processInterfaceDefinition(InterfaceDefinition definition) {
+        List<Attribute> oldAttributes = new ArrayList<>();
+        List<Attribute> newAttributes = new ArrayList<>();
         definition.getAttributes().stream()
                 .filter(attribute -> hasEnumTypeVisitor.accept(attribute.getType()))
-                .forEach(this::processAttribute);
+                .forEach(attribute -> {
+                    oldAttributes.add(attribute);
+                    newAttributes.add(processAttribute(definition, attribute));
+
+                });
+        definition.getAttributes().removeAll(oldAttributes);
+        definition.getAttributes().addAll(newAttributes);
     }
 
-    private void processAttribute(Attribute attribute) {
+    private Attribute processAttribute(InterfaceDefinition definition, Attribute attribute) {
         Type newType = enumSubstitutionVisitor.accept(attribute.getType());
         if (!(newType instanceof UnionType)) {
-            attribute.setEnumSubstitutionType(newType);
+            return attribute.newAttributeWithEnumSubstitutionType(newType);
         }
+        return attribute;
     }
 }

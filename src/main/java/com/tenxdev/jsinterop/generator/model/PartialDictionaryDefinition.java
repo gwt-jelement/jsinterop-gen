@@ -18,19 +18,10 @@
 package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
-import com.tenxdev.jsinterop.generator.model.types.Type;
-
-import java.util.List;
 
 public class PartialDictionaryDefinition extends DictionaryDefinition implements PartialDefinition {
 
-    public PartialDictionaryDefinition(String name, Type parent, List<DictionaryMember> members,
-                                       List<String> extendedAttributes) {
-        super(name, parent, members, extendedAttributes);
-    }
-
     public PartialDictionaryDefinition(DictionaryDefinition dictionaryDefinition) {
-        super(dictionaryDefinition.getName(), dictionaryDefinition.getParent(), dictionaryDefinition.getMembers(),
-                dictionaryDefinition.extendedAttributes);
+        super(dictionaryDefinition);
     }
 }

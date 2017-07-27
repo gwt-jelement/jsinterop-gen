@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Feature;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
@@ -38,6 +39,7 @@ class MapLikeRestVisitor extends ContextWebIDLBaseVisitor<Feature> {
     public Feature visitMaplikeRest(WebIDLParser.MaplikeRestContext ctx) {
         Type keyType = ctx.type(0).accept(new TypeVisitor(parsingContext));
         Type valueType = ctx.type(1).accept(new TypeVisitor(parsingContext));
-        return new Feature(Feature.FeatureType.MAP_LIKE, keyType, valueType, readOnly, extendedAttributes);
+        return new Feature(Feature.FeatureType.MAP_LIKE, keyType, valueType, readOnly,
+                new ExtendedAttributes(extendedAttributes));
     }
 }

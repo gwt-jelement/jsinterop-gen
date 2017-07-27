@@ -24,14 +24,30 @@ import java.util.List;
 
 public class Constructor extends Method {
 
-    List<MethodArgument> superArguments = new ArrayList<>();
+    private final List<MethodArgument> superArguments;
 
-    public Constructor(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod, Method enumOverlay, String javaName) {
-        super(name, returnType, arguments, staticMethod, enumOverlay, javaName, null);
+    public Constructor(String name, Type returnType, List<MethodArgument> arguments,
+                       boolean staticMethod, Method enumOverlay, String javaName) {
+        this(name, returnType, arguments, staticMethod, enumOverlay, javaName, new ArrayList<>());
     }
 
-    public Constructor(Method method) {
+    protected Constructor(String name, Type returnType, List<MethodArgument> arguments,
+                          boolean staticMethod, Method enumOverlay, String javaName,
+                          List<MethodArgument> superArguments) {
+        super(name, returnType, arguments, staticMethod, enumOverlay, javaName, new ExtendedAttributes(null));
+        this.superArguments = superArguments;
+
+
+    }
+
+    protected Constructor(Method method) {
         super(method);
+        this.superArguments = new ArrayList<>();
+    }
+
+    public Constructor constructorWithSuperArguments(List<MethodArgument> arguments) {
+        return new Constructor(getName(), getReturnType(), getArguments(), isStatic(),
+                getEnumOverlay(), getJavaName(), arguments);
     }
 
     @Override
@@ -42,10 +58,6 @@ public class Constructor extends Method {
 
     public List<MethodArgument> getSuperArguments() {
         return superArguments;
-    }
-
-    public void setSuperArguments(List<MethodArgument> superArguments) {
-        this.superArguments = superArguments;
     }
 
     @Override

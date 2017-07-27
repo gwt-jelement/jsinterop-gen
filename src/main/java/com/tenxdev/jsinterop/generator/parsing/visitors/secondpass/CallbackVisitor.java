@@ -42,7 +42,7 @@ class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
         if (ctx.interface_() != null) {
             InterfaceDefinition interfaceDefinition = ctx.interface_().accept(new InterfaceVisitor(parsingContext, constructors, extendedAttributes));
             return new CallbackDefinition(interfaceDefinition.getName(),
-                    interfaceDefinition.getMethods().get(0), extendedAttributes);
+                    interfaceDefinition.getMethods().get(0), new ExtendedAttributes(extendedAttributes));
         } else if (ctx.callbackRest() != null) {
             return ctx.callbackRest().accept(this);
         } else {
@@ -58,7 +58,8 @@ class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
         Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
         List<MethodArgument> arguments = ctx.argumentList() != null && ctx.argumentList().arguments() != null ?
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext)) : Collections.emptyList();
-        Method method = new Method(null, returnType, arguments, false, null, null, extendedAttributes);
-        return new CallbackDefinition(name, method, extendedAttributes);
+        Method method = new Method(null, returnType, arguments, false, null, null,
+                new ExtendedAttributes(null));
+        return new CallbackDefinition(name, method, new ExtendedAttributes(extendedAttributes));
     }
 }

@@ -32,9 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SourceGenerator extends XtendTemplate {
-
+    //TODO remove probably
     private static final List<String> JAVA_REOURCES = Arrays.asList(
-            "gwt/jelement/Browser.java"
     );
     private static final String VERSION = "0.0.1-SNAPSHOT";
     private Logger logger;

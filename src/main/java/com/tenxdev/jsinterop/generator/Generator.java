@@ -72,9 +72,9 @@ class Generator {
         Logger logger = new PrintStreamLogger(System.err);
         CmdLineParser parser = new CmdLineParser(this);
         try {
-            banner(logger);
             parser.parseArgument(args);
             logger.setLogLevel(logLevel);
+            banner(logger);
             checkArguments();
             Model model = new ModelBuilder(logger).buildFrom(inputDirectory);
             processModel(model, logger);

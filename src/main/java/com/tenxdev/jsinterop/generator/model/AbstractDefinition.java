@@ -17,28 +17,22 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.HasExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDefinition implements HasExtendedAttributes {
+public abstract class AbstractDefinition {
 
-    protected List<String> extendedAttributes;
-    private List<PartialDefinition> partialDefinitions = new ArrayList<>();
-    private List<ImplementsDefinition> implementsDefinitions = new ArrayList<>();
-    private String packageName;
+    private final String name;
+    private final List<PartialDefinition> partialDefinitions = new ArrayList<>();
+    private final List<ImplementsDefinition> implementsDefinitions = new ArrayList<>();
+    private final List<String> importedPackages = new ArrayList<>();
+    private  String packageName;
     private String filename;
-    private List<String> importedPackages = new ArrayList<>();
 
-    public AbstractDefinition(List<String> extendedAttributes) {
-        this.extendedAttributes = extendedAttributes;
-    }
-
-    @Override
-    public boolean hasExtendedAttribute(String name) {
-        return extendedAttributes != null && extendedAttributes.contains(name);
+    public AbstractDefinition(String name) {
+        this.name = name;
     }
 
     public List<String> getImportedPackages() {
@@ -51,6 +45,10 @@ public abstract class AbstractDefinition implements HasExtendedAttributes {
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
+    }
+
+    public final String getName() {
+        return name;
     }
 
     public List<PartialDefinition> getPartialDefinitions() {
@@ -69,5 +67,4 @@ public abstract class AbstractDefinition implements HasExtendedAttributes {
         this.filename = filename;
     }
 
-    public abstract String getName();
 }

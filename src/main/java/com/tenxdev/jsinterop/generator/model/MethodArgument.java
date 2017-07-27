@@ -17,47 +17,43 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.HasExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
-import java.util.List;
-
-public class MethodArgument implements HasExtendedAttributes {
+public class MethodArgument {
     private final String defaultValue;
-    private final Type type;
     private final String name;
     private final boolean vararg;
-    private final boolean optional;
-    private final List<String> extendedAttributes;
+    private boolean optional;
+    private Type type;
     private boolean enumSubstitution;
 
     public MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue,
-                          List<String> extendedAttributes) {
+                          ExtendedAttributes extendedAttributes) {
+        this(name, type, vararg, optional, defaultValue);
+    }
+
+    protected MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue) {
         this.type = type;
         this.name = name;
         this.vararg = vararg;
         this.optional = optional;
         this.defaultValue = defaultValue;
-        this.extendedAttributes = extendedAttributes;
     }
 
-    public MethodArgument(MethodArgument methodArgument) {
-        this.defaultValue = methodArgument.defaultValue;
+    protected MethodArgument(MethodArgument methodArgument) {
         this.type = methodArgument.type;
         this.name = methodArgument.name;
         this.vararg = methodArgument.vararg;
         this.optional = methodArgument.optional;
-        this.extendedAttributes = methodArgument.extendedAttributes;
+        this.defaultValue = methodArgument.defaultValue;
     }
 
     public MethodArgument newMethodArgumentWithType(Type type) {
-        return new MethodArgument(this.name, type, this.vararg, this.optional, this.defaultValue,
-                this.extendedAttributes);
+        return new MethodArgument(name, type, vararg, optional, defaultValue);
     }
 
     public MethodArgument newRequiredArgument() {
-        return new MethodArgument(this.name, this.type, this.vararg, false, this.defaultValue,
-                this.extendedAttributes);
+        return new MethodArgument(name, type, vararg, false, defaultValue);
     }
 
     public String getDefaultValue() {
@@ -121,10 +117,5 @@ public class MethodArgument implements HasExtendedAttributes {
                 ", vararg=" + vararg +
                 ", optional=" + optional +
                 '}';
-    }
-
-    @Override
-    public boolean hasExtendedAttribute(String name) {
-        return extendedAttributes != null && extendedAttributes.contains(name);
     }
 }

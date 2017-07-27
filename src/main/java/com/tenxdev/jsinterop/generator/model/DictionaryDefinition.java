@@ -25,25 +25,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DictionaryDefinition extends AbstractDefinition implements HasUnionReturnTypes {
-    private final String name;
     private final Type parent;
     private List<DictionaryMember> members;
     private List<UnionType> unionReturnTypes = new ArrayList<>();
 
-    public DictionaryDefinition(String name, Type parent, List<DictionaryMember> members, List<String> extendedAttributes) {
-        super(extendedAttributes);
-        this.name = name;
+    public DictionaryDefinition(String name, Type parent, List<DictionaryMember> members, ExtendedAttributes extendedAttributes) {
+        super(name);
         this.parent = parent;
         this.members = members;
     }
 
-    public Type getParent() {
-        return parent;
+    public DictionaryDefinition(DictionaryDefinition dictionaryDefinition) {
+        super(dictionaryDefinition.getName());
+        this.parent = dictionaryDefinition.getParent();
+        this.members = dictionaryDefinition.getMembers();
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public Type getParent() {
+        return parent;
     }
 
     public List<DictionaryMember> getMembers() {
@@ -63,14 +62,14 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DictionaryDefinition that = (DictionaryDefinition) o;
-        if (!name.equals(that.name)) return false;
+        if (!getName().equals(that.getName())) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
         return members != null ? members.equals(that.members) : that.members == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
+        int result = getName().hashCode();
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (members != null ? members.hashCode() : 0);
         return result;
@@ -80,7 +79,7 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
     public String toString() {
         return "\n" + getClass().getSimpleName() +
                 "{" +
-                "name='" + name + '\'' +
+                "name='" + getName() + '\'' +
                 ", parent='" + parent + '\'' +
                 ", members=" + members +
                 '}';

@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Feature;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
@@ -38,10 +39,12 @@ class IterableVisitor extends ContextWebIDLBaseVisitor<Feature> {
     public Feature visitIterable(WebIDLParser.IterableContext ctx) {
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
         if (ctx.optionalType() == null || ctx.optionalType().type() == null) {
-            return new Feature(Feature.FeatureType.MAP_ITERATOR, type, false, extendedAttributes);
+            return new Feature(Feature.FeatureType.MAP_ITERATOR, type, false,
+                    new ExtendedAttributes(extendedAttributes));
         } else {
             Type type2 = ctx.optionalType().type().accept(new TypeVisitor(parsingContext));
-            return new Feature(Feature.FeatureType.MAP_ITERATOR, type, type2, false, extendedAttributes);
+            return new Feature(Feature.FeatureType.MAP_ITERATOR, type, type2, false,
+                    new ExtendedAttributes(extendedAttributes));
         }
     }
 }

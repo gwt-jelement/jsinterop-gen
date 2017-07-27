@@ -24,12 +24,10 @@ import java.util.List;
 
 public class EnumDefinition extends AbstractDefinition {
 
-    private final String name;
     private final List<String> values;
 
     public EnumDefinition(String name, List<String> values, List<String> extendedAttributes) {
-        super(extendedAttributes);
-        this.name = name;
+        super(name);
         this.values = values;
     }
 
@@ -45,11 +43,6 @@ public class EnumDefinition extends AbstractDefinition {
             result = "_" + result;
         }
         return result.replaceAll("[^A-Z0-9]", "_");
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     public List<String> getValues() {
@@ -68,13 +61,13 @@ public class EnumDefinition extends AbstractDefinition {
 
         EnumDefinition that = (EnumDefinition) o;
 
-        if (!name.equals(that.name)) return false;
+        if (!getName().equals(that.getName())) return false;
         return values.equals(that.values);
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
+        int result = getName().hashCode();
         result = 31 * result + values.hashCode();
         return result;
     }
@@ -82,7 +75,7 @@ public class EnumDefinition extends AbstractDefinition {
     @Override
     public String toString() {
         return "\nEnumDefinition{" +
-                "name='" + name + '\'' +
+                "name='" + getName() + '\'' +
                 ", values=" + values +
                 '}';
     }

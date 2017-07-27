@@ -48,6 +48,7 @@ Web IDL grammar derived from:
                             Removed class and extension, not part of WEBIDL 1.0 spec
                             Fixed serializationPatternMap, add serializationPatterRest to serializationPattern
                             added record<type,type> type, looks to be a Google extension and not a standard?
+ Tony BenBrahim 27 Jul 2017 remove Infinity and NaN as float literals, to allow use as attribute name
  */
 grammar WebIDL;
 
@@ -219,9 +220,9 @@ booleanLiteral
 
 floatLiteral
 	: FLOAT_WEBIDL
-	| '-Infinity'
-	| 'Infinity'
-	| 'NaN'
+//	| '-Infinity'
+//	| 'Infinity'
+//	| 'NaN'
 ;
 
 serializer
@@ -450,7 +451,7 @@ other
 	| STRING_WEBIDL
 	| OTHER_WEBIDL
 	| '-'
-	| '-Infinity'
+//	| '-Infinity'
 	| '.'
 	| '...'
 	| ':'
@@ -462,8 +463,8 @@ other
 	| 'ByteString'
 	| 'DOMString'
 	| 'FrozenArray'
-	| 'Infinity'
-	| 'NaN'
+//	| 'Infinity'
+//	| 'NaN'
 	| 'RegExp'
 	| 'USVString'
 	| 'any'
@@ -552,13 +553,13 @@ nonAnyType
 	| 'ByteString'  null_
 	| 'DOMString'  null_
 	| 'USVString'  null_
-	| IDENTIFIER_WEBIDL  null_
 	| 'sequence' '<' type '>' null_
 	| 'record' '<' argumentList '>' null_
 	| 'object'  null_
 	| 'RegExp'  null_
 	| 'FrozenArray' '<' type '>' null_
 	| 'record' '<' type ',' type '>' null_
+	| IDENTIFIER_WEBIDL  null_
 ;
 
 constType

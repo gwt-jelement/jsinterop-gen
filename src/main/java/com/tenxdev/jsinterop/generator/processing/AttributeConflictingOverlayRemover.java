@@ -65,17 +65,19 @@ public class AttributeConflictingOverlayRemover {
                 .filter(Attribute::isReadOnly)
                 .map(Attribute::getName)
                 .collect(Collectors.toList());
-        // could also do write only but not needed so far
         List<Attribute> attributesToBeRemoved = new ArrayList<>();
+        List<Attribute> attributesToBeAdded = new ArrayList<>();
         definition.getAttributes().stream()
                 .forEach(attribute -> {
                     if (parentWritableAttributes.contains(attribute.getName())) {
                         attributesToBeRemoved.add(attribute);
                     } else if (parentReadOnlyAttributes.contains(attribute.getName())) {
-                        attribute.setWriteOnly(true);
+                        attributesToBeRemoved.add(attribute);
+                        attributesToBeAdded.add(attribute.newWriteOnlyAttribute());
                     }
                 });
         definition.getAttributes().removeAll(attributesToBeRemoved);
+        definition.getAttributes().addAll(attributesToBeAdded);
         //could recurse into parent but not needed so far
     }
 

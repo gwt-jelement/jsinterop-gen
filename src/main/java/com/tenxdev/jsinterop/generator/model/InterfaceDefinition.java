@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InterfaceDefinition extends AbstractDefinition implements HasUnionReturnTypes {
-    private final String name;
     private final Type parent;
+    private final String jsTypeName;
     private List<Constant> constants = new ArrayList<>();
     private List<Feature> features = new ArrayList<>();
     private List<Constructor> constructors = new ArrayList<>();
@@ -38,9 +38,8 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     private List<UnionType> unionReturnTypes = new ArrayList<>();
 
     public InterfaceDefinition(String name, Type parent, List<Constructor> constructors,
-                               List<InterfaceMember> members, List<String> extendedAttributes) {
-        super(extendedAttributes);
-        this.name = name;
+                               List<InterfaceMember> members, ExtendedAttributes extendedAttributes) {
+        super(name);
         this.parent = parent;
         this.constructors = constructors == null ? Collections.emptyList() : constructors;
         this.methods = members.stream().filter(member -> member instanceof Method)
@@ -51,22 +50,18 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
                 .map(member -> (Constant) member).collect(Collectors.toList());
         this.features = members.stream().filter(member -> member instanceof Feature)
                 .map(member -> (Feature) member).collect(Collectors.toList());
+        this.jsTypeName = extendedAttributes.extractValue(ExtendedAttributes.JS_TYPE_NAME, name);
     }
 
-    InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
-        super(interfaceDefinition.extendedAttributes);
-        this.name = interfaceDefinition.name;
+    protected InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
+        super(interfaceDefinition.getName());
         this.parent = interfaceDefinition.parent;
         this.constructors = interfaceDefinition.constructors;
         this.methods = interfaceDefinition.methods;
         this.attributes = interfaceDefinition.attributes;
         this.constants = interfaceDefinition.constants;
         this.features = interfaceDefinition.features;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        this.jsTypeName = interfaceDefinition.jsTypeName;
     }
 
     public Type getParent() {
@@ -98,6 +93,10 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
         return unionReturnTypes;
     }
 
+    public String getJsTypeName() {
+        return jsTypeName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,7 +104,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
 
         InterfaceDefinition that = (InterfaceDefinition) o;
 
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
         if (constants != null ? constants.equals(that.constants) : that.constants == null)
             if (features != null ? features.equals(that.features) : that.features == null)
@@ -118,7 +117,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = getName() != null ? getName().hashCode() : 0;
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (constants != null ? constants.hashCode() : 0);
         result = 31 * result + (features != null ? features.hashCode() : 0);
@@ -132,7 +131,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     public String toString() {
         return "\n" + getClass().getSimpleName() +
                 "(constructors=" + constructors +
-                ", name='" + name + '\'' +
+                ", name='" + getName() + '\'' +
                 ", parent='" + parent + '\'' +
                 ", methods=" + methods +
                 ", attributes=" + attributes +

@@ -29,7 +29,8 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private final boolean staticMethod;
     private final String name;
     private final List<MethodArgument> arguments;
-    private final List<String> extendedAttributes;
+    private final boolean deprecated;
+    private final boolean genericReturn;
     private Type returnType;
     private Method methodReferences;
     private Method enumOverlay;
@@ -37,29 +38,42 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private String javaName;
 
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
-                  Method enumOverlay, String javaName, List<String> extendedAttributes) {
+                  Method enumOverlay, String javaName, ExtendedAttributes extendedAttributes) {
+        this(name, returnType, arguments, staticMethod, enumOverlay, javaName,
+                extendedAttributes.hasExtendedAttribute(ExtendedAttributes.DEPRECATED),
+                extendedAttributes.hasExtendedAttribute(ExtendedAttributes.GENERIC_RETURN));
+    }
+
+    protected Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
+                     Method enumOverlay, String javaName, boolean deprecated, boolean genericReturn) {
         this.name = name;
         this.returnType = returnType;
         this.arguments = arguments;
         this.staticMethod = staticMethod;
         this.enumOverlay = enumOverlay;
         this.javaName = javaName;
-        this.extendedAttributes = extendedAttributes;
+        this.deprecated = deprecated;
+        this.genericReturn = genericReturn;
     }
 
-    public Method(Method method) {
+    protected Method(Method method) {
         this.name = method.name;
         this.returnType = method.returnType;
         this.staticMethod = method.staticMethod;
         this.arguments = method.arguments.stream().map(MethodArgument::new).collect(Collectors.toList());
         this.enumOverlay = method.enumOverlay;
         this.javaName = method.javaName;
-        this.extendedAttributes = method.extendedAttributes;
+        this.deprecated = method.deprecated;
+        this.genericReturn = method.genericReturn;
     }
 
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
-        return (T) new Method(name, returnType, newArguments, staticMethod,
-                enumOverlay, javaName, extendedAttributes);
+        return (T) new Method(name, returnType, newArguments, staticMethod, enumOverlay,
+                javaName, deprecated, genericReturn);
+    }
+
+    public boolean isGenericReturn() {
+        return genericReturn;
     }
 
     public boolean isStatic() {
@@ -71,7 +85,8 @@ public class Method implements InterfaceMember, Comparable<Method> {
     }
 
     public Type getReturnType() {
-        return returnType == null ? new NativeType("void") : returnType;
+        return returnType == null ?
+                new NativeType("void") : returnType;
     }
 
     public void setReturnType(Type returnType) {
@@ -88,9 +103,8 @@ public class Method implements InterfaceMember, Comparable<Method> {
         }
     }
 
-    @Override
-    public boolean hasExtendedAttribute(String name) {
-        return extendedAttributes != null && extendedAttributes.contains(name);
+    public boolean isDeprecated() {
+        return deprecated;
     }
 
     @Override

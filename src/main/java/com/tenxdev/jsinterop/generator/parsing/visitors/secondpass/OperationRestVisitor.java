@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.model.types.Type;
@@ -44,6 +45,7 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
         String name = ctx.optionalIdentifier().getText();
         List<MethodArgument> parameters = ctx.argumentList() == null || ctx.argumentList().argument() == null ? Collections.emptyList() :
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext));
-        return new Method(name, returnType, parameters, staticMethod, null, null, extendedAttributes);
+        return new Method(name, returnType, parameters, staticMethod, null, null,
+                new ExtendedAttributes(extendedAttributes));
     }
 }

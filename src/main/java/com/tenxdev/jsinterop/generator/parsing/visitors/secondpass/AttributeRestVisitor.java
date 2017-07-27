@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.Attribute;
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -41,7 +42,7 @@ class AttributeRestVisitor extends ContextWebIDLBaseVisitor<Attribute> {
     public Attribute visitAttributeRest(WebIDLParser.AttributeRestContext ctx) {
         String name = ctx.attributeName().getText();
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new Attribute(name, type, readOnly, staticAttribute, extendedAttributes);
+        return new Attribute(name, type, readOnly, staticAttribute, new ExtendedAttributes(extendedAttributes));
     }
 
 }

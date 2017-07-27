@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.Constructor;
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.types.Type;
@@ -43,6 +44,6 @@ class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
         Type parent = ctx.inheritance() == null || ctx.inheritance().IDENTIFIER_WEBIDL() == null
                 ? null : parsingContext.getTypeFactory().getTypeNoParse(ctx.inheritance().IDENTIFIER_WEBIDL().getText());
         List<InterfaceMember> members = ctx.interfaceMembers().accept(new InterfaceMembersVisitor(parsingContext, name));
-        return new InterfaceDefinition(name, parent, constructors, members, extendedAttributes);
+        return new InterfaceDefinition(name, parent, constructors, members, new ExtendedAttributes(extendedAttributes));
     }
 }

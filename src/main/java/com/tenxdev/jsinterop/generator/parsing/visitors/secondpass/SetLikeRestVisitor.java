@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Feature;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
@@ -37,6 +38,7 @@ class SetLikeRestVisitor extends ContextWebIDLBaseVisitor<Feature> {
     @Override
     public Feature visitSetlikeRest(WebIDLParser.SetlikeRestContext ctx) {
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new Feature(Feature.FeatureType.SET_LIKE, type, readOnly, extendedAttributes);
+        return new Feature(Feature.FeatureType.SET_LIKE, type, readOnly,
+                new ExtendedAttributes(extendedAttributes));
     }
 }

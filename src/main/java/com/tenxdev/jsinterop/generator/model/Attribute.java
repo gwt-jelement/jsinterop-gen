@@ -18,37 +18,56 @@
 package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
-import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
-
-import java.util.List;
 
 public class Attribute implements InterfaceMember {
     private final boolean staticAttribute;
     private final String name;
-    private List<String> extendedAttributes;
-    private boolean readOnly;
-    private boolean writeOnly;
-    private Type type;
-    private String javaName;
-    private Type enumSubstitutionType;
+    private final String jsPropertyName;
+    private final boolean deprecated;
+    private final Type type;
+    private final boolean readOnly;
+    private final boolean writeOnly;
+    private final Type enumSubstitutionType;
 
-    public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute, List<String> extendedAttributes) {
+    public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute, ExtendedAttributes extendedAttributes) {
+        this(name, type, readOnly, staticAttribute,
+                extendedAttributes.extractValue(ExtendedAttributes.JS_PROPERTY_NAME, name),
+                extendedAttributes.hasExtendedAttribute(ExtendedAttributes.DEPRECATED),
+                false, null);
+    }
+
+    protected Attribute(String name, Type type, boolean readOnly, boolean staticAttribute, String jsPropertyName,
+                        boolean deprecated, boolean writeOnly, Type enumSubstitutionType) {
         this.name = name;
         this.type = type;
         this.readOnly = readOnly;
         this.staticAttribute = staticAttribute;
-        this.extendedAttributes = extendedAttributes;
+        this.jsPropertyName = jsPropertyName;
+        this.deprecated = deprecated;
+        this.writeOnly = writeOnly;
+        this.enumSubstitutionType = enumSubstitutionType;
     }
 
-    public Attribute(Attribute attribute) {
+    protected Attribute(Attribute attribute) {
         this.name = attribute.name;
         this.type = attribute.type;
         this.readOnly = attribute.readOnly;
-        this.writeOnly = attribute.writeOnly;
-        this.javaName = attribute.javaName;
         this.staticAttribute = attribute.staticAttribute;
-        this.extendedAttributes = attribute.extendedAttributes;
+        this.jsPropertyName = attribute.jsPropertyName;
+        this.deprecated = attribute.deprecated;
+        this.writeOnly = attribute.writeOnly;
+        this.enumSubstitutionType = attribute.enumSubstitutionType;
+    }
+
+    public Attribute newWriteOnlyAttribute() {
+        return new Attribute(name, type, readOnly, staticAttribute, jsPropertyName, deprecated,
+                true, enumSubstitutionType);
+    }
+
+    public Attribute newAttributeWithEnumSubstitutionType(Type enumSubstitutionType) {
+        return new Attribute(name, type, readOnly, staticAttribute, jsPropertyName, deprecated,
+                writeOnly, enumSubstitutionType);
     }
 
     public boolean isStatic() {
@@ -63,40 +82,24 @@ public class Attribute implements InterfaceMember {
         return type;
     }
 
-    public void setType(NativeType type) {
-        this.type = type;
-    }
-
     public boolean isReadOnly() {
         return readOnly;
-    }
-
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
-    public String getJavaName() {
-        return javaName == null ? name : javaName;
-    }
-
-    public void setJavaName(String javaName) {
-        this.javaName = javaName;
     }
 
     public boolean isWriteOnly() {
         return writeOnly;
     }
 
-    public void setWriteOnly(boolean writeOnly) {
-        this.writeOnly = writeOnly;
-    }
-
     public Type getEnumSubstitutionType() {
         return enumSubstitutionType;
     }
 
-    public void setEnumSubstitutionType(Type enumSubstitutionType) {
-        this.enumSubstitutionType = enumSubstitutionType;
+    public String getJsPropertyName() {
+        return jsPropertyName;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
     }
 
     @Override
@@ -107,17 +110,26 @@ public class Attribute implements InterfaceMember {
         Attribute attribute = (Attribute) o;
 
         if (staticAttribute != attribute.staticAttribute) return false;
+        if (deprecated != attribute.deprecated) return false;
         if (readOnly != attribute.readOnly) return false;
+        if (writeOnly != attribute.writeOnly) return false;
         if (!name.equals(attribute.name)) return false;
-        return type.equals(attribute.type);
+        if (jsPropertyName != null ? !jsPropertyName.equals(attribute.jsPropertyName) : attribute.jsPropertyName != null)
+            return false;
+        if (!type.equals(attribute.type)) return false;
+        return enumSubstitutionType != null ? enumSubstitutionType.equals(attribute.enumSubstitutionType) : attribute.enumSubstitutionType == null;
     }
 
     @Override
     public int hashCode() {
         int result = (staticAttribute ? 1 : 0);
         result = 31 * result + name.hashCode();
+        result = 31 * result + (jsPropertyName != null ? jsPropertyName.hashCode() : 0);
+        result = 31 * result + (deprecated ? 1 : 0);
         result = 31 * result + type.hashCode();
         result = 31 * result + (readOnly ? 1 : 0);
+        result = 31 * result + (writeOnly ? 1 : 0);
+        result = 31 * result + (enumSubstitutionType != null ? enumSubstitutionType.hashCode() : 0);
         return result;
     }
 
@@ -129,10 +141,5 @@ public class Attribute implements InterfaceMember {
                 ", type='" + type + '\'' +
                 ", readOnly=" + readOnly +
                 '}';
-    }
-
-    @Override
-    public boolean hasExtendedAttribute(String name) {
-        return extendedAttributes != null && extendedAttributes.contains(name);
     }
 }

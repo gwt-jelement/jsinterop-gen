@@ -17,25 +17,16 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import java.util.List;
-
 public class CallbackDefinition extends AbstractDefinition {
-    private final String name;
     private final Method method;
 
-    public CallbackDefinition(String name, Method method, List<String> extendedAttributes) {
-        super(extendedAttributes);
-        this.name = name;
+    public CallbackDefinition(String name, Method method, ExtendedAttributes extendedAttributes) {
+        super(name);
         this.method = method;
     }
 
     public Method getMethod() {
         return method;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -45,13 +36,13 @@ public class CallbackDefinition extends AbstractDefinition {
 
         CallbackDefinition that = (CallbackDefinition) o;
 
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
         return method != null ? method.equals(that.method) : that.method == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = getName() != null ? getName().hashCode() : 0;
         result = 31 * result + (method != null ? method.hashCode() : 0);
         return result;
     }
@@ -59,7 +50,7 @@ public class CallbackDefinition extends AbstractDefinition {
     @Override
     public String toString() {
         return "\nCallbackDefinition{" +
-                "name='" + name + '\'' +
+                "name='" + getName() + '\'' +
                 ", method=" + method +
                 '}';
     }

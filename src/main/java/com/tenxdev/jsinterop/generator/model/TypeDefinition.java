@@ -22,22 +22,15 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import java.util.List;
 
 public class TypeDefinition extends AbstractDefinition {
-    private final String name;
     private final Type type;
 
     public TypeDefinition(String name, Type type, List<String> extendedAttributes) {
-        super(extendedAttributes);
-        this.name = name;
+        super(name);
         this.type = type;
     }
 
     public Type getType() {
         return type;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -47,14 +40,14 @@ public class TypeDefinition extends AbstractDefinition {
 
         TypeDefinition that = (TypeDefinition) o;
 
-        if (!name.equals(that.name)) return false;
+        if (!getName().equals(that.getName())) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         return type.equals(that.type);
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
+        int result = getName().hashCode();
         result = 31 * result + type.hashCode();
         return result;
     }
@@ -62,7 +55,7 @@ public class TypeDefinition extends AbstractDefinition {
     @Override
     public String toString() {
         return "\nTypeDefinition{" +
-                "name='" + name + '\'' +
+                "name='" + getName() + '\'' +
                 ", types=" + type +
                 '}';
     }

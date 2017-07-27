@@ -83,7 +83,7 @@ public class SuperCallConstructorProcessor {
         if (constructor.getSuperArguments().isEmpty() && parentInterface != null
                 && !parentInterface.getConstructors().isEmpty()) {
             Constructor parentConstructor = parentInterface.getConstructors().get(0);
-            constructor.setSuperArguments(parentConstructor.getArguments());
+            constructor.getSuperArguments().addAll(parentConstructor.getArguments());
         }
     }
 }

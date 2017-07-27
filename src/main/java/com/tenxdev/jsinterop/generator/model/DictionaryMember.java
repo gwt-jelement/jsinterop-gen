@@ -17,27 +17,22 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.interfaces.HasExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
-import java.util.List;
-
-public class DictionaryMember implements HasExtendedAttributes {
+public class DictionaryMember {
 
     private final String name;
     private final boolean required;
     private final String defaultValue;
     private final Type type;
-    private List<String> extendedAttributes;
     private Type enumSubstitutionType;
 
     public DictionaryMember(String name, Type type, boolean required, String defaultValue,
-                            List<String> extendedAttributes) {
+                            ExtendedAttributes extendedAttributes) {
         this.name = name;
         this.type = type;
         this.required = required;
         this.defaultValue = defaultValue;
-        this.extendedAttributes = extendedAttributes;
     }
 
     public boolean isRequired() {
@@ -89,13 +84,8 @@ public class DictionaryMember implements HasExtendedAttributes {
                 ", required=" + required +
                 ", defaultValue='" + defaultValue + '\'' +
                 ", type=" + type +
-                ", extendedAttributes=" + extendedAttributes +
                 ", enumSubstitutionType=" + enumSubstitutionType +
                 '}';
     }
 
-    @Override
-    public boolean hasExtendedAttribute(String name) {
-        return extendedAttributes != null && extendedAttributes.contains(name);
-    }
 }

@@ -19,6 +19,7 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.PartialDictionaryDefinition;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -38,7 +39,8 @@ class PartialDictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefini
     public DictionaryDefinition visitPartialDictionary(WebIDLParser.PartialDictionaryContext ctx) {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
         List<DictionaryMember> members = ctx.dictionaryMembers().accept(new DictionaryMemberVisitor(parsingContext));
-        DictionaryDefinition partialDictionary = new DictionaryDefinition(name, null, members, extendedAttributes);
+        DictionaryDefinition partialDictionary = new DictionaryDefinition(name, null, members,
+                new ExtendedAttributes(extendedAttributes));
         return new PartialDictionaryDefinition(partialDictionary);
 
     }

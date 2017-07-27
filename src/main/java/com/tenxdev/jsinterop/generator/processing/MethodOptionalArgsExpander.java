@@ -90,7 +90,7 @@ public class MethodOptionalArgsExpander {
                 T newMethod = method.newMethodWithArguments(new ArrayList<>(newArguments));
                 expandedMethods.add(newMethod);
                 hasOptions = true;
-                newArguments.add(new MethodArgument(argument.newRequiredArgument()));
+                newArguments.add(argument.newRequiredArgument());
             } else {
                 newArguments.add(argument);
             }

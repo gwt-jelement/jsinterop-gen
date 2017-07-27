@@ -17,22 +17,13 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import java.util.List;
-
 public class ImplementsDefinition extends AbstractDefinition {
 
-    private final String name;
     private final String parent;
 
-    public ImplementsDefinition(String name, String parent, List<String> extendedAttributes) {
-        super(extendedAttributes);
-        this.name = name;
+    public ImplementsDefinition(String name, String parent, ExtendedAttributes extendedAttributes) {
+        super(name);
         this.parent = parent;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     public String getParent() {
@@ -46,13 +37,13 @@ public class ImplementsDefinition extends AbstractDefinition {
 
         ImplementsDefinition that = (ImplementsDefinition) o;
 
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
         return parent != null ? parent.equals(that.parent) : that.parent == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = getName() != null ? getName().hashCode() : 0;
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         return result;
     }
@@ -60,7 +51,7 @@ public class ImplementsDefinition extends AbstractDefinition {
     @Override
     public String toString() {
         return "\nImplementsDefinition{" +
-                "name='" + name + '\'' +
+                "name='" + getName() + '\'' +
                 ", parent='" + parent + '\'' +
                 '}';
     }

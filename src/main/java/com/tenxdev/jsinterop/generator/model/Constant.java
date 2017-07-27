@@ -21,20 +21,16 @@ import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
-import java.util.List;
-
 public class Constant implements InterfaceMember {
 
     private final String name;
     private final Type type;
     private final String value;
-    private List<String> extendedAttributes;
 
-    public Constant(String name, Type type, String value, List<String> extendedAttributes) {
+    public Constant(String name, Type type, String value, ExtendedAttributes extendedAttributes) {
         this.name = name;
         this.type = type == null ? new NativeType("int") : type;
         this.value = value;
-        this.extendedAttributes = extendedAttributes;
     }
 
     @Override
@@ -76,10 +72,5 @@ public class Constant implements InterfaceMember {
 
     public String getValue() {
         return value;
-    }
-
-    @Override
-    public boolean hasExtendedAttribute(String name) {
-        return extendedAttributes != null && extendedAttributes.contains(name);
     }
 }

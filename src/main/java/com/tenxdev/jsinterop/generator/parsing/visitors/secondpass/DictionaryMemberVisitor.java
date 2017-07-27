@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -44,7 +45,7 @@ class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<DictionaryMe
             String name = memberContext.IDENTIFIER_WEBIDL().getText();
             String defaultValue = memberContext.default_() == null || memberContext.default_().defaultValue() == null ? null :
                     memberContext.default_().defaultValue().getText();
-            members.add(new DictionaryMember(name, type, required, defaultValue, extendedAttributes));
+            members.add(new DictionaryMember(name, type, required, defaultValue, new ExtendedAttributes(extendedAttributes)));
             context = context.dictionaryMembers();
         }
         return members;

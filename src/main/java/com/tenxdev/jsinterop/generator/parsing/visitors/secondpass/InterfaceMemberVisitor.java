@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Feature;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
@@ -44,7 +45,8 @@ class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
             return ctx.const_().accept(new ConstantVisitor(parsingContext, extendedAttributes));
         }
         if (ctx.serializer() != null) {
-            return new Feature(Feature.FeatureType.STRINGIFIER, null, false, extendedAttributes);
+            return new Feature(Feature.FeatureType.STRINGIFIER, null, false,
+                    new ExtendedAttributes(extendedAttributes));
         }
         if (ctx.stringifier() != null) {
             return ctx.stringifier().stringifierRest().accept(new StringifierRestVisitor(parsingContext, extendedAttributes));

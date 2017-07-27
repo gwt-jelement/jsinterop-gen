@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.Constant;
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -38,6 +39,6 @@ class ConstantVisitor extends ContextWebIDLBaseVisitor<Constant> {
         String name = ctx.IDENTIFIER_WEBIDL().getText();
         Type type = ctx.constType().accept(new TypeVisitor(parsingContext));
         String value = ctx.constValue().getText();
-        return new Constant(name, type, value, extendedAttributes);
+        return new Constant(name, type, value, new ExtendedAttributes(extendedAttributes));
     }
 }
