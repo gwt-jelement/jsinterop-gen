@@ -50,9 +50,16 @@ public class PrintStreamLogger implements Logger {
     }
 
     @Override
-    public void info(int level, Supplier<String> infoSupplier) {
-        if (level <= logLevel) {
-            printStream.println(infoSupplier.get());
+    public void info(Supplier<String> messageSupplier) {
+        if (logLevel >= Logger.LEVEL_INFO) {
+            printStream.println(messageSupplier.get());
+        }
+    }
+
+    @Override
+    public void debug(Supplier<String> messageSupplier) {
+        if (logLevel >= Logger.LEVEL_DEBUG) {
+            printStream.println(messageSupplier.get());
         }
     }
 

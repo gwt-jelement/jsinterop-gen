@@ -37,7 +37,7 @@ public class DuplicateInheritedDictionaryMemberRemover {
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Removing duplicate inherited fields from dictionaries");
+        logger.info(() -> "Removing duplicate inherited fields from dictionaries");
         model.getDictionaryDefinitions().stream()
                 .filter(definition -> definition.getParent() != null)
                 .forEach(this::processDictionary);

@@ -37,7 +37,7 @@ public class DuplicateInheritedInterfaceAttributeRemover {
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Removing duplicate inherited attributes from interfaces");
+        logger.info(() -> "Removing duplicate inherited attributes from interfaces");
         model.getInterfaceDefinitions().stream()
                 .filter(definition -> definition.getParent() != null)
                 .forEach(this::processInterface);

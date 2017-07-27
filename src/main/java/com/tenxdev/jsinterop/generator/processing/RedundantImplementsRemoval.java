@@ -27,7 +27,7 @@ import com.tenxdev.jsinterop.generator.model.Model;
 public class RedundantImplementsRemoval extends AbstractParentModelProcessor {
 
     public void process(Model model, Logger logger) {
-        logger.info(Logger.LEVEL_INFO, () -> "Removing redundant implements definitions");
+        logger.info(() -> "Removing redundant implements definitions");
         for (AbstractDefinition definition : model.getDefinitions()) {
             AbstractDefinition parentAbstractDefinition = getParentDefinition(model, definition);
             while (parentAbstractDefinition != null) {

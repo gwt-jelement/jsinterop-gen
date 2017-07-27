@@ -39,7 +39,7 @@ public class SuperCallConstructorProcessor {
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Finding super call arguments for constructors of inherited classes");
+        logger.info(() -> "Finding super call arguments for constructors of inherited classes");
         model.getInterfaceDefinitions().stream()
                 .filter(interfaceDefinition -> interfaceDefinition.getParent() != null)
                 .forEach(this::processInterfaceDefinition);

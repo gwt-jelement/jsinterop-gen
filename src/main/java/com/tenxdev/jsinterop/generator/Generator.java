@@ -52,10 +52,10 @@ class Generator {
     @Option(name = "-package", usage = "the base package into which to place the IDL files", metaVar = "basePackage")
     private String basePackage = "gwt.jelement";
 
-    @Option(name = "-force", usage = "remove the output folder if it exists", metaVar = "")
+    @Option(name = "-force", usage = "remove the output folder if it exists")
     private boolean force;
 
-    @Option(name = "-overwrite", usage = "overwrite the output folder if it exists", metaVar = "")
+    @Option(name = "-overwrite", usage = "overwrite the output folder if it exists")
     private boolean overwrite;
 
     @Option(name = "-logLevel", usage = "logging level: 0-no logging 1-mimum logging", metaVar = "logLevel")
@@ -72,7 +72,7 @@ class Generator {
         Logger logger = new PrintStreamLogger(System.err);
         CmdLineParser parser = new CmdLineParser(this);
         try {
-            banner();
+            banner(logger);
             parser.parseArgument(args);
             logger.setLogLevel(logLevel);
             checkArguments();
@@ -167,8 +167,8 @@ class Generator {
         parser.printUsage(logger.getPrintStream());
     }
 
-    private void banner() {
-        System.out.println("       __     ____      __                                             \n" +
+    private void banner(Logger logger) {
+        logger.info(() -> "       __     ____      __                                             \n" +
                 "      / /____/  _/___  / /____  _________  ____        ____ ____  ____ \n" +
                 " __  / / ___// // __ \\/ __/ _ \\/ ___/ __ \\/ __ \\______/ __ `/ _ \\/ __ \\\n" +
                 "/ /_/ (__  )/ // / / / /_/  __/ /  / /_/ / /_/ /_____/ /_/ /  __/ / / /\n" +

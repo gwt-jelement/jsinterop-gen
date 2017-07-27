@@ -38,7 +38,7 @@ public class DictionaryMemberEnumTypeProcessor {
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Processing enum types in dictionaries");
+        logger.info(() -> "Processing enum types in dictionaries");
         model.getDictionaryDefinitions().forEach(this::processDictionaryDefinition);
     }
 

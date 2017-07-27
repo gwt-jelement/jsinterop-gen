@@ -42,7 +42,7 @@ public class MethodEnumArgumentProcessor {
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Processing methods with enum arguments");
+        logger.info(() -> "Processing methods with enum arguments");
         model.getInterfaceDefinitions().forEach(this::processInterfaceDefinition);
     }
 

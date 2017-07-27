@@ -91,5 +91,5 @@ public class Feature implements InterfaceMember {
         return extendedAttributes != null && extendedAttributes.contains(name);
     }
 
-    public enum FeatureType {VALUE_ITERATOR, MAP_ITERATOR, MAP_LIKE, SET_LIKE}
+    public enum FeatureType {VALUE_ITERATOR, MAP_ITERATOR, MAP_LIKE, SET_LIKE, STRINGIFIER}
 }

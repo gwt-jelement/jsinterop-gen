@@ -42,7 +42,7 @@ public class AttributeUnionTypeProcessor {
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Processing union type attributes");
+        logger.info(() -> "Processing union type attributes");
         model.getInterfaceDefinitions().forEach(this::processInterfaceDefinition);
     }
 

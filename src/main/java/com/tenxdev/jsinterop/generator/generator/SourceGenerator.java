@@ -44,7 +44,7 @@ public class SourceGenerator extends XtendTemplate {
     }
 
     public void processModel(Model model, String outputDirectory, String basePackageName) throws IOException {
-        logger.info(Logger.LEVEL_INFO, () -> "Generating Java source code");
+        logger.info(() -> "Generating Java source code");
         for (String javaResourcePath : JAVA_REOURCES) {
             outputResource(outputDirectory, javaResourcePath);
         }

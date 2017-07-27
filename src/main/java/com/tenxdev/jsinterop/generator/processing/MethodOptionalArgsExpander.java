@@ -44,7 +44,7 @@ public class MethodOptionalArgsExpander {
     }
 
     public void processModel() {
-        logger.info(Logger.LEVEL_INFO, () -> "Expanding methods with optional arguments");
+        logger.info(() -> "Expanding methods with optional arguments");
         model.getInterfaceDefinitions().forEach(this::processInterface);
     }
 

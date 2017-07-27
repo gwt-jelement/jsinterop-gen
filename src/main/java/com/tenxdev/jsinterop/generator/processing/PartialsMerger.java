@@ -34,7 +34,7 @@ public class PartialsMerger extends AbstractDefinitionMerger {
     }
 
     private void processPartials() {
-        logger.info(Logger.LEVEL_INFO, () -> "Merging partial definitions");
+        logger.info(() -> "Merging partial definitions");
         model.getDefinitions().stream()
                 .filter(info -> !info.getPartialDefinitions().isEmpty())
                 .forEach(primaryDefinition -> {

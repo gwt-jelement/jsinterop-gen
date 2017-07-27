@@ -49,7 +49,7 @@ public class MethodUnionArgsExpander {
     }
 
     public void processModel() {
-        logger.info(Logger.LEVEL_INFO, () -> "Expanding methods with union type arguments");
+        logger.info(() -> "Expanding methods with union type arguments");
         model.getInterfaceDefinitions().forEach(this::processInterface);
     }
 

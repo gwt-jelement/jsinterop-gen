@@ -54,7 +54,7 @@ public class ModelBuilder {
      * @return a parsing context
      */
     private ParsingContext performFirstPass(String inputDirectory) throws IOException {
-        logger.info(Logger.LEVEL_INFO, () -> "Parsing pass 1-scanning object types");
+        logger.info(() -> "Parsing pass 1-scanning object types");
         List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory);
         int offset = new File(inputDirectory).getAbsolutePath().length();
         ParsingContext parsingContext = new ParsingContext(logger);
@@ -67,7 +67,7 @@ public class ModelBuilder {
     }
 
     private Model performSecondPass(String inputDirectory, ParsingContext parsingContext) throws IOException {
-        logger.info(Logger.LEVEL_INFO, () -> "Parsing pass 2-building model");
+        logger.info(() -> "Parsing pass 2-building model");
         Model model = new Model();
         List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory);
         int offset = new File(inputDirectory).getAbsolutePath().length();

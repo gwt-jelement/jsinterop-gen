@@ -26,6 +26,8 @@ public interface Logger {
 
     int LEVEL_INFO = 1;
 
+    int LEVEL_DEBUG = 2;
+
     void reportError(String error);
 
     void formatError(String format, Object... args);
@@ -34,5 +36,7 @@ public interface Logger {
 
     void setLogLevel(int logLevel);
 
-    void info(int level, Supplier<String> infoSupplier);
+    void info(Supplier<String> messageSupplier);
+
+    void debug(Supplier<String> messageSupplier);
 }

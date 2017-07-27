@@ -40,7 +40,7 @@ public class DictionaryMemberUnionTypeProcessor {
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Processing union types in dictionaries");
+        logger.info(() -> "Processing union types in dictionaries");
         model.getDictionaryDefinitions().forEach(this::processDictionary);
     }
 

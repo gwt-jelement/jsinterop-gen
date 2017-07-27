@@ -42,7 +42,7 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
     }
 
     public void processModel() {
-        logger.info(Logger.LEVEL_INFO, () -> "Merging 'implements' definitions");
+        logger.info(() -> "Merging 'implements' definitions");
         model.getDefinitions().forEach(definition ->
                 definition.getImplementsDefinitions().forEach((ImplementsDefinition implementsDefinition) -> {
                     String definitionName = implementsDefinition.getName();

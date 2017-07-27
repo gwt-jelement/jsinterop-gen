@@ -38,7 +38,7 @@ public class AttributeEnumTypeProcessor {
     }
 
     public void process() {
-        logger.info(Logger.LEVEL_INFO, () -> "Processing enum type attributes");
+        logger.info(() -> "Processing enum type attributes");
         model.getInterfaceDefinitions().forEach(this::processInterfaceDefinition);
     }
 
