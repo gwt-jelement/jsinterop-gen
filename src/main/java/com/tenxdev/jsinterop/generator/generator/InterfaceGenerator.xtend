@@ -74,18 +74,22 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     def fields(InterfaceDefinition definition)'''
         «FOR attribute: definition.attributes»
             «IF attribute.enumSubstitutionType !== null»
+                «attribute.checkDeprecated»
                 @JsProperty(name="«attribute.name»")
                 private «staticModifier(attribute)»«attribute.enumSubstitutionType.displayValue» «attribute.name.adjustJavaName»;
 
             «ELSEIF attribute.type instanceof UnionType»
+                «attribute.checkDeprecated»
                 @JsProperty(name="«attribute.name»")
                 private «staticModifier(attribute)»«attribute.type.unionTypeName(definition)» «attribute.name.adjustJavaName»;
 
             «ELSEIF attribute.isStatic»
+                «attribute.checkDeprecated»
                 @JsProperty(name="«attribute.jsPropertyName»")
                 public static «attribute.type.displayValue» «attribute.name.adjustJavaName»;
 
             «ELSEIF attribute.eventHandler»
+                «attribute.checkDeprecated»
                 @JsProperty(name="«attribute.name»")
                 private «staticModifier(attribute)»«attribute.type.displayValue» «attribute.name.adjustJavaName»;
 
@@ -98,12 +102,14 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
             «IF attribute.enumSubstitutionType !== null»
                 «IF !attribute.writeOnly»
                     «IF attribute.type instanceof ArrayType»
+                        «attribute.checkDeprecated»
                         @JsOverlay
                         public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
                            return «attribute.type.displayValue.replace("[]","")».ofArray(«attribute.name.adjustJavaName»);
                         }
 
                     «ELSE»
+                        «attribute.checkDeprecated»
                         @JsOverlay
                         public final «staticModifier(attribute)»«attribute.type.displayValue» get«attribute.name.toFirstUpper»(){
                            return «attribute.type.displayValue».of(«attribute.name.adjustJavaName»);
@@ -112,6 +118,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                     «ENDIF»
                 «ENDIF»
                 «IF !attribute.readOnly»
+                    «attribute.checkDeprecated»
                     @JsOverlay
                     public final «staticModifier(attribute)»void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name.adjustJavaName»){
                        «staticThis(attribute)».«attribute.name.adjustJavaName» = «attribute.name.adjustJavaName».getInternalValue();
@@ -120,6 +127,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                 «ENDIF»
             «ELSEIF attribute.type instanceof UnionType»
                 «IF !attribute.writeOnly»
+                    «attribute.checkDeprecated»
                     @JsOverlay
                     public «staticModifier(attribute)»final «attribute.type.unionTypeName(definition)» get«attribute.name.toFirstUpper»(){
                         return «staticThis(attribute)».«attribute.name.adjustJavaName»;
@@ -128,6 +136,7 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                 «ENDIF»
                 «IF !attribute.readOnly»
                     «FOR type: (attribute.type as UnionType).types »
+                        «attribute.checkDeprecated»
                         @JsOverlay
                         public «staticModifier(attribute)»final void set«attribute.name.toFirstUpper»(«type.displayValue» «attribute.name.adjustJavaName»){
                             «staticThis(attribute)».«attribute.name.adjustJavaName» = «attribute.type.displayValue».of(«attribute.name.adjustJavaName»);
@@ -136,11 +145,13 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
                     «ENDFOR»
                 «ENDIF»
             «ELSEIF attribute.eventHandler»
+                «attribute.checkDeprecated»
                 @JsOverlay
                 public «staticModifier(attribute)»final «attribute.type.displayValue» get«attribute.eventHandlerName»(){
                     return «staticThis(attribute)».«attribute.name.adjustJavaName»;
                 }
 
+                «attribute.checkDeprecated»
                 @JsOverlay
                 public «staticModifier(attribute)»final void set«attribute.eventHandlerName»(«attribute.type.displayValue» «attribute.name.adjustJavaName»){
                     «staticThis(attribute)».«attribute.name.adjustJavaName» = «attribute.name.adjustJavaName»;
@@ -148,11 +159,13 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
             «ELSEIF !attribute.isStatic»
                 «IF !attribute.writeOnly»
+                    «attribute.checkDeprecated»
                     @JsProperty(name="«attribute.name»")
                     public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
 
                 «ENDIF»
                 «IF !attribute.readOnly»
+                    «attribute.checkDeprecated»
                     @JsProperty(name="«attribute.name»")
                     public «staticModifier(attribute)»native void set«attribute.name.toFirstUpper»(«attribute.type.displayValue» «attribute.name.adjustJavaName»);
 
@@ -164,10 +177,12 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
     def methods(InterfaceDefinition definition)'''
         «FOR method: definition.methods»
             «IF method.enumOverlay===null»
+                «method.checkDeprecated»
                 @JsMethod(name = "«method.name»")
                 public native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
 
             «ELSE»
+                «method.checkDeprecated»
                 @JsOverlay
                 public final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
                     «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
@@ -234,5 +249,13 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     def eventHandlerName(Attribute attribute){
         attribute.name.substring(0,2).toFirstUpper + attribute.name.substring(2).toFirstUpper
+    }
+
+    def checkDeprecated(Attribute attribute){
+        if (attribute.deprecated) "@Deprecated\n"
+    }
+
+    def checkDeprecated(Method method){
+        if (method.deprecated) "@Deprecated\n"
     }
 }

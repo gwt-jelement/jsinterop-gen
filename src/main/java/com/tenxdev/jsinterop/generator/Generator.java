@@ -68,7 +68,7 @@ class Generator {
         new Generator().execute(args);
     }
 
-    public void execute(String[] args) {
+    private void execute(String[] args) {
         Logger logger = new PrintStreamLogger(System.err);
         CmdLineParser parser = new CmdLineParser(this);
         try {
