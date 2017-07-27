@@ -49,7 +49,7 @@ public class AttributeConflictingOverlayRemover {
         String parentTypeName = definition.getParent().getTypeName();
         AbstractDefinition parentDefinition = model.getDefinition(parentTypeName);
         if (parentDefinition == null || !(parentDefinition instanceof InterfaceDefinition)) {
-            logger.formatError("AttributeConflictingOverlayRemover: inconsistent parent %s for %s%n",
+            logger.formatError("AttributeConflictingOverlayRemover: inconsistent parent %s for %s",
                     parentTypeName, definition.getName());
         } else {
             process(definition, (InterfaceDefinition) parentDefinition);

@@ -80,7 +80,7 @@ public class ModelBuilder {
                     model.registerDefinition(definition, packageSuffix, file.getAbsolutePath());
                 } catch (Model.ConflictingNameException conflictingNameException) {
                     logger.formatError("Name collision detected:%n\t%s is defined in package %s in file %s%n" +
-                                    "\t%s is also defined in package %s in file %s%n",
+                                    "\t%s is also defined in package %s in file %s",
                             conflictingNameException.getDefinition().getName(),
                             conflictingNameException.getDefinition().getPackageName(),
                             conflictingNameException.getDefinition().getFilename(),

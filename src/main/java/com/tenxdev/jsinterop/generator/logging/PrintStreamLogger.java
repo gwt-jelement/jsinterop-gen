@@ -18,10 +18,13 @@
 package com.tenxdev.jsinterop.generator.logging;
 
 import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.function.Supplier;
 
 public class PrintStreamLogger implements Logger {
-
+    private final DateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss.SSS Z");
     private final PrintStream printStream;
     private int logLevel;
 
@@ -36,7 +39,7 @@ public class PrintStreamLogger implements Logger {
 
     @Override
     public void formatError(String format, Object... args) {
-        printStream.format(format, args);
+        printStream.println(timestamp() + " ERROR " + String.format(format, args));
     }
 
     @Override
@@ -52,15 +55,26 @@ public class PrintStreamLogger implements Logger {
     @Override
     public void info(Supplier<String> messageSupplier) {
         if (logLevel >= Logger.LEVEL_INFO) {
-            printStream.println(messageSupplier.get());
+            printStream.println(timestamp() + " INFO  " + messageSupplier.get());
         }
     }
 
     @Override
     public void debug(Supplier<String> messageSupplier) {
         if (logLevel >= Logger.LEVEL_DEBUG) {
+            printStream.println(timestamp() + " DEBUG " + messageSupplier.get());
+        }
+    }
+
+    @Override
+    public void rawOutput(Supplier<String> messageSupplier) {
+        if (logLevel >= Logger.LEVEL_INFO) {
             printStream.println(messageSupplier.get());
         }
+    }
+
+    private String timestamp() {
+        return dateFormat.format(new Date());
     }
 
 

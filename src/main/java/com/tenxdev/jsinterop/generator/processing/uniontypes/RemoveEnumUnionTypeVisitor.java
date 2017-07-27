@@ -70,7 +70,7 @@ public class RemoveEnumUnionTypeVisitor extends AbstractTypeVisitor<Type> {
         if (definition != null && definition instanceof EnumDefinition) {
             return ((EnumDefinition) definition).getJavaElementType();
         }
-        logger.formatError("Unable to find enum definition for %s%n", type.getTypeName());
+        logger.formatError("Unable to find enum definition for %s", type.getTypeName());
         return type;
     }
 

@@ -47,12 +47,13 @@ public class TypeParser extends TypesBaseVisitor<Type> {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         org.antlr4.webidl.TypesParser parser = new org.antlr4.webidl.TypesParser(tokens);
         parser.removeErrorListeners();
-        parser.addErrorListener(new BaseErrorListener() {
-            @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                logger.formatError("TypeParser: %s position %d:%n\t%s%n", typeName, charPositionInLine, msg);
-            }
-        });
+        parser.addErrorListener(
+                new BaseErrorListener() {
+                    @Override
+                    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                        logger.formatError("TypeParser: %s position %d:%n\t%s", typeName, charPositionInLine, msg);
+                    }
+                });
         return parser.type().accept(this);
     }
 

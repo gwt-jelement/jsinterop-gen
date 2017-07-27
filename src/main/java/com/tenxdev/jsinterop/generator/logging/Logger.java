@@ -39,4 +39,6 @@ public interface Logger {
     void info(Supplier<String> messageSupplier);
 
     void debug(Supplier<String> messageSupplier);
+
+    void rawOutput(Supplier<String> messageSupplier);
 }

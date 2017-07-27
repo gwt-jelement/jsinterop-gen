@@ -62,7 +62,7 @@ public class AttributeUnionTypeProcessor {
             UnionType newUnionType = removeEnumUnionTypeVisitor.visitUnionType(unionType);
             definition.addUnionReturnType(definition, newUnionType, attribute.getName());
         } else {
-            logger.formatError("Unexpected number of union types (%d) for attribute %s in %s%n",
+            logger.formatError("Unexpected number of union types (%d) for attribute %s in %s",
                     unionTypes.size(), attribute.getName(), definition.getName());
         }
         return newAttributes;

@@ -179,12 +179,12 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
             «IF method.enumOverlay===null»
                 «method.checkDeprecated»
                 @JsMethod(name = "«method.name»")
-                public native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
+                public «staticModifier(method)»native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
 
             «ELSE»
                 «method.checkDeprecated»
                 @JsOverlay
-                public final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
+                public «staticModifier(method)»final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
                     «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
                 }
 
@@ -221,6 +221,10 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     def staticModifier(Attribute attribute){
         if (attribute.static) "static "
+    }
+
+    def staticModifier(Method method){
+        if (method.static) "static "
     }
 
     def hasReturn(Method method){

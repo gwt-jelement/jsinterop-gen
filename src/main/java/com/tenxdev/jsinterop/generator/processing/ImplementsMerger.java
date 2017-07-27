@@ -66,7 +66,7 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
     private void getDefinitionByName(String name, Consumer<AbstractDefinition> consumer) {
         AbstractDefinition definition = model.getDefinition(name);
         if (definition == null) {
-            logger.formatError("Unknown definition %s implements %n", name);
+            logger.formatError("Unknown definition %s implements", name);
         } else {
             consumer.accept(definition);
         }

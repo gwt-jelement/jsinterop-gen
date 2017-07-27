@@ -46,7 +46,7 @@ abstract class AbstractDefinitionMerger {
     }
 
     void reportTypeMismatch(AbstractDefinition primaryDefinition, AbstractDefinition secondaryDefinition) {
-        logger.formatError("Do not know how to merge implements of %s %s and %s %s%n",
+        logger.formatError("Do not know how to merge implements of %s %s and %s %s",
                 primaryDefinition.getClass().getSimpleName(), primaryDefinition.getName(),
                 secondaryDefinition.getClass().getSimpleName(), secondaryDefinition.getName());
     }

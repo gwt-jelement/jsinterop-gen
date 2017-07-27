@@ -65,7 +65,7 @@ public class DuplicateInheritedDictionaryMemberRemover {
             if (parentDefinition instanceof DictionaryDefinition) {
                 return (DictionaryDefinition) parentDefinition;
             }
-            logger.formatError("DuplicateInheritedDictionaryMemberRemover: Inconsitent parent type for %s%n",
+            logger.formatError("DuplicateInheritedDictionaryMemberRemover: Inconsitent parent type for %s",
                     definition.getName());
         }
         return null;

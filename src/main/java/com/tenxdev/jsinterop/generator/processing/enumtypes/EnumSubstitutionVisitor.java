@@ -64,7 +64,7 @@ public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
         if (definition instanceof EnumDefinition) {
             return ((EnumDefinition) definition).getJavaElementType();
         } else {
-            logger.formatError("Unexpected definition for enum type %s%n", type.getTypeName());
+            logger.formatError("Unexpected definition for enum type %s", type.getTypeName());
             return type;
         }
     }

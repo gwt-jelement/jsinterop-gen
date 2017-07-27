@@ -55,18 +55,25 @@ public class SourceGenerator extends XtendTemplate {
         CallbackGenerator callbackGenerator = new CallbackGenerator();
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator();
         DictionaryGenerator dictionaryGenerator = new DictionaryGenerator();
+        int numOutput = 0;
         for (AbstractDefinition definition : model.getDefinitions()) {
             Path filePath = getSourcePath(outputDirectory, definition, basePackageName);
             if (definition instanceof EnumDefinition) {
                 outputFile(filePath, enumGenerator.generate(basePackageName, (EnumDefinition) definition));
+                ++numOutput;
             } else if (definition instanceof CallbackDefinition) {
                 outputFile(filePath, callbackGenerator.generate(basePackageName, (CallbackDefinition) definition));
+                ++numOutput;
             } else if (definition instanceof InterfaceDefinition) {
                 outputFile(filePath, interfaceGenerator.generate(basePackageName, (InterfaceDefinition) definition));
+                ++numOutput;
             } else if (definition instanceof DictionaryDefinition) {
                 outputFile(filePath, dictionaryGenerator.generate(basePackageName, (DictionaryDefinition) definition));
+                ++numOutput;
             }
         }
+        int count = numOutput;
+        logger.info(() -> String.format("Generated %d Java file%s in %s", count, count != 1 ? "s" : "", outputDirectory));
     }
 
     private void outputResource(String outputDirectory, String javaResourcePath) throws IOException {

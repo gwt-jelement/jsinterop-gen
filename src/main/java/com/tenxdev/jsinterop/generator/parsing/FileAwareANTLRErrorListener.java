@@ -34,7 +34,9 @@ public class FileAwareANTLRErrorListener extends BaseErrorListener {
     }
 
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-        logger.formatError("In file %s at line %d, position %d:%n\t%s%n", file.getAbsolutePath(), line, charPositionInLine, msg);
+    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
+                            int charPositionInLine, String msg, RecognitionException e) {
+        logger.formatError("In file %s at line %d, position %d:%n\t%s", file.getAbsolutePath(), line,
+                charPositionInLine, msg);
     }
 }

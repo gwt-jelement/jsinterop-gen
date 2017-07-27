@@ -65,7 +65,7 @@ public class DuplicateInheritedInterfaceAttributeRemover {
             if (parentDefinition instanceof InterfaceDefinition) {
                 return (InterfaceDefinition) parentDefinition;
             }
-            logger.formatError("InheritedInterfaceAttributeRemover: Inconsitent parent type for %s%n",
+            logger.formatError("InheritedInterfaceAttributeRemover: Inconsitent parent type for %s",
                     definition.getName());
         }
         return null;

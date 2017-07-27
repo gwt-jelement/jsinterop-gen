@@ -57,7 +57,7 @@ public class SuperCallConstructorProcessor {
     private InterfaceDefinition findParentInterface(InterfaceDefinition interfaceDefinition) {
         AbstractDefinition parentDefinition = model.getDefinition(interfaceDefinition.getParent().getTypeName());
         if (parentDefinition == null || !(parentDefinition instanceof InterfaceDefinition)) {
-            logger.formatError("SuperCallConstructorProcessor: could not find parent for %s%n",
+            logger.formatError("SuperCallConstructorProcessor: could not find parent for %s",
                     interfaceDefinition.getParent().getTypeName());
             return null;
         }
