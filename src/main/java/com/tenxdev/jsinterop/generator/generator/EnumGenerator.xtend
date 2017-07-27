@@ -29,7 +29,7 @@ import java.util.Arrays;
 
 public enum «definition.name»{
     «FOR value: definition.values SEPARATOR ",\n" AFTER ";\n"
-        »«value.enumValueToJavaName().toUpperCase()»(«value»)«ENDFOR»
+        »«EnumDefinition.toJavaName(value)»(«value»)«ENDFOR»
 
     private String internalValue;
 
@@ -41,29 +41,25 @@ public enum «definition.name»{
         return this.internalValue;
     }
 
-    public static «definition.name» of(«enumMemberType(definition)» value){
+    public static «definition.name» of(«definition.javaElementType.displayValue» value){
         switch(value){
             «FOR value: definition.values»
             case «value»:
-                return «value.enumValueToJavaName().toUpperCase()»;
+                return «EnumDefinition.toJavaName(value)»;
             «ENDFOR»
             default:
                 return null;
         }
     }
 
-    public static «definition.name»[] ofArray(«enumMemberType(definition)»[] values) {
-        return Arrays.<«enumMemberType(definition)»>stream(values)
+    public static «definition.name»[] ofArray(«definition.javaElementType.displayValue»[] values) {
+        return Arrays.<«definition.javaElementType.displayValue»>stream(values)
                 .map(«definition.name»::of)
                 .toArray(«definition.name»[]::new);
     }
 
 }
     '''
-    }
-
-    def enumMemberType(EnumDefinition definition){
-        if (definition.values.get(0).startsWith("\"")) "String" else "int"
     }
 
 

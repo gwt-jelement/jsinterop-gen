@@ -55,7 +55,7 @@ public class TypeFactory {
         typeMap.put("int", new NativeType("int"));
         typeMap.put("byte", new NativeType("byte"));
         typeMap.put("octet", new NativeType("byte"));
-        typeMap.put("any", new NativeType("Object"));
+        typeMap.put("any", new NativeType("Object"));//keep as Object!
         typeMap.put("SerializedScriptValue", new NativeType("Object"));
         typeMap.put("object", new NativeType("Object"));
         typeMap.put("void", new NativeType("void"));
@@ -74,7 +74,6 @@ public class TypeFactory {
         typeMap.put("USVString", new NativeType("String"));
         typeMap.put("ByteString", new NativeType("String"));
         typeMap.put("Dictionary", new NativeType("Object"));
-        typeMap.put("Date", new ObjectType("Date", "elemental2.core"));
         typeMap.put("Int8Array", new ObjectType("Int8Array", "elemental2.core"));
         typeMap.put("Uint8Array", new ObjectType("Uint8Array", "elemental2.core"));
         typeMap.put("Uint8ClampedArray", new ObjectType("Uint8ClampedArray", "elemental2.core"));

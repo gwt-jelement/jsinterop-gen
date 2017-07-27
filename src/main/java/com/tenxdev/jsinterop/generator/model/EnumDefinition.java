@@ -33,6 +33,20 @@ public class EnumDefinition extends AbstractDefinition {
         this.values = values;
     }
 
+    public static String toJavaName(String value) {
+        String result = value.toUpperCase();
+        if (result.startsWith("\"") && result.endsWith("\"")) {
+            result = result.substring(1, result.length() - 1);
+        }
+        if (result.isEmpty()) {
+            result = "NONE";
+        }
+        if (!Character.isAlphabetic(result.charAt(0))) {
+            result = "_" + result;
+        }
+        return result.replaceAll("[^A-Z0-9]", "_");
+    }
+
     @Override
     public String getName() {
         return name;

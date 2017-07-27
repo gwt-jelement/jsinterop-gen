@@ -72,20 +72,6 @@ class XtendTemplate {
         return type;
     }
 
-    def enumValueToJavaName(@Nonnull String value) {
-        var result = value;
-        if (value.startsWith("\"") && value.endsWith("\"")) {
-            result = value.substring(1, value.length() - 1);
-        }
-        if (result.isEmpty()) {
-            result = "NONE";
-        }
-        if (!Character.isAlphabetic(result.charAt(0))) {
-            result = "_" + result;
-        }
-        return result.replace('-', '_').replace('/', '_').replace('+', '_');
-    }
-
     def unionTypeName(Type type, AbstractDefinition definition){
         type.displayValue.replace(definition.name+".","")
     }
