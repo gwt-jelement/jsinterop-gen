@@ -32,7 +32,6 @@ public class Attribute implements InterfaceMember {
     private Type type;
     private String javaName;
     private Type enumSubstitutionType;
-    private Attribute reference;
 
     public Attribute(String name, Type type, boolean readOnly, boolean staticAttribute, List<String> extendedAttributes) {
         this.name = name;

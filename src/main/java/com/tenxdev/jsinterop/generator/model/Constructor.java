@@ -47,4 +47,22 @@ public class Constructor extends Method {
     public void setSuperArguments(List<MethodArgument> superArguments) {
         this.superArguments = superArguments;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Constructor that = (Constructor) o;
+
+        return superArguments != null ? superArguments.equals(that.superArguments) : that.superArguments == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (superArguments != null ? superArguments.hashCode() : 0);
+        return result;
+    }
 }

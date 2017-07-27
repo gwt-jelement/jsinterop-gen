@@ -38,6 +38,9 @@ public class Browser {
     public static Object undefined;
     public static gwt.jelement.core.Math JsMath;
 
+    private Browser() {
+    }
+
     public static native Object eval(String code);
 
     public static native String uneval(Object object);
@@ -58,9 +61,15 @@ public class Browser {
 
     public static native String encodeURIComponent(String uriComponent);
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public static native String escape(String value);
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public static native String unescape(String value);
 }

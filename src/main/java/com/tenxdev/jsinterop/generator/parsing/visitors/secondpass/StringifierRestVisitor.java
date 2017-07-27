@@ -17,13 +17,12 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.model.Feature;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
-import java.util.Collections;
 import java.util.List;
 
 class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
@@ -44,9 +43,7 @@ class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
             return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, false, extendedAttributes));
         } else {
-            //TODO maybe add as feature
-            return new Method("toString", parsingContext.getTypeFactory().getType("DOMString"),
-                    Collections.emptyList(), false, null, null, extendedAttributes);
+            return new Feature(Feature.FeatureType.STRINGIFIER, null, false, null);
         }
     }
 }

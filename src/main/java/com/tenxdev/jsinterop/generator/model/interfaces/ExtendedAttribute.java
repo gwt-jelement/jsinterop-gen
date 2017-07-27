@@ -17,7 +17,10 @@
 
 package com.tenxdev.jsinterop.generator.model.interfaces;
 
-public interface ExtendedAttribute {
+public final class ExtendedAttribute {
 
-    String GENERIC_RETURN = "GenericReturn";
+    public static final String GENERIC_RETURN = "GenericReturn";
+
+    private ExtendedAttribute() {
+    }
 }
