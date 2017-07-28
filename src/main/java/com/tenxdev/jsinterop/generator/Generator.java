@@ -95,7 +95,7 @@ class Generator {
         new ImplementsMerger(model, logger).processModel(); //must run after partials merger
 
         new DuplicateInheritedDictionaryMemberRemover(model, logger).process();
-        new DuplicateInheritedInterfaceAttributeRemover(model, logger).process();
+        new DuplicateInheritedInterfaceMembersRemover(model, logger).process();
 
         new MethodUnionArgsExpander(model, logger).processModel(); //must run after all interface merging
         new MethodOptionalArgsExpander(model, logger).processModel();//must run after union args expansion

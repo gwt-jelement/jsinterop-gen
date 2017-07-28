@@ -34,7 +34,6 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private final boolean genericReturn;
     private final String genericTypeSpecifiers;
     private Type returnType;
-    private Method methodReferences;
     private Method enumOverlay;
     private boolean enumReturnType;
     private String javaName;
@@ -107,12 +106,6 @@ public class Method implements InterfaceMember, Comparable<Method> {
         return arguments;
     }
 
-    public void setMethodReferences(Method methodReferences) {
-        if (this.methodReferences == null) {
-            this.methodReferences = methodReferences;
-        }
-    }
-
     public String getGenericTypeSpecifiers() {
         return genericTypeSpecifiers;
     }
@@ -154,14 +147,6 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.javaName = javaName;
     }
 
-    public boolean hasReturnType() {
-        if (returnType instanceof NativeType) {
-            String returnTypeName = ((NativeType) returnType).getTypeName();
-            return !"void".equals(returnTypeName);
-        }
-        return returnType != null;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -170,19 +155,22 @@ public class Method implements InterfaceMember, Comparable<Method> {
         Method method = (Method) o;
 
         if (staticMethod != method.staticMethod) return false;
+        if (genericReturn != method.genericReturn) return false;
         if (name != null ? !name.equals(method.name) : method.name != null) return false;
-        if (returnType != null ? !returnType.equals(method.returnType) : method.returnType != null) return false;
         if (arguments != null ? !arguments.equals(method.arguments) : method.arguments != null) return false;
-        return methodReferences != null ? methodReferences.equals(method.methodReferences) : method.methodReferences == null;
+        if (genericTypeSpecifiers != null ? !genericTypeSpecifiers.equals(method.genericTypeSpecifiers) : method.genericTypeSpecifiers != null)
+            return false;
+        return returnType != null ? returnType.equals(method.returnType) : method.returnType == null;
     }
 
     @Override
     public int hashCode() {
         int result = (staticMethod ? 1 : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (returnType != null ? returnType.hashCode() : 0);
         result = 31 * result + (arguments != null ? arguments.hashCode() : 0);
-        result = 31 * result + (methodReferences != null ? methodReferences.hashCode() : 0);
+        result = 31 * result + (genericReturn ? 1 : 0);
+        result = 31 * result + (genericTypeSpecifiers != null ? genericTypeSpecifiers.hashCode() : 0);
+        result = 31 * result + (returnType != null ? returnType.hashCode() : 0);
         return result;
     }
 

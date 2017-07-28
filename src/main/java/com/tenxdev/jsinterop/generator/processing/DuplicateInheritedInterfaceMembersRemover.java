@@ -18,20 +18,17 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
-import com.tenxdev.jsinterop.generator.model.Attribute;
-import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
-import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DuplicateInheritedInterfaceAttributeRemover {
+public class DuplicateInheritedInterfaceMembersRemover {
 
     private Model model;
     private Logger logger;
 
-    public DuplicateInheritedInterfaceAttributeRemover(Model model, Logger logger) {
+    public DuplicateInheritedInterfaceMembersRemover(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
     }
@@ -44,6 +41,12 @@ public class DuplicateInheritedInterfaceAttributeRemover {
     }
 
     private void processInterface(InterfaceDefinition definition) {
+        processAttributes(definition);
+        processMethods(definition);
+
+    }
+
+    private void processAttributes(InterfaceDefinition definition) {
         List<Attribute> attribtesToRemove = new ArrayList<>();
         for (Attribute attribute : definition.getAttributes()) {
             if (parentHasAttribute(definition, attribute)) {
@@ -53,10 +56,28 @@ public class DuplicateInheritedInterfaceAttributeRemover {
         definition.getAttributes().removeAll(attribtesToRemove);
     }
 
-    private boolean parentHasAttribute(InterfaceDefinition definition, Attribute member) {
+    private void processMethods(InterfaceDefinition definition) {
+        List<Method> methodsToRemove = new ArrayList<>();
+        for (Method method : definition.getMethods()) {
+            if (parentHasMethod(definition, method)) {
+                methodsToRemove.add(method);
+            }
+        }
+        definition.getMethods().removeAll(methodsToRemove);
+    }
+
+    private boolean parentHasAttribute(InterfaceDefinition definition, Attribute attribute) {
         InterfaceDefinition parentDefinition = getParentDefinition(definition);
         return parentDefinition != null &&
-                (parentDefinition.getAttributes().contains(member) || parentHasAttribute(parentDefinition, member));
+                (parentDefinition.getAttributes().contains(attribute)
+                        || parentHasAttribute(parentDefinition, attribute));
+    }
+
+    private boolean parentHasMethod(InterfaceDefinition definition, Method method) {
+        InterfaceDefinition parentDefinition = getParentDefinition(definition);
+        return parentDefinition != null &&
+                (parentDefinition.getMethods().contains(method)
+                        || parentHasMethod(parentDefinition, method));
     }
 
     private InterfaceDefinition getParentDefinition(InterfaceDefinition definition) {
