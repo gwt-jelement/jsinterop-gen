@@ -74,19 +74,9 @@ public class TypeFactory {
         typeMap.put("USVString", new NativeType("String"));
         typeMap.put("ByteString", new NativeType("String"));
         typeMap.put("Dictionary", new NativeType("Object"));
-        typeMap.put("Int8Array", new ObjectType("Int8Array", "elemental2.core"));
-        typeMap.put("Uint8Array", new ObjectType("Uint8Array", "elemental2.core"));
-        typeMap.put("Uint8ClampedArray", new ObjectType("Uint8ClampedArray", "elemental2.core"));
-        typeMap.put("Int16Array", new ObjectType("Int16Array", "elemental2.core"));
-        typeMap.put("Uint16Array", new ObjectType("Uint16Array", "elemental2.core"));
-        typeMap.put("Int32Array", new ObjectType("Int32Array", "elemental2.core"));
-        typeMap.put("Uint32Array", new ObjectType("Uint32Array", "elemental2.core"));
-        typeMap.put("Float32Array", new ObjectType("Float32Array", "elemental2.core"));
-        typeMap.put("Float64Array", new ObjectType("Float64Array", "elemental2.core"));
-        typeMap.put("ArrayBufferView", new ObjectType("ArrayBufferView", "elemental2.core"));
-        typeMap.put("ArrayBuffer", new ObjectType("ArrayBuffer", "elemental2.core"));
         typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
-        typeMap.put("record", new ObjectType("JsPropertyMap", "jsinterop.base"));
+        typeMap.put("record", new ObjectType("JsObject", ".core"));
+        typeMap.put("T", new NativeType("T"));
     }
 
     public Type getTypeNoParse(String typeName) {

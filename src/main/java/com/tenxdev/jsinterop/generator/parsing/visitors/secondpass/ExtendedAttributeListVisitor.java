@@ -49,6 +49,10 @@ class ExtendedAttributeListVisitor extends ContextWebIDLBaseVisitor<List<Constru
     }
 
     private Constructor getConstructor(WebIDLParser.ExtendedAttributeContext ctx) {
+        if (ctx.other() != null) {
+            parsingContext.getlogger().formatError("%s %s", ctx.other().getText(),
+                    ctx.other() != null && "Constructor".equals(ctx.other().getText()) ? "true" : "false");
+        }
         if (ctx.other() != null && "Constructor".equals(ctx.other().getText())) {
             return ctx.extendedAttributeRest().accept(new ConstructorVisitor(parsingContext));
         }

@@ -72,7 +72,7 @@ public class Model {
             }
         } else if (!definition.equals(exisitingDefinition)) {
             if (exisitingDefinition != null) {
-                throw new ConflictingNameException(definition);
+                throw new ConflictingNameException(exisitingDefinition);
             }
             definitions.put(definition.getName(), definition);
             List<PartialDefinition> partials = deferredPartials.remove(definition.getName());

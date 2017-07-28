@@ -11,4 +11,5 @@ applies to interface methods and attributes only.
 - `JsPropertyName(newPropName)`: overrides the default @JsProperty name with newPropName. 
 Currently applies to interface static attributes only, since those are generated as fields 
 (others are generated with getters and setters)
-
+- `GenericType(T)`: adds a generic type T to the type of an interface, a method return value or
+a method argument.

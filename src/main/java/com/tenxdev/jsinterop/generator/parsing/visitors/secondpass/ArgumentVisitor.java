@@ -56,7 +56,7 @@ class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
     public MethodArgument visitRequiredVarArgArgument(WebIDLParser.RequiredVarArgArgumentContext ctx) {
         String name = ctx.argumentName().getText();
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new MethodArgument(name, type, true, true, null,
+        return new MethodArgument(name, type, true, false, null,
                 new ExtendedAttributes(extendedAttributes));
     }
 

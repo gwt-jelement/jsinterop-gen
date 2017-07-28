@@ -32,8 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SourceGenerator extends XtendTemplate {
-    //TODO remove probably
     private static final List<String> JAVA_REOURCES = Arrays.asList(
+            "gwt/jelement/core/JsUtils.java"
     );
     private static final String VERSION = "0.0.1-SNAPSHOT";
     private Logger logger;
@@ -44,8 +44,11 @@ public class SourceGenerator extends XtendTemplate {
 
     public void processModel(Model model, String outputDirectory, String basePackageName) throws IOException {
         logger.info(() -> "Generating Java source code");
+
+        int numOutput = 0;
         for (String javaResourcePath : JAVA_REOURCES) {
             outputResource(outputDirectory, javaResourcePath);
+            ++numOutput;
         }
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
         outputFile(Paths.get(outputDirectory, ".gitignore"), new GitIgnoreGenerator().generate());
@@ -55,7 +58,6 @@ public class SourceGenerator extends XtendTemplate {
         CallbackGenerator callbackGenerator = new CallbackGenerator();
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator();
         DictionaryGenerator dictionaryGenerator = new DictionaryGenerator();
-        int numOutput = 0;
         for (AbstractDefinition definition : model.getDefinitions()) {
             Path filePath = getSourcePath(outputDirectory, definition, basePackageName);
             if (definition instanceof EnumDefinition) {

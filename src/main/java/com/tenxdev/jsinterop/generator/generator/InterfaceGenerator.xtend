@@ -37,13 +37,39 @@ package «basePackageName»«definition.getPackageName()»;
 «imports(basePackageName, definition)»
 
 @JsType(namespace = JsPackage.GLOBAL, name="«definition.jsTypeName»", isNative = true)
-public class «definition.name.adjustJavaName»«extendsClass(definition)»{
+public class «definition.name.adjustJavaName»«generic(definition)»«extendsClass(definition)»{
     «constants(definition)»
     «unionTypes(definition)»
     «fields(definition)»
     «constructors(definition)»
     «nonFieldAttributes(definition)»
     «methods(definition)»
+    «IF definition.name=="JsObject"»
+        @JsOverlay
+        public T get(String propertyName){
+            return JsUtils.<T>get(this, propertyName);
+        }
+
+        @JsOverlay
+        public void set(String propertyName, T value){
+            JsUtils.<T>set(this, propertyName, value);
+        }
+
+        @JsOverlay
+        public void delete(String propertyName){
+            JsUtils.<T>delete(this, propertyName);
+        }
+
+        @JsOverlay
+        public boolean has(String propertyName){
+            return JsUtils.<T>has(this, propertyName);
+        }
+
+        @JsOverlay
+        public static <T> JsObject<T> of(String key, T value) {
+            return JsUtils.<T>of(key, value);
+        }
+    «ENDIF»
 }
 '''
     }
@@ -56,7 +82,6 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
         «FOR constant: definition.constants AFTER "\n"»
             public static «constant.type.displayValue» «constant.name»;
         «ENDFOR»
-
     '''
 
     def constructors(InterfaceDefinition definition)'''
@@ -261,5 +286,9 @@ public class «definition.name.adjustJavaName»«extendsClass(definition)»{
 
     def checkDeprecated(Method method){
         if (method.deprecated) "@Deprecated\n"
+    }
+
+    def generic(InterfaceDefinition definition){
+        if (definition.genericType!==null) '''<«definition.genericType»>'''
     }
 }
