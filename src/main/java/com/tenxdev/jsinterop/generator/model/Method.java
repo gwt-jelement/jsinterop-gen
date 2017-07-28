@@ -33,14 +33,15 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private final boolean deprecated;
     private final boolean genericReturn;
     private final String genericTypeSpecifiers;
+    protected Method enumOverlay;
+    protected String javaName;
     private Type returnType;
-    private Method enumOverlay;
     private boolean enumReturnType;
-    private String javaName;
 
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
                   Method enumOverlay, String javaName, ExtendedAttributes extendedAttributes) {
-        this(name, returnType, arguments, staticMethod, enumOverlay, javaName,
+        this(name, returnType, arguments, staticMethod, enumOverlay,
+                extendedAttributes.extractValue(ExtendedAttributes.JAVA_NAME, null),
                 extendedAttributes.hasExtendedAttribute(ExtendedAttributes.DEPRECATED),
                 extendedAttributes.hasExtendedAttribute(ExtendedAttributes.GENERIC_RETURN),
                 extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null),

@@ -47,13 +47,13 @@ public class Constructor extends Method {
 
     public Constructor constructorWithSuperArguments(List<MethodArgument> arguments) {
         return new Constructor(getName(), getReturnType(), getArguments(), isStatic(),
-                getEnumOverlay(), getJavaName(), arguments);
+                enumOverlay, javaName, arguments);
     }
 
     @Override
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
         return (T) new Constructor(getName(), getReturnType(), newArguments, isStatic(),
-                getEnumOverlay(), getJavaName());
+                enumOverlay, javaName);
     }
 
     public List<MethodArgument> getSuperArguments() {

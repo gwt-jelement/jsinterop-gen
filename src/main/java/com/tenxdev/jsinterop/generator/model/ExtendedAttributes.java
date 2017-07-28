@@ -21,13 +21,13 @@ import java.util.List;
 
 public class ExtendedAttributes {
 
+    static final String JAVA_NAME = "JavaName";
     static final String GENERIC_SUB = "GenericSub";
     static final String GENERIC_PARAMETER = "GenericParameter";
     static final String GENERIC_RETURN = "GenericReturn";
     static final String JS_TYPE_NAME = "JsTypeName";
     static final String JS_PROPERTY_NAME = "JsPropertyName";
     static final String DEPRECATED = "Deprecated";
-
     private List<String> attributes;
 
     public ExtendedAttributes(List<String> attributes) {

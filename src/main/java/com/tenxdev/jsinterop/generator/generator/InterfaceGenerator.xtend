@@ -204,13 +204,13 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
             «IF method.enumOverlay===null»
                 «method.checkDeprecated»
                 @JsMethod(name = "«method.name»")
-                public «staticModifier(method)»native «typeSpecifier(method)»«returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
+                public «staticModifier(method)»native «typeSpecifier(method)»«returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»);
 
             «ELSE»
                 «method.checkDeprecated»
                 @JsOverlay
                 public «staticModifier(method)»final «typeSpecifier(method)»«returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
-                    «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
+                    «hasReturn(method)»«hasEnumReturnType(method)»«method.javaName»(«enumMethodArguments(method)»);
                 }
 
             «ENDIF»

@@ -1,4 +1,4 @@
-___IDL Extended Attributes___
+___IDL Extended Attributes Supported by jsinterop-gen___
 
 These additional extended attributes are supported by the generator:
 - `GenericReturn`: for a method that returns type X, generate instead a return type of
@@ -18,3 +18,6 @@ applies to interface methods and attributes only.
 - `JsPropertyName(newPropName)`: overrides the default @JsProperty name with newPropName. 
 Currently applies to interface static attributes only, since those are generated as fields 
 (others are generated with getters and setters)
+- `JavaName(X)`: provides an alternate name X for a method, when the regular name
+would conflict with an inherited or parent method name (for example, same method
+with same signature, but static in one class and not the other).
