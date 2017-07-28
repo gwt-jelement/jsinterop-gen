@@ -19,6 +19,8 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.types.ObjectType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +81,13 @@ public class ImplementsMerger extends AbstractDefinitionMerger {
                         mergeInterfaces((InterfaceDefinition) primaryDefinition, (InterfaceDefinition) implementsDefinition);
                     } else if (primaryDefinition instanceof DictionaryDefinition && implementsDefinition instanceof DictionaryDefinition) {
                         mergeDictionaries((DictionaryDefinition) primaryDefinition, (DictionaryDefinition) implementsDefinition);
+                    } else if (primaryDefinition instanceof InterfaceDefinition && implementsDefinition instanceof TypeDefinition) {
+                        Type type = ((TypeDefinition) implementsDefinition).getType();
+                        if (type instanceof ObjectType) {
+                            processModel(definitionName, type.getTypeName());
+                        } else {
+                            reportTypeMismatch(primaryDefinition, implementsDefinition);
+                        }
                     } else {
                         reportTypeMismatch(primaryDefinition, implementsDefinition);
                     }
