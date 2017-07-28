@@ -41,7 +41,16 @@ public class ImportResolver {
                 .collect(Collectors.toList()));
     }
 
-    private boolean needsImport(AbstractDefinition definition, String packageName) {
-        return packageName != null && !definition.getPackageName().equals(packageName);
+    private boolean needsImport(AbstractDefinition definition, String importName) {
+        return importName != null && !samePackage(importName, definition);
+    }
+
+    private boolean samePackage(String importName, AbstractDefinition definition) {
+        int lastDot = importName.lastIndexOf('.');
+        if (lastDot != -1) {
+            String packageName = importName.substring(0, lastDot);
+            return packageName.equals(definition.getPackageName());
+        }
+        return false;
     }
 }
