@@ -34,4 +34,5 @@ public class EnumType extends ObjectType {
     public String displayValue() {
         return getTypeName();
     }
+
 }

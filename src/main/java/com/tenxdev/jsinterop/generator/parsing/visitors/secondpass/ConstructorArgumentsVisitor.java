@@ -18,6 +18,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -88,10 +89,11 @@ class ConstructorArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodAr
             String type = removeOptionalIndicator(typeBuilder.toString());
             if (type.indexOf('|') != -1) {
                 String[] types = type.split("\\|");
-                arguments.add(new MethodArgument(name, parsingContext.getTypeFactory().getUnionType(types), false, optional, defaultValue, null));
+                arguments.add(new MethodArgument(name, parsingContext.getTypeFactory().getUnionType(types),
+                        false, optional, defaultValue, new ExtendedAttributes(null)));
             } else {
                 arguments.add(new MethodArgument(name, parsingContext.getTypeFactory().getType(type),
-                        false, optional, defaultValue, null));
+                        false, optional, defaultValue, new ExtendedAttributes(null)));
             }
         }
     }

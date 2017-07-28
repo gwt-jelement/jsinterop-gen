@@ -17,19 +17,23 @@
 
 package com.tenxdev.jsinterop.generator.model.types;
 
-public interface Type {
+import java.util.Collections;
 
-    default boolean is(String typeName) {
-        return this instanceof NativeType && typeName.equals(((NativeType) this).getTypeName());
+public enum GenericTypeHandler {
+
+    INSTANCE;
+
+    public Type getEffectiveType(Type type, String genericSubstitution, String genericParameter) {
+        if (genericSubstitution != null) {
+            return new GenericType(genericSubstitution);
+        }
+        if (genericParameter != null && type.getClass() == ObjectType.class) {
+            return new ParameterisedType(type, Collections.singletonList(new GenericType(genericParameter)));
+        }
+        return type;
     }
 
-    default boolean isNumber() {
-        return is("int") || is("long") || is("byte") || is("double")
-                || is("float") || is("short");
+    public String getTypeSpecifiers(String genericSubstitution) {
+        return genericSubstitution == null ? null : genericSubstitution;
     }
-
-    String displayValue();
-
-    String getTypeName();
-
 }

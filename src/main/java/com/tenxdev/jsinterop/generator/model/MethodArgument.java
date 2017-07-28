@@ -17,27 +17,36 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import com.tenxdev.jsinterop.generator.model.types.GenericTypeHandler;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
 public class MethodArgument {
     private final String defaultValue;
     private final String name;
     private final boolean vararg;
-    private boolean optional;
-    private Type type;
+    private final String genericSubstituion;
+    private final String genericParameter;
+    private final boolean optional;
+    private final Type type;
     private boolean enumSubstitution;
 
     public MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue,
                           ExtendedAttributes extendedAttributes) {
-        this(name, type, vararg, optional, defaultValue);
+        this(name, type, vararg, optional, defaultValue,
+                extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null),
+                extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null)
+        );
     }
 
-    protected MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue) {
-        this.type = type;
+    protected MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue,
+                             String genericSubstitution, String genericParameter) {
+        this.type = GenericTypeHandler.INSTANCE.getEffectiveType(type, genericSubstitution, genericParameter);
         this.name = name;
         this.vararg = vararg;
         this.optional = optional;
         this.defaultValue = defaultValue;
+        this.genericSubstituion = genericSubstitution;
+        this.genericParameter = genericParameter;
     }
 
     protected MethodArgument(MethodArgument methodArgument) {
@@ -46,14 +55,16 @@ public class MethodArgument {
         this.vararg = methodArgument.vararg;
         this.optional = methodArgument.optional;
         this.defaultValue = methodArgument.defaultValue;
+        this.genericSubstituion = methodArgument.genericSubstituion;
+        this.genericParameter = methodArgument.genericParameter;
     }
 
     public MethodArgument newMethodArgumentWithType(Type type) {
-        return new MethodArgument(name, type, vararg, optional, defaultValue);
+        return new MethodArgument(name, type, vararg, optional, defaultValue, genericSubstituion, genericParameter);
     }
 
     public MethodArgument newRequiredArgument() {
-        return new MethodArgument(name, type, vararg, false, defaultValue);
+        return new MethodArgument(name, type, vararg, false, defaultValue, null, null);
     }
 
     public String getDefaultValue() {

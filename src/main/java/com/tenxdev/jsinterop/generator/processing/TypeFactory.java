@@ -19,10 +19,7 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.google.common.collect.ImmutableMap;
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.types.NativeType;
-import com.tenxdev.jsinterop.generator.model.types.ObjectType;
-import com.tenxdev.jsinterop.generator.model.types.Type;
-import com.tenxdev.jsinterop.generator.model.types.UnionType;
+import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.parsing.visitors.types.TypeParser;
 
 import java.util.Arrays;
@@ -76,7 +73,9 @@ public class TypeFactory {
         typeMap.put("Dictionary", new NativeType("Object"));
         typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
         typeMap.put("record", new ObjectType("JsObject", ".core"));
-        typeMap.put("T", new NativeType("T"));
+        typeMap.put("T", new GenericType("T"));
+        typeMap.put("U", new GenericType("U"));
+        typeMap.put("V", new GenericType("V"));
     }
 
     public Type getTypeNoParse(String typeName) {

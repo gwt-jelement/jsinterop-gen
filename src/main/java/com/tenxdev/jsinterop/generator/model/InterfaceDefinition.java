@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class InterfaceDefinition extends AbstractDefinition implements HasUnionReturnTypes {
     private final Type parent;
     private final String jsTypeName;
-    private final String genericType;
+    private final String genericParameter;
     private List<Constant> constants = new ArrayList<>();
     private List<Feature> features = new ArrayList<>();
     private List<Constructor> constructors = new ArrayList<>();
@@ -52,7 +52,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
         this.features = members.stream().filter(member -> member instanceof Feature)
                 .map(member -> (Feature) member).collect(Collectors.toList());
         this.jsTypeName = extendedAttributes.extractValue(ExtendedAttributes.JS_TYPE_NAME, name);
-        this.genericType = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_TYPE, null);
+        this.genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
     }
 
     protected InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
@@ -64,11 +64,11 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
         this.constants = interfaceDefinition.constants;
         this.features = interfaceDefinition.features;
         this.jsTypeName = interfaceDefinition.jsTypeName;
-        this.genericType = interfaceDefinition.genericType;
+        this.genericParameter = interfaceDefinition.genericParameter;
     }
 
-    public String getGenericType() {
-        return genericType;
+    public String getGenericParameter() {
+        return genericParameter;
     }
 
     public Type getParent() {

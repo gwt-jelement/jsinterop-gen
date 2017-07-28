@@ -40,6 +40,9 @@ public abstract class AbstractTypeVisitor<T> {
         if (type.getClass() == ArrayType.class) {
             return visitArrayType((ArrayType) type);
         }
+        if (type.getClass() == GenericType.class) {
+            return visitGenericType((GenericType) type);
+        }
         throw new IllegalStateException("Unknown type " + type.getClass().getName());
     }
 
@@ -54,4 +57,6 @@ public abstract class AbstractTypeVisitor<T> {
     protected abstract T visitObjectType(ObjectType type);
 
     protected abstract T visitNativeType(NativeType type);
+
+    protected abstract T visitGenericType(GenericType type);
 }

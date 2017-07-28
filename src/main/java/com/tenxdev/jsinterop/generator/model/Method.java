@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
+import com.tenxdev.jsinterop.generator.model.types.GenericTypeHandler;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
@@ -31,6 +32,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private final List<MethodArgument> arguments;
     private final boolean deprecated;
     private final boolean genericReturn;
+    private final String genericTypeSpecifiers;
     private Type returnType;
     private Method methodReferences;
     private Method enumOverlay;
@@ -41,13 +43,19 @@ public class Method implements InterfaceMember, Comparable<Method> {
                   Method enumOverlay, String javaName, ExtendedAttributes extendedAttributes) {
         this(name, returnType, arguments, staticMethod, enumOverlay, javaName,
                 extendedAttributes.hasExtendedAttribute(ExtendedAttributes.DEPRECATED),
-                extendedAttributes.hasExtendedAttribute(ExtendedAttributes.GENERIC_RETURN));
+                extendedAttributes.hasExtendedAttribute(ExtendedAttributes.GENERIC_RETURN),
+                extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null),
+                extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null));
     }
 
     protected Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
-                     Method enumOverlay, String javaName, boolean deprecated, boolean genericReturn) {
+                     Method enumOverlay, String javaName, boolean deprecated, boolean genericReturn,
+                     String genericSubstitution, String genericParameter) {
         this.name = name;
-        this.returnType = returnType;
+        this.returnType = GenericTypeHandler.INSTANCE.getEffectiveType(returnType, genericSubstitution, genericParameter);
+        this.genericTypeSpecifiers = staticMethod ?
+                GenericTypeHandler.INSTANCE.getTypeSpecifiers(genericSubstitution) :
+                null;
         this.arguments = arguments;
         this.staticMethod = staticMethod;
         this.enumOverlay = enumOverlay;
@@ -65,11 +73,13 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.javaName = method.javaName;
         this.deprecated = method.deprecated;
         this.genericReturn = method.genericReturn;
+        this.genericTypeSpecifiers = method.genericTypeSpecifiers;
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
         return (T) new Method(name, returnType, newArguments, staticMethod, enumOverlay,
-                javaName, deprecated, genericReturn);
+                javaName, deprecated, genericReturn, null, null);
     }
 
     public boolean isGenericReturn() {
@@ -101,6 +111,10 @@ public class Method implements InterfaceMember, Comparable<Method> {
         if (this.methodReferences == null) {
             this.methodReferences = methodReferences;
         }
+    }
+
+    public String getGenericTypeSpecifiers() {
+        return genericTypeSpecifiers;
     }
 
     public boolean isDeprecated() {

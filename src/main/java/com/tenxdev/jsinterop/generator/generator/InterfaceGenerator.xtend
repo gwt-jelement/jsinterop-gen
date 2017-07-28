@@ -46,27 +46,27 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     «methods(definition)»
     «IF definition.name=="JsObject"»
         @JsOverlay
-        public T get(String propertyName){
+        public final T get(String propertyName){
             return JsUtils.<T>get(this, propertyName);
         }
 
         @JsOverlay
-        public void set(String propertyName, T value){
+        public final void set(String propertyName, T value){
             JsUtils.<T>set(this, propertyName, value);
         }
 
         @JsOverlay
-        public void delete(String propertyName){
+        public final void delete(String propertyName){
             JsUtils.<T>delete(this, propertyName);
         }
 
         @JsOverlay
-        public boolean has(String propertyName){
+        public final boolean has(String propertyName){
             return JsUtils.<T>has(this, propertyName);
         }
 
         @JsOverlay
-        public static <T> JsObject<T> of(String key, T value) {
+        public static final <T> JsObject<T> of(String key, T value) {
             return JsUtils.<T>of(key, value);
         }
     «ENDIF»
@@ -204,12 +204,12 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
             «IF method.enumOverlay===null»
                 «method.checkDeprecated»
                 @JsMethod(name = "«method.name»")
-                public «staticModifier(method)»native «returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
+                public «staticModifier(method)»native «typeSpecifier(method)»«returnType(method)» «method.name.adjustJavaName»(«arguments(method)»);
 
             «ELSE»
                 «method.checkDeprecated»
                 @JsOverlay
-                public «staticModifier(method)»final «returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
+                public «staticModifier(method)»final «typeSpecifier(method)»«returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
                     «hasReturn(method)»«hasEnumReturnType(method)»«method.name»(«enumMethodArguments(method)»);
                 }
 
@@ -289,6 +289,10 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     }
 
     def generic(InterfaceDefinition definition){
-        if (definition.genericType!==null) '''<«definition.genericType»>'''
+        if (definition.genericParameter!==null) '''<«definition.genericParameter»>'''
+    }
+
+    def typeSpecifier(Method method){
+        if (method.genericTypeSpecifiers!==null) '''<«method.genericTypeSpecifiers»> '''
     }
 }

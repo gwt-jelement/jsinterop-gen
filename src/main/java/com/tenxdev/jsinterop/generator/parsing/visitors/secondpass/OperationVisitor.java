@@ -55,7 +55,7 @@ class OperationVisitor extends ContextWebIDLBaseVisitor<Method> {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
             return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, false, extendedAttributes));
         } else {
-            System.err.println("Unexpected condition in operation");
+            parsingContext.getlogger().reportError("Unexpected condition in operation");
             return null;
         }
 

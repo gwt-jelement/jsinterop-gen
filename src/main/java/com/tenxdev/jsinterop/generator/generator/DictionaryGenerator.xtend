@@ -30,7 +30,7 @@ package «basePackageName»«definition.getPackageName()»;
 «imports(basePackageName, definition)»
 
 @JsType(name="Object", namespace = JsPackage.GLOBAL, isNative = true)
-public class «definition.name»«
+public class «definition.name»«generic(definition)»«
         IF definition.parent!==null» extends «definition.parent.displayValue»«ENDIF»{
 
     «FOR member: definition.members»
@@ -108,6 +108,10 @@ public class «definition.name»«
     «ENDFOR»
 }
     '''
+    }
+
+    def generic(DictionaryDefinition definition){
+        if (definition.genericParameter!==null) '''<«definition.genericParameter»>''' else ""
     }
 
 }

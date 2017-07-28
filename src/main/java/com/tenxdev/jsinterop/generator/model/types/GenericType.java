@@ -17,17 +17,13 @@
 
 package com.tenxdev.jsinterop.generator.model.types;
 
-public class NativeType implements Type {
+public class GenericType implements Type {
 
     private final String typeName;
 
-    public NativeType(String typeName) {
+    public GenericType(String typeName) {
+        super();
         this.typeName = typeName;
-    }
-
-    @Override
-    public String getTypeName() {
-        return typeName;
     }
 
     @Override
@@ -36,11 +32,16 @@ public class NativeType implements Type {
     }
 
     @Override
+    public String getTypeName() {
+        return typeName;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        NativeType that = (NativeType) o;
+        GenericType that = (GenericType) o;
 
         return typeName != null ? typeName.equals(that.typeName) : that.typeName == null;
     }
@@ -52,7 +53,7 @@ public class NativeType implements Type {
 
     @Override
     public String toString() {
-        return "NativeType{" +
+        return "GenericType{" +
                 "typeName='" + typeName + '\'' +
                 '}';
     }

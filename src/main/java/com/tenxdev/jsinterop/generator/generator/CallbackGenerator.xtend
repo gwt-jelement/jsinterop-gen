@@ -32,7 +32,7 @@ import «if(importName.startsWith(".")) basePackageName else ""»«importName»;
 «ENDFOR»
 
 @JsFunction
-public interface «definition.name»{
+public interface «definition.name»«generic(definition)»{
     «definition.method.returnType.displayValue» «definition.method.callbackMethodName»(«
         FOR argument: definition.method.arguments SEPARATOR ", "
         »«argument.type.displayValue»«vararg(argument)» «argument.name»«ENDFOR»);
@@ -42,6 +42,10 @@ public interface «definition.name»{
 
     def vararg(MethodArgument argument){
         if (argument.vararg) "..."
+    }
+
+    def generic(CallbackDefinition definition){
+        if (definition.genericParameter!==null) '''<«definition.genericParameter»>'''
     }
 
 }

@@ -39,7 +39,7 @@ public class DefinitionsVisitor extends ContextWebIDLBaseVisitor<List<AbstractDe
         WebIDLParser.DefinitionsContext definitions = ctx;
         while (definitions != null && definitions.definition() != null) {
             List<Constructor> constructors = definitions.extendedAttributeList() != null ?
-                    ctx.extendedAttributeList().accept(new ExtendedAttributeListVisitor(parsingContext))
+                    definitions.extendedAttributeList().accept(new ExtendedAttributeListVisitor(parsingContext))
                     : Collections.emptyList();
             List<String> extendedAttributes = definitions.extendedAttributeList() != null ?
                     definitions.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) : null;

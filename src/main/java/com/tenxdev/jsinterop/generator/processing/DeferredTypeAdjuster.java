@@ -70,4 +70,9 @@ public class DeferredTypeAdjuster extends AbstractTypeVisitor<Type> {
     protected Type visitNativeType(NativeType type) {
         return typeFactory.getTypeNoParse(type.getTypeName());
     }
+
+    @Override
+    protected Type visitGenericType(GenericType type) {
+        return type;
+    }
 }

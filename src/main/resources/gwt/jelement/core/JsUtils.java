@@ -22,7 +22,7 @@ public class JsUtils<T> {
     public static native <T> JsObject<T> of(String key, T value)/*-{
         var obj = {};
         obj[key] = value;
-        return value;
+        return obj;
     }-*/;
 
     public static native <T> void set(JsObject<T> obj, String propertyName, T value) /*-{

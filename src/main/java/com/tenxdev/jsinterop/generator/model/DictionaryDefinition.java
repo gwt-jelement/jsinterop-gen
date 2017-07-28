@@ -26,6 +26,7 @@ import java.util.List;
 
 public class DictionaryDefinition extends AbstractDefinition implements HasUnionReturnTypes {
     private final Type parent;
+    private final String genericParameter;
     private List<DictionaryMember> members;
     private List<UnionType> unionReturnTypes = new ArrayList<>();
 
@@ -33,12 +34,14 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
         super(name);
         this.parent = parent;
         this.members = members;
+        this.genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
     }
 
     public DictionaryDefinition(DictionaryDefinition dictionaryDefinition) {
         super(dictionaryDefinition.getName());
         this.parent = dictionaryDefinition.getParent();
         this.members = dictionaryDefinition.getMembers();
+        this.genericParameter = dictionaryDefinition.genericParameter;
     }
 
     public Type getParent() {
@@ -50,6 +53,10 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
             members = new ArrayList<>();
         }
         return members;
+    }
+
+    public String getGenericParameter() {
+        return genericParameter;
     }
 
     @Override
