@@ -20,6 +20,7 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
+import com.tenxdev.jsinterop.generator.model.types.GenericType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -31,7 +32,7 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
 
     private final Type returnType;
     private final boolean staticMethod;
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public OperationRestVisitor(ParsingContext context, Type returnType, boolean staticMethod, List<String> extendedAttributes) {
         super(context);
@@ -45,7 +46,21 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
         String name = ctx.optionalIdentifier().getText();
         List<MethodArgument> parameters = ctx.argumentList() == null || ctx.argumentList().argument() == null ? Collections.emptyList() :
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext));
-        return new Method(name, returnType, parameters, staticMethod, null, null,
-                new ExtendedAttributes(extendedAttributes));
+        String genericTypeSpecifiers = null;
+        ExtendedAttributes extendedAttributes = new ExtendedAttributes(this.extendedAttributes);
+        Type effectiveReturnType = returnType;
+        if (extendedAttributes.hasExtendedAttribute(ExtendedAttributes.GENERIC_RETURN)) {
+            genericTypeSpecifiers = "T";
+            effectiveReturnType = new GenericType("T");
+        }
+        String genericSubstitution = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null);
+        if (genericSubstitution != null) {
+            effectiveReturnType = new GenericType(genericSubstitution);
+            if (staticMethod){
+                genericTypeSpecifiers=genericSubstitution;
+            }
+        }
+
+        return new Method(name, effectiveReturnType, parameters, staticMethod, genericTypeSpecifiers, extendedAttributes);
     }
 }

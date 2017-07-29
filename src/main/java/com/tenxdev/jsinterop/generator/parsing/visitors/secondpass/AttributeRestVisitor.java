@@ -29,7 +29,7 @@ class AttributeRestVisitor extends ContextWebIDLBaseVisitor<Attribute> {
 
     private final boolean readOnly;
     private final boolean staticAttribute;
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     AttributeRestVisitor(ParsingContext context, boolean readOnly, boolean staticAttribute, List<String> extendedAttributes) {
         super(context);

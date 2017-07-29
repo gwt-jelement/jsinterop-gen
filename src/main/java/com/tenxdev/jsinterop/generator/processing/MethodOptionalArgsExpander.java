@@ -36,7 +36,7 @@ import java.util.List;
 public class MethodOptionalArgsExpander {
 
     private final Model model;
-    private Logger logger;
+    private final Logger logger;
 
     public MethodOptionalArgsExpander(Model model, Logger logger) {
         this.model = model;

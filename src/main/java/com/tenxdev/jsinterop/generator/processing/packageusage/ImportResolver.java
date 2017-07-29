@@ -30,7 +30,7 @@ public class ImportResolver {
     public void processModel(Model model, Logger logger) {
         logger.info(() -> "Resolving Java package imports");
         Map<AbstractDefinition, List<String>> packagesMap = new PackageUsageModelVisitor().accept(model);
-        packagesMap.entrySet().forEach(entry -> processPackagesForDefinition(entry.getKey(), entry.getValue()));
+        packagesMap.forEach((definition, packages) -> processPackagesForDefinition(definition, packages));
     }
 
     private void processPackagesForDefinition(AbstractDefinition definition, List<String> packages) {

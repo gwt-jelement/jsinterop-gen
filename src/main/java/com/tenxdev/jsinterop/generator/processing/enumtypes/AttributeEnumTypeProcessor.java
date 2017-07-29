@@ -29,10 +29,10 @@ import java.util.List;
 
 public class AttributeEnumTypeProcessor {
 
-    private Model model;
-    private Logger logger;
-    private HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
-    private EnumSubstitutionVisitor enumSubstitutionVisitor;
+    private final Model model;
+    private final Logger logger;
+    private final HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
+    private final EnumSubstitutionVisitor enumSubstitutionVisitor;
 
     public AttributeEnumTypeProcessor(Model model, Logger logger) {
         this.model = model;

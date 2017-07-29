@@ -19,7 +19,10 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.google.common.collect.ImmutableMap;
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.types.*;
+import com.tenxdev.jsinterop.generator.model.types.NativeType;
+import com.tenxdev.jsinterop.generator.model.types.ObjectType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
+import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.parsing.visitors.types.TypeParser;
 
 import java.util.Arrays;
@@ -50,7 +53,9 @@ public class TypeFactory {
         typeMap.put("bool", new NativeType("boolean"));
         typeMap.put("boolean", new NativeType("boolean"));
         typeMap.put("int", new NativeType("int"));
+        typeMap.put("Integer", new NativeType("Integer"));
         typeMap.put("byte", new NativeType("byte"));
+        typeMap.put("Byte", new NativeType("Byte"));
         typeMap.put("octet", new NativeType("byte"));
         typeMap.put("any", new NativeType("Object"));//keep as Object!
         typeMap.put("SerializedScriptValue", new NativeType("Object"));
@@ -58,24 +63,25 @@ public class TypeFactory {
         typeMap.put("void", new NativeType("void"));
         typeMap.put("unrestricteddouble", new NativeType("double"));
         typeMap.put("double", new NativeType("double"));
+        typeMap.put("Double", new NativeType("double"));
         typeMap.put("unrestrictedfloat", new NativeType("float"));
         typeMap.put("float", new NativeType("float"));
+        typeMap.put("Float", new NativeType("Float"));
         typeMap.put("unsignedlong", new NativeType("double"));
         typeMap.put("unsignedlonglong", new NativeType("double"));
         typeMap.put("EnforceRangeunsignedlong", new NativeType("double"));
         typeMap.put("long", new NativeType("double"));
+        typeMap.put("Long", new NativeType("Double"));
         typeMap.put("longlong", new NativeType("double"));
         typeMap.put("unsignedshort", new NativeType("short"));
         typeMap.put("short", new NativeType("short"));
+        typeMap.put("Short", new NativeType("Short"));
         typeMap.put("DOMString", new NativeType("String"));
         typeMap.put("USVString", new NativeType("String"));
         typeMap.put("ByteString", new NativeType("String"));
         typeMap.put("Dictionary", new NativeType("Object"));
         typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
         typeMap.put("record", new ObjectType("JsObject", ".core"));
-        typeMap.put("T", new GenericType("T"));
-        typeMap.put("U", new GenericType("U"));
-        typeMap.put("V", new GenericType("V"));
     }
 
     public Type getTypeNoParse(String typeName) {
@@ -106,7 +112,7 @@ public class TypeFactory {
 
     public Type boxType(Type type) {
         if (type instanceof NativeType) {
-            Type boxedType = BOXED_TYPES.get(((NativeType) type).getTypeName());
+            Type boxedType = BOXED_TYPES.get(type.getTypeName());
             return boxedType != null ? boxedType : type;
         }
         //TODO may need to box other types
@@ -115,13 +121,10 @@ public class TypeFactory {
 
     public Type getUnionType(String[] typeNames) {
         String key = String.join(",", typeNames);
-        UnionType unionType = anonymousUnionTypes.get(key);
-        if (unionType == null) {
-            unionType = new UnionType(null, Arrays.stream(typeNames)
-                    .map(this::getType)
-                    .collect(Collectors.toList()));
-            anonymousUnionTypes.put(key, unionType);
-        }
+        UnionType unionType = anonymousUnionTypes.computeIfAbsent(key,
+                k -> new UnionType(null, Arrays.stream(typeNames)
+                        .map(this::getType)
+                        .collect(Collectors.toList())));
         return unionType;
     }
 

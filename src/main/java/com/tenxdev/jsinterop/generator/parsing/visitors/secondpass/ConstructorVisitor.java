@@ -34,7 +34,7 @@ class ConstructorVisitor extends ContextWebIDLBaseVisitor<Constructor> {
     @Override
     public Constructor visitExtendedAttributeRest(WebIDLParser.ExtendedAttributeRestContext ctx) {
         if (ctx.extendedAttribute() == null) {
-            return new Constructor("", null, Collections.emptyList(), false, null, null);
+            return new Constructor(null, null, Collections.emptyList());
         }
         return ctx.extendedAttribute().accept(this);
     }
@@ -44,6 +44,6 @@ class ConstructorVisitor extends ContextWebIDLBaseVisitor<Constructor> {
         List<MethodArgument> arguments = ctx.extendedAttributeInner() != null ?
                 ctx.extendedAttributeInner().accept(new ConstructorArgumentsVisitor(parsingContext)) :
                 Collections.emptyList();
-        return new Constructor("", null, arguments, false, null, null);
+        return new Constructor(null, null, arguments);
     }
 }

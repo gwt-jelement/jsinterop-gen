@@ -27,7 +27,7 @@ import java.util.List;
 
 class SetLikeRestVisitor extends ContextWebIDLBaseVisitor<Feature> {
     private final boolean readOnly;
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public SetLikeRestVisitor(ParsingContext context, boolean readOnly, List<String> extendedAttributes) {
         super(context);

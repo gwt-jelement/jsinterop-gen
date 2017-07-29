@@ -22,10 +22,10 @@ import com.tenxdev.jsinterop.generator.model.Feature;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 
-public class InterfaceFeatureProcessor {
+class InterfaceFeatureProcessor {
 
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public InterfaceFeatureProcessor(Model model, Logger logger) {
         this.model = model;

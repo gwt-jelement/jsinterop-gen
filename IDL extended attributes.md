@@ -11,6 +11,7 @@ members.
 dictionaries, methods (for their return type) if the return type is ObjectType,
 method arguments if the type is ObjectType, and dictionary members if the type
 is ObjectType
+- `GenericExtend(T)` same as GenericParameter, but for the extended type.
 - `Deprecated`: adds the `@Deprecated` annotation to the method or attribute. Currently 
 applies to interface methods and attributes only.
 - `JsTypeName(newTypeName)`: overrides the default @JsType name with newTypeName. Cuurently 

@@ -36,7 +36,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     private List<Constructor> constructors = new ArrayList<>();
     private List<Method> methods = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
-    private List<UnionType> unionReturnTypes = new ArrayList<>();
+    private final List<UnionType> unionReturnTypes = new ArrayList<>();
 
     public InterfaceDefinition(String name, Type parent, List<Constructor> constructors,
                                List<InterfaceMember> members, ExtendedAttributes extendedAttributes) {

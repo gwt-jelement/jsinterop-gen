@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 
 public class RemoveEnumUnionTypeVisitor extends AbstractTypeVisitor<Type> {
 
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public RemoveEnumUnionTypeVisitor(Model model, Logger logger) {
         this.model = model;

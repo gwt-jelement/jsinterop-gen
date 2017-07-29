@@ -27,7 +27,7 @@ import java.util.List;
 
 class ConstantVisitor extends ContextWebIDLBaseVisitor<Constant> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public ConstantVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

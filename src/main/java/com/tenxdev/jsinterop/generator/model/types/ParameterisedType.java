@@ -46,6 +46,7 @@ public class ParameterisedType implements Type {
         return baseType.displayValue() + (typeParameters.isEmpty() ? "" : (
                 "<" + typeParameters.stream()
                         .map(Type::displayValue)
+                        .map(s -> s.isEmpty()?"?":s)
                         .collect(Collectors.joining(", "))
                         + ">"));
     }

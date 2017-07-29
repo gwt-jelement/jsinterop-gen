@@ -24,7 +24,7 @@ import java.util.List;
 public class TypeDefinition extends AbstractDefinition {
     private final Type type;
 
-    public TypeDefinition(String name, Type type, List<String> extendedAttributes) {
+    public TypeDefinition(String name, Type type, @SuppressWarnings("unused") List<String> extendedAttributes) {
         super(name);
         this.type = type;
     }

@@ -24,7 +24,7 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.List;
 
 class ReadOlyMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public ReadOlyMemberRestVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

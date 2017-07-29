@@ -22,6 +22,8 @@ import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Constructor;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.Collections;
 
@@ -30,8 +32,8 @@ import java.util.Collections;
  */
 public class SuperCallConstructorProcessor {
 
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public SuperCallConstructorProcessor(Model model, Logger logger) {
         this.model = model;
@@ -55,10 +57,15 @@ public class SuperCallConstructorProcessor {
     }
 
     private InterfaceDefinition findParentInterface(InterfaceDefinition interfaceDefinition) {
-        AbstractDefinition parentDefinition = model.getDefinition(interfaceDefinition.getParent().getTypeName());
+        Type parentType= interfaceDefinition.getParent() instanceof ParameterisedType ?
+                ((ParameterisedType)interfaceDefinition.getParent()).getBaseType(): interfaceDefinition.getParent();
+        if ("Object".equals(parentType.getTypeName())) {
+            return null;
+        }
+        AbstractDefinition parentDefinition = model.getDefinition(parentType.getTypeName());
         if (parentDefinition == null || !(parentDefinition instanceof InterfaceDefinition)) {
             logger.formatError("SuperCallConstructorProcessor: could not find parent for %s",
-                    interfaceDefinition.getParent().getTypeName());
+                    interfaceDefinition.getName());
             return null;
         }
         InterfaceDefinition parentInterface = (InterfaceDefinition) parentDefinition;
@@ -75,8 +82,7 @@ public class SuperCallConstructorProcessor {
     }
 
     private Constructor getDefaultConstructor() {
-        return new Constructor(null, null, Collections.emptyList(),
-                false, null, null);
+        return new Constructor(null, null, Collections.emptyList());
     }
 
     private void findSuperCallArguments(Constructor constructor, InterfaceDefinition parentInterface) {

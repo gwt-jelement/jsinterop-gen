@@ -22,9 +22,9 @@ import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 
-public abstract class AbstractParentModelProcessor {
+abstract class AbstractParentModelProcessor {
 
-    protected AbstractDefinition getParentDefinition(Model model, AbstractDefinition definition) {
+    AbstractDefinition getParentDefinition(Model model, AbstractDefinition definition) {
         if (definition instanceof InterfaceDefinition &&
                 ((InterfaceDefinition) definition).getParent() instanceof ObjectType) {
             InterfaceDefinition interfaceDefinition = (InterfaceDefinition) definition;

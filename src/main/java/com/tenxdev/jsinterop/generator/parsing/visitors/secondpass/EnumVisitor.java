@@ -25,7 +25,7 @@ import java.util.List;
 
 class EnumVisitor extends ContextWebIDLBaseVisitor<EnumDefinition> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public EnumVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

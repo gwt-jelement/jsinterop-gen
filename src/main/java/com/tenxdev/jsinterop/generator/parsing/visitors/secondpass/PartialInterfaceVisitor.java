@@ -28,7 +28,7 @@ import java.util.List;
 
 class PartialInterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public PartialInterfaceVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

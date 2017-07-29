@@ -30,10 +30,10 @@ import java.util.List;
 
 public class MethodEnumArgumentProcessor {
 
-    private HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
-    private EnumSubstitutionVisitor enumSubstitutionVisitor;
-    private Model model;
-    private Logger logger;
+    private final HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
+    private final EnumSubstitutionVisitor enumSubstitutionVisitor;
+    private final Model model;
+    private final Logger logger;
 
     public MethodEnumArgumentProcessor(Model model, Logger logger) {
         this.model = model;

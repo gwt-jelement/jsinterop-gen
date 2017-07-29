@@ -28,10 +28,10 @@ import java.util.List;
 public class DictionaryMemberUnionTypeProcessor {
 
     private final RemoveEnumUnionTypeVisitor removeEnumUnionTypeVisitor;
-    private HasUnionTypeVisitor hasUnionTypeVisitor = new HasUnionTypeVisitor();
-    private GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
-    private Model model;
-    private Logger logger;
+    private final HasUnionTypeVisitor hasUnionTypeVisitor = new HasUnionTypeVisitor();
+    private final GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
+    private final Model model;
+    private final Logger logger;
 
     public DictionaryMemberUnionTypeProcessor(Model model, Logger logger) {
         this.model = model;

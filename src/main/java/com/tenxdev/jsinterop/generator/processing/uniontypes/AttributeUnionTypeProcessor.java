@@ -30,9 +30,9 @@ public class AttributeUnionTypeProcessor {
 
     private final Model model;
     private final RemoveEnumUnionTypeVisitor removeEnumUnionTypeVisitor;
-    private Logger logger;
-    private GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
-    private HasUnionTypeVisitor hasUnionTypeVisitor = new HasUnionTypeVisitor();
+    private final Logger logger;
+    private final GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
+    private final HasUnionTypeVisitor hasUnionTypeVisitor = new HasUnionTypeVisitor();
 
     public AttributeUnionTypeProcessor(Model model, Logger logger) {
         this.model = model;

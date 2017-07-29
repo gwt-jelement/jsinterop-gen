@@ -93,7 +93,6 @@ public class ModelBuilder {
                 }
             }
         }
-        model.setTypeFactory(parsingContext.getTypeFactory());
         return model;
     }
 

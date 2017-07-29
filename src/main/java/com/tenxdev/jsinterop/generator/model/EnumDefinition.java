@@ -26,7 +26,7 @@ public class EnumDefinition extends AbstractDefinition {
 
     private final List<String> values;
 
-    public EnumDefinition(String name, List<String> values, List<String> extendedAttributes) {
+    public EnumDefinition(String name, List<String> values, @SuppressWarnings("unused") List<String> extendedAttributes) {
         super(name);
         this.values = values;
     }

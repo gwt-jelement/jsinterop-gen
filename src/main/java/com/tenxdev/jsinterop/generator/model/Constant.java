@@ -27,6 +27,7 @@ public class Constant implements InterfaceMember {
     private final Type type;
     private final String value;
 
+    @SuppressWarnings("unused")
     public Constant(String name, Type type, String value, ExtendedAttributes extendedAttributes) {
         this.name = name;
         this.type = type == null ? new NativeType("int") : type;

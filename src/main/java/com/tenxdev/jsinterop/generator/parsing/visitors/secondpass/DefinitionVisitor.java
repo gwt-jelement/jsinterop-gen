@@ -26,7 +26,7 @@ import java.util.List;
 
 class DefinitionVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
     private final List<Constructor> constructors;
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public DefinitionVisitor(ParsingContext context, List<Constructor> constructors, List<String> extendedAttributes) {
         super(context);

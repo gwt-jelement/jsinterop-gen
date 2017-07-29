@@ -19,11 +19,14 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
+import com.tenxdev.jsinterop.generator.model.types.GenericType;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<DictionaryMember>> {
@@ -37,15 +40,29 @@ class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<DictionaryMe
         List<DictionaryMember> members = new ArrayList<>();
         WebIDLParser.DictionaryMembersContext context = ctx;
         while (context != null && context.dictionaryMember() != null) {
-            List<String> extendedAttributes = context.extendedAttributeList() != null ?
-                    context.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) : null;
+            ExtendedAttributes extendedAttributes =
+                    new ExtendedAttributes(context.extendedAttributeList() != null ?
+                            context.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor())
+                            : null);
             WebIDLParser.DictionaryMemberContext memberContext = context.dictionaryMember();
             boolean required = memberContext.required() != null && "required".equals(memberContext.required().getText());
+
             Type type = memberContext.type().accept(new TypeVisitor(parsingContext));
+            String genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
+            if (genericParameter!=null){
+                type=new ParameterisedType(type,
+                        Collections.singletonList(parsingContext.getTypeFactory().getTypeNoParse(genericParameter)));
+            }
+            String genericSubstitution = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null);
+            if (genericSubstitution!=null) {
+                type=new GenericType(genericSubstitution);
+            }
             String name = memberContext.IDENTIFIER_WEBIDL().getText();
             String defaultValue = memberContext.default_() == null || memberContext.default_().defaultValue() == null ? null :
                     memberContext.default_().defaultValue().getText();
-            members.add(new DictionaryMember(name, type, required, defaultValue, new ExtendedAttributes(extendedAttributes)));
+
+
+            members.add(new DictionaryMember(name, type, required, defaultValue, extendedAttributes));
             context = context.dictionaryMembers();
         }
         return members;

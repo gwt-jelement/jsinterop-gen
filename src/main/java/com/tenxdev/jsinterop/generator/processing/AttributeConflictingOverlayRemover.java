@@ -22,6 +22,8 @@ import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Attribute;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,8 @@ import java.util.stream.Collectors;
 
 public class AttributeConflictingOverlayRemover {
 
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public AttributeConflictingOverlayRemover(Model model, Logger logger) {
         this.model = model;
@@ -46,11 +48,15 @@ public class AttributeConflictingOverlayRemover {
     }
 
     private void process(InterfaceDefinition definition) {
-        String parentTypeName = definition.getParent().getTypeName();
-        AbstractDefinition parentDefinition = model.getDefinition(parentTypeName);
+        Type parentType = definition.getParent() instanceof ParameterisedType ?
+                ((ParameterisedType) definition.getParent()).getBaseType() : definition.getParent();
+        if ("Object".equals(parentType.getTypeName())) {
+            return;
+        }
+        AbstractDefinition parentDefinition = model.getDefinition(parentType.getTypeName());
         if (parentDefinition == null || !(parentDefinition instanceof InterfaceDefinition)) {
             logger.formatError("AttributeConflictingOverlayRemover: inconsistent parent %s for %s",
-                    parentTypeName, definition.getName());
+                    parentType.getTypeName(), definition.getName());
         } else {
             process(definition, (InterfaceDefinition) parentDefinition);
         }
@@ -67,15 +73,14 @@ public class AttributeConflictingOverlayRemover {
                 .collect(Collectors.toList());
         List<Attribute> attributesToBeRemoved = new ArrayList<>();
         List<Attribute> attributesToBeAdded = new ArrayList<>();
-        definition.getAttributes().stream()
-                .forEach(attribute -> {
-                    if (parentWritableAttributes.contains(attribute.getName())) {
-                        attributesToBeRemoved.add(attribute);
-                    } else if (parentReadOnlyAttributes.contains(attribute.getName())) {
-                        attributesToBeRemoved.add(attribute);
-                        attributesToBeAdded.add(attribute.newWriteOnlyAttribute());
-                    }
-                });
+        definition.getAttributes().forEach(attribute -> {
+            if (parentWritableAttributes.contains(attribute.getName())) {
+                attributesToBeRemoved.add(attribute);
+            } else if (parentReadOnlyAttributes.contains(attribute.getName())) {
+                attributesToBeRemoved.add(attribute);
+                attributesToBeAdded.add(attribute.newWriteOnlyAttribute());
+            }
+        });
         definition.getAttributes().removeAll(attributesToBeRemoved);
         definition.getAttributes().addAll(attributesToBeAdded);
         //could recurse into parent but not needed so far

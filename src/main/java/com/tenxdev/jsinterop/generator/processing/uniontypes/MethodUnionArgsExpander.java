@@ -40,7 +40,7 @@ public class MethodUnionArgsExpander {
     private final Model model;
     private final GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
     private final RemoveEnumUnionTypeVisitor removeEnumUnionTypeVisitor;
-    private Logger logger;
+    private final Logger logger;
 
     public MethodUnionArgsExpander(Model model, Logger logger) {
         this.model = model;

@@ -17,7 +17,6 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
-import com.tenxdev.jsinterop.generator.model.types.GenericTypeHandler;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
 public class DictionaryMember {
@@ -31,9 +30,7 @@ public class DictionaryMember {
     public DictionaryMember(String name, Type type, boolean required, String defaultValue,
                             ExtendedAttributes extendedAttributes) {
         this.name = name;
-        this.type = GenericTypeHandler.INSTANCE.getEffectiveType(type,
-                extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null),
-                extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null));
+        this.type = type;
         this.required = required;
         this.defaultValue = defaultValue;
     }

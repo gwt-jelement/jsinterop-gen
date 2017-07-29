@@ -18,7 +18,6 @@
 package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
-import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,9 +25,8 @@ import java.util.stream.Collectors;
 public class Model {
 
     private final Map<String, AbstractDefinition> definitions = new HashMap<>();
-    private TypeFactory typeFactory;
-    private Map<String, List<PartialDefinition>> deferredPartials = new HashMap<>();
-    private Map<String, List<ImplementsDefinition>> deferredImplements = new HashMap<>();
+    private final Map<String, List<PartialDefinition>> deferredPartials = new HashMap<>();
+    private final Map<String, List<ImplementsDefinition>> deferredImplements = new HashMap<>();
 
     public Collection<AbstractDefinition> getDefinitions() {
         return definitions.values();
@@ -87,19 +85,10 @@ public class Model {
 
     }
 
-    public TypeFactory getTypeFactory() {
-        return typeFactory;
-    }
-
-    public void setTypeFactory(TypeFactory typeFactory) {
-        this.typeFactory = typeFactory;
-    }
-
     @Override
     public String toString() {
         return "Model{" +
                 "definitions=" + definitions +
-                ", typeFactory=" + typeFactory +
                 '}';
     }
 

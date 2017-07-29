@@ -28,15 +28,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SourceGenerator extends XtendTemplate {
-    private static final List<String> JAVA_REOURCES = Arrays.asList(
+    private static final List<String> JAVA_REOURCES = Collections.singletonList(
             "gwt/jelement/core/JsUtils.java"
     );
     private static final String VERSION = "0.0.1-SNAPSHOT";
-    private Logger logger;
+    private final Logger logger;
 
     public SourceGenerator(Logger logger) {
         this.logger = logger;

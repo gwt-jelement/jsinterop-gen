@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 
 public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
 
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public EnumSubstitutionVisitor(Model model, Logger logger) {
         super();

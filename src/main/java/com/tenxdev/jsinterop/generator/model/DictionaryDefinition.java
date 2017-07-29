@@ -28,7 +28,7 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
     private final Type parent;
     private final String genericParameter;
     private List<DictionaryMember> members;
-    private List<UnionType> unionReturnTypes = new ArrayList<>();
+    private final List<UnionType> unionReturnTypes = new ArrayList<>();
 
     public DictionaryDefinition(String name, Type parent, List<DictionaryMember> members, ExtendedAttributes extendedAttributes) {
         super(name);
@@ -37,7 +37,7 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
         this.genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
     }
 
-    public DictionaryDefinition(DictionaryDefinition dictionaryDefinition) {
+    protected DictionaryDefinition(DictionaryDefinition dictionaryDefinition) {
         super(dictionaryDefinition.getName());
         this.parent = dictionaryDefinition.getParent();
         this.members = dictionaryDefinition.getMembers();

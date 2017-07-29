@@ -26,10 +26,10 @@ import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
 public class DictionaryMemberEnumTypeProcessor {
 
-    private Model model;
-    private Logger logger;
-    private HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
-    private EnumSubstitutionVisitor enumSubstitutionVisitor;
+    private final Model model;
+    private final Logger logger;
+    private final HasEnumTypeVisitor hasEnumTypeVisitor = new HasEnumTypeVisitor();
+    private final EnumSubstitutionVisitor enumSubstitutionVisitor;
 
     public DictionaryMemberEnumTypeProcessor(Model model, Logger logger) {
         this.model = model;

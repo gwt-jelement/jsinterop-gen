@@ -28,7 +28,7 @@ import java.util.List;
 class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
     private final String containingType;
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public InterfaceMemberVisitor(ParsingContext context, String containingType, List<String> extendedAttributes) {
         super(context);

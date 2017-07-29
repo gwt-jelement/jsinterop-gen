@@ -27,7 +27,7 @@ import java.util.List;
 class OperationVisitor extends ContextWebIDLBaseVisitor<Method> {
 
     private final String containingType;
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public OperationVisitor(ParsingContext context, String containingType, List<String> extendedAttributes) {
         super(context);

@@ -28,7 +28,7 @@ import java.util.List;
 
 class PartialDictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public PartialDictionaryVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

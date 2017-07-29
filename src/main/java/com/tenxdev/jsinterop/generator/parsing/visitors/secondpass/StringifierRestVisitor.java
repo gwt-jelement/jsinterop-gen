@@ -27,7 +27,7 @@ import java.util.List;
 
 class StringifierRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public StringifierRestVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

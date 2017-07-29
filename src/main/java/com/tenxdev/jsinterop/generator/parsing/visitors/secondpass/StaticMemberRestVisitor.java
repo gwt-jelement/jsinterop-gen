@@ -26,7 +26,7 @@ import java.util.List;
 
 class StaticMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     StaticMemberRestVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

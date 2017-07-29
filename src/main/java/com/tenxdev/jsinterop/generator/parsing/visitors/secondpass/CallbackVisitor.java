@@ -29,7 +29,7 @@ import java.util.List;
 class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
 
     private final List<Constructor> constructors;
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     CallbackVisitor(ParsingContext context, List<Constructor> constructors, List<String> extendedAttributes) {
         super(context);
@@ -58,7 +58,7 @@ class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
         Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
         List<MethodArgument> arguments = ctx.argumentList() != null && ctx.argumentList().arguments() != null ?
                 ctx.argumentList().accept(new ArgumentsVisitor(parsingContext)) : Collections.emptyList();
-        Method method = new Method(null, returnType, arguments, false, null, null,
+        Method method = new Method(null, returnType, arguments, false, null,
                 new ExtendedAttributes(null));
         return new CallbackDefinition(name, method, new ExtendedAttributes(extendedAttributes));
     }

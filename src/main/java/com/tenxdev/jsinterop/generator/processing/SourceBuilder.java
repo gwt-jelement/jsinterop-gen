@@ -24,7 +24,7 @@ public class SourceBuilder {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private final StringBuilder stringBuilder;
-    private String indent;
+    private final String indent;
 
     public SourceBuilder(int numSpacesPerIndent) {
         this.indent = new String(new char[numSpacesPerIndent]).replace("\0", " ");
@@ -43,12 +43,12 @@ public class SourceBuilder {
         return this;
     }
 
-    public SourceBuilder newLine() {
+    private SourceBuilder newLine() {
         stringBuilder.append(LINE_SEPARATOR);
         return this;
     }
 
-    public SourceBuilder append(String value) {
+    private SourceBuilder append(String value) {
         stringBuilder.append(value);
         return this;
     }

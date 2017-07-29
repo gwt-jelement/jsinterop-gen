@@ -204,13 +204,13 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
             «IF method.enumOverlay===null»
                 «method.checkDeprecated»
                 @JsMethod(name = "«method.name»")
-                public «staticModifier(method)»native «typeSpecifier(method)»«returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»);
+                public «staticModifier(method)»native «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»);
 
             «ELSE»
                 «method.checkDeprecated»
                 @JsOverlay
-                public «staticModifier(method)»final «typeSpecifier(method)»«returnType(method)» «method.javaName.adjustJavaName»(«arguments(method)»){
-                    «hasReturn(method)»«hasEnumReturnType(method)»«method.javaName»(«enumMethodArguments(method)»);
+                public «staticModifier(method)»final «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»){
+                    «hasReturn(method)»«hasEnumReturnType(method)»«method.enumOverlay.javaName»(«enumMethodArguments(method)»);
                 }
 
             «ENDIF»
@@ -231,14 +231,6 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     def staticThis(Attribute attribute){
         if (attribute.static) attribute.type.displayValue else "this"
     }
-
-    def returnType(Method method){
-        if (method.genericReturn)
-            "<T extends "+method.returnType.displayValue+"> T"
-        else
-            method.returnType.displayValue
-    }
-
 
     def vararg(MethodArgument argument){
         if (argument.vararg) "..."

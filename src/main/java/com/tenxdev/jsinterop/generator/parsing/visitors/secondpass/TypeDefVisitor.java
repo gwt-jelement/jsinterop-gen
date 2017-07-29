@@ -26,7 +26,7 @@ import java.util.List;
 
 class TypeDefVisitor extends ContextWebIDLBaseVisitor<TypeDefinition> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public TypeDefVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

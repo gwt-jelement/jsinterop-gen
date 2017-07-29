@@ -19,14 +19,16 @@ package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DuplicateInheritedInterfaceMembersRemover {
 
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public DuplicateInheritedInterfaceMembersRemover(Model model, Logger logger) {
         this.model = model;
@@ -81,8 +83,10 @@ public class DuplicateInheritedInterfaceMembersRemover {
     }
 
     private InterfaceDefinition getParentDefinition(InterfaceDefinition definition) {
-        if (definition.getParent() != null) {
-            AbstractDefinition parentDefinition = model.getDefinition(definition.getParent().getTypeName());
+        if (definition.getParent() != null && !"Object".equals(definition.getParent().getTypeName())) {
+            Type parentType= definition.getParent() instanceof ParameterisedType?
+                    ((ParameterisedType)definition.getParent()).getBaseType(): definition.getParent();
+            AbstractDefinition parentDefinition = model.getDefinition(parentType.getTypeName());
             if (parentDefinition instanceof InterfaceDefinition) {
                 return (InterfaceDefinition) parentDefinition;
             }

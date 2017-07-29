@@ -43,6 +43,7 @@ import java.util.List;
 
 class Generator {
 
+    @SuppressWarnings("unused")
     @Option(name = "-in", usage = "the folder from which to read IDL files", required = true, metaVar = "inputDirectory")
     private String inputDirectory;
 
@@ -52,15 +53,19 @@ class Generator {
     @Option(name = "-package", usage = "the base package into which to place the IDL files", metaVar = "basePackage")
     private String basePackage = "gwt.jelement";
 
+    @SuppressWarnings("unused")
     @Option(name = "-force", usage = "remove the output folder if it exists")
     private boolean force;
 
+    @SuppressWarnings("unused")
     @Option(name = "-overwrite", usage = "overwrite the output folder if it exists")
     private boolean overwrite;
 
+    @SuppressWarnings("FieldCanBeLocal")
     @Option(name = "-logLevel", usage = "logging level: 0-no logging 1-mimum logging", metaVar = "logLevel")
     private int logLevel = 1;
 
+    @SuppressWarnings("unused")
     @Argument
     private List<String> arguments = new ArrayList<>();
 

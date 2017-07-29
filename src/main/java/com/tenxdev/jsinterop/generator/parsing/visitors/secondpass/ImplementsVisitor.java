@@ -26,7 +26,7 @@ import java.util.List;
 
 class ImplementsVisitor extends ContextWebIDLBaseVisitor<ImplementsDefinition> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public ImplementsVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

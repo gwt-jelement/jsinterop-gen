@@ -28,8 +28,8 @@ import java.util.List;
 
 public class DuplicateInheritedDictionaryMemberRemover {
 
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public DuplicateInheritedDictionaryMemberRemover(Model model, Logger logger) {
         this.model = model;
@@ -60,13 +60,14 @@ public class DuplicateInheritedDictionaryMemberRemover {
     }
 
     private DictionaryDefinition getParentDefinition(DictionaryDefinition definition) {
-        if (definition.getParent() != null) {
+        if (definition.getParent() != null && !"Object".equals(definition.getParent().getTypeName())) {
             AbstractDefinition parentDefinition = model.getDefinition(definition.getParent().getTypeName());
             if (parentDefinition instanceof DictionaryDefinition) {
                 return (DictionaryDefinition) parentDefinition;
+            } else if (!"JsObject".equals(parentDefinition.getName())) {
+                logger.formatError("DuplicateInheritedDictionaryMemberRemover: Inconsitent parent type for %s",
+                        definition.getName());
             }
-            logger.formatError("DuplicateInheritedDictionaryMemberRemover: Inconsitent parent type for %s",
-                    definition.getName());
         }
         return null;
     }

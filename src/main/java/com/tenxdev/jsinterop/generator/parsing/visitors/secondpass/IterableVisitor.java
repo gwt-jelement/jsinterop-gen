@@ -27,7 +27,7 @@ import java.util.List;
 
 class IterableVisitor extends ContextWebIDLBaseVisitor<Feature> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     public IterableVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);

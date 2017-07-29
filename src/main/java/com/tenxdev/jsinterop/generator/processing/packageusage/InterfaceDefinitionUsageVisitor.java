@@ -19,6 +19,7 @@ package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.PackageType;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractInterfaceDefinitionVisitor;
 
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinitionVisitor<List<String>> {
 
     private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
-    private MethodVisitor methodVisitor = new MethodVisitor();
+    private final MethodVisitor methodVisitor = new MethodVisitor();
 
     @Override
     public List<String> accept(InterfaceDefinition interfaceDefinition) {
@@ -42,6 +43,10 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         result.add("jsinterop.annotations.JsOverlay");
         if (interfaceDefinition.getParent() instanceof PackageType) {
             PackageType packageType = (PackageType) interfaceDefinition.getParent();
+            result.add(packageType.getPackageName() + "." + packageType.getTypeName());
+        } else if (interfaceDefinition.getParent() instanceof ParameterisedType
+                && ((ParameterisedType) interfaceDefinition.getParent()).getBaseType() instanceof PackageType) {
+            PackageType packageType = (PackageType) ((ParameterisedType) interfaceDefinition.getParent()).getBaseType();
             result.add(packageType.getPackageName() + "." + packageType.getTypeName());
         }
         if (!interfaceDefinition.getConstructors().isEmpty()) {

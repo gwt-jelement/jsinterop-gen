@@ -31,7 +31,7 @@ public abstract class AbstractDefinition {
     private  String packageName;
     private String filename;
 
-    public AbstractDefinition(String name) {
+    AbstractDefinition(String name) {
         this.name = name;
     }
 

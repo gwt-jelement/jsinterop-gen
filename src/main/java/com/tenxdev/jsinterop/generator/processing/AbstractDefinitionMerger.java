@@ -27,7 +27,7 @@ import java.util.List;
 
 abstract class AbstractDefinitionMerger {
 
-    protected final Logger logger;
+    final Logger logger;
 
     AbstractDefinitionMerger(Logger logger) {
         this.logger = logger;

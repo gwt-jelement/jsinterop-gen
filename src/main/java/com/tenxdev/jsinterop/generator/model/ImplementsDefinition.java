@@ -21,7 +21,7 @@ public class ImplementsDefinition extends AbstractDefinition {
 
     private final String parent;
 
-    public ImplementsDefinition(String name, String parent, ExtendedAttributes extendedAttributes) {
+    public ImplementsDefinition(String name, String parent, @SuppressWarnings("unused") ExtendedAttributes extendedAttributes) {
         super(name);
         this.parent = parent;
     }

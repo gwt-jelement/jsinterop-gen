@@ -19,15 +19,18 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
+import com.tenxdev.jsinterop.generator.model.types.GenericType;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.Collections;
 import java.util.List;
 
 class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
 
-    private List<String> extendedAttributes;
+    private final List<String> extendedAttributes;
 
     ArgumentVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
@@ -37,7 +40,8 @@ class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
     @Override
     public MethodArgument visitOptionalArgument(WebIDLParser.OptionalArgumentContext ctx) {
         String name = ctx.argumentName().getText();
-        Type type = ctx.type().accept(new TypeVisitor(parsingContext));
+        Type type = adjustType(ctx.type().accept(new TypeVisitor(parsingContext)));
+
         String defaultValue = ctx.default_() == null || ctx.default_().defaultValue() == null ? null :
                 ctx.default_().defaultValue().getText();
         return new MethodArgument(name, type, false, true, defaultValue,
@@ -47,7 +51,7 @@ class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
     @Override
     public MethodArgument visitRequiredArgument(WebIDLParser.RequiredArgumentContext ctx) {
         String name = ctx.argumentName().getText();
-        Type type = ctx.type().accept(new TypeVisitor(parsingContext));
+        Type type = adjustType(ctx.type().accept(new TypeVisitor(parsingContext)));
         return new MethodArgument(name, type, false, false, null,
                 new ExtendedAttributes(extendedAttributes));
     }
@@ -55,9 +59,23 @@ class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
     @Override
     public MethodArgument visitRequiredVarArgArgument(WebIDLParser.RequiredVarArgArgumentContext ctx) {
         String name = ctx.argumentName().getText();
-        Type type = ctx.type().accept(new TypeVisitor(parsingContext));
+        Type type = adjustType(ctx.type().accept(new TypeVisitor(parsingContext)));
         return new MethodArgument(name, type, true, false, null,
                 new ExtendedAttributes(extendedAttributes));
+    }
+
+    private Type adjustType(Type type){
+        ExtendedAttributes extendedAttributes=new ExtendedAttributes(this.extendedAttributes);
+        String genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
+        if (genericParameter!=null){
+            return new ParameterisedType(type,
+                    Collections.singletonList(parsingContext.getTypeFactory().getTypeNoParse(genericParameter)));
+        }
+        String genericSubstitution = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null);
+        if (genericSubstitution!=null) {
+            return new GenericType(genericSubstitution);
+        }
+        return type;
     }
 
 }
