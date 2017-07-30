@@ -27,7 +27,7 @@ public class Constructor extends Method {
     private final List<MethodArgument> superArguments;
 
     public Constructor(String name, Type returnType, List<MethodArgument> arguments) {
-        super(name, returnType, arguments, false, null, new ExtendedAttributes(null));
+        super(name, returnType, arguments, false, null, new ExtendedAttributes(null), null);
         this.superArguments=new ArrayList<>();
     }
 
@@ -35,8 +35,7 @@ public class Constructor extends Method {
                           String genericTypeSpecifiers, boolean deprecated, boolean enumReturnType,
                           Method enumOverlay,
                           String javaName, List<MethodArgument> superArguments){
-        super(name, returnType, arguments, false, null,
-                deprecated, false, null, null);
+        super(name, returnType, arguments, false, null, deprecated, false, null, null, null);
         this.superArguments = superArguments;
     }
 

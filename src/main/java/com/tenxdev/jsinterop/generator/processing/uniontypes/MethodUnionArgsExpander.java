@@ -77,6 +77,12 @@ public class MethodUnionArgsExpander {
                 .flatMap(List::stream)
                 .distinct()
                 .collect(Collectors.toList());
+        unionReturnTypes.addAll(definition.getMethods().stream()
+                .filter(method -> method.getReplacedReturnType()!=null)
+                .map(method -> getUnionTypesVisitor.accept(method.getReplacedReturnType()))
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList()));
         removeEnumUnionTypeVisitor.visitUnionTypes(unionReturnTypes)
                 .forEach(unionType -> definition.addUnionReturnType(definition, unionType, unionType.getName()));
     }

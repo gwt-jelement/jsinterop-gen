@@ -36,7 +36,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
     public List<String> accept(InterfaceDefinition interfaceDefinition) {
         List<String> result = super.accept(interfaceDefinition);
         if ("JsObject".equals(interfaceDefinition.getName())) {
-            result.add(".core.JsUtils");
+            result.add(".core.Js");
         }
         result.add("jsinterop.annotations.JsPackage");
         result.add("jsinterop.annotations.JsType");

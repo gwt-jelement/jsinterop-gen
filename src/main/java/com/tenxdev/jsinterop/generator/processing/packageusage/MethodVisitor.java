@@ -35,6 +35,9 @@ class MethodVisitor {
                 .distinct()
                 .collect(Collectors.toCollection(ArrayList::new));
         packages.addAll(typeVisitor.accept(method.getReturnType()));
+        if (method.getReplacedReturnType()!=null){
+            packages.addAll(typeVisitor.accept(method.getReplacedReturnType()));
+        }
         return packages.stream()
                 .distinct()
                 .sorted()

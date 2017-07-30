@@ -11,6 +11,7 @@ import com.tenxdev.jsinterop.generator.processing.TypeFactory
 import javax.annotation.Nonnull
 import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes
 import com.tenxdev.jsinterop.generator.model.types.UnionType
+import java.util.List
 
 class XtendTemplate {
 
@@ -25,6 +26,12 @@ class XtendTemplate {
             "char", "final", "interface", "static", "void",
             "class", "finally", "long", "strictfp", "volatile",
             "const", "float", "native", "super", "while", "_"));
+
+    public static final List<String> GWT_PRIMITIVE_TYPES = Arrays.asList(
+        "boolean", "char", "byte", "short", "int", "float", "double");
+
+    public static final List<String> JAVA_PRIMITIVE_TYPES = Arrays.asList(
+            "boolean", "char", "byte", "short", "int", "long", "float", "double");
 
     def copyright()'''
 /*

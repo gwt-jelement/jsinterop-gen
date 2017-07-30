@@ -21,6 +21,7 @@ import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.model.types.GenericType;
+import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -49,9 +50,11 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
         String genericTypeSpecifiers = null;
         ExtendedAttributes extendedAttributes = new ExtendedAttributes(this.extendedAttributes);
         Type effectiveReturnType = returnType;
+        Type replacedReturnedType=null;
         if (extendedAttributes.hasExtendedAttribute(ExtendedAttributes.GENERIC_RETURN)) {
-            genericTypeSpecifiers = "T";
+            genericTypeSpecifiers = "T extends "+returnType.displayValue();
             effectiveReturnType = new GenericType("T");
+            replacedReturnedType=returnType;
         }
         String genericSubstitution = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null);
         if (genericSubstitution != null) {
@@ -60,7 +63,7 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
                 genericTypeSpecifiers=genericSubstitution;
             }
         }
-
-        return new Method(name, effectiveReturnType, parameters, staticMethod, genericTypeSpecifiers, extendedAttributes);
+        return new Method(name, effectiveReturnType, parameters, staticMethod, genericTypeSpecifiers,
+                extendedAttributes, replacedReturnedType);
     }
 }

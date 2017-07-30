@@ -32,9 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class SourceGenerator extends XtendTemplate {
-    private static final List<String> JAVA_REOURCES = Collections.singletonList(
-            "gwt/jelement/core/JsUtils.java"
-    );
+
     private static final String VERSION = "0.0.1-SNAPSHOT";
     private final Logger logger;
 
@@ -45,11 +43,6 @@ public class SourceGenerator extends XtendTemplate {
     public void processModel(Model model, String outputDirectory, String basePackageName) throws IOException {
         logger.info(() -> "Generating Java source code");
 
-        int numOutput = 0;
-        for (String javaResourcePath : JAVA_REOURCES) {
-            outputResource(outputDirectory, javaResourcePath);
-            ++numOutput;
-        }
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
         outputFile(Paths.get(outputDirectory, ".gitignore"), new GitIgnoreGenerator().generate());
         outputFile(Paths.get(outputDirectory, "src", "main", "java", packageNameToPath(basePackageName),
@@ -58,8 +51,10 @@ public class SourceGenerator extends XtendTemplate {
         CallbackGenerator callbackGenerator = new CallbackGenerator();
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator();
         DictionaryGenerator dictionaryGenerator = new DictionaryGenerator();
+        int numOutput = 0;
         for (AbstractDefinition definition : model.getDefinitions()) {
-            Path filePath = getSourcePath(outputDirectory, definition, basePackageName);
+            Path filePath = getSourcePath(outputDirectory, definition.getPackageName(), definition.getName(),
+                    basePackageName);
             if (definition instanceof EnumDefinition) {
                 outputFile(filePath, enumGenerator.generate(basePackageName, (EnumDefinition) definition));
                 ++numOutput;
@@ -74,6 +69,8 @@ public class SourceGenerator extends XtendTemplate {
                 ++numOutput;
             }
         }
+        Path filePath = getSourcePath(outputDirectory, ".core","Js", basePackageName);
+        outputFile(filePath, new JsGenerator().generate(basePackageName));
         int count = numOutput;
         logger.info(() -> String.format("Generated %d Java file%s in %s", count, count != 1 ? "s" : "", outputDirectory));
     }
@@ -90,10 +87,10 @@ public class SourceGenerator extends XtendTemplate {
         }
     }
 
-    private Path getSourcePath(String outputDirectory, AbstractDefinition definition, String basePackageName) {
+    private Path getSourcePath(String outputDirectory, String definitionPackage, String definitionName, String basePackageName) {
         return Paths.get(outputDirectory, "src", "main", "java",
-                packageNameToPath(basePackageName + definition.getPackageName()),
-                definition.getName() + ".java");
+                packageNameToPath(basePackageName + definitionPackage),
+                definitionName + ".java");
     }
 
     private String packageNameToPath(String packageName) {

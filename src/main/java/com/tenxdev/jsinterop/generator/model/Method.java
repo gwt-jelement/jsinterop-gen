@@ -31,13 +31,14 @@ public class Method implements InterfaceMember, Comparable<Method> {
     private final boolean staticMethod;
     private final String genericTypeSpecifiers;
     final boolean deprecated;
+    private final Type replacedReturnType;
     private Method enumOverlay;
     private String javaName;
     Type returnType;
     private boolean enumReturnType;
 
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
-                  String genericTypeSpecifiers, ExtendedAttributes extendedAttributes) {
+                  String genericTypeSpecifiers, ExtendedAttributes extendedAttributes, Type replacedReturnType) {
         this.name = name;
         this.returnType = returnType;
         this.genericTypeSpecifiers = genericTypeSpecifiers;
@@ -46,11 +47,12 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.enumOverlay = null;
         this.javaName = extendedAttributes.extractValue(ExtendedAttributes.JAVA_NAME, null);
         this.deprecated = extendedAttributes.hasExtendedAttribute(ExtendedAttributes.DEPRECATED);
+        this.replacedReturnType=replacedReturnType;
     }
 
     Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
            String genericTypeSpecifiers, boolean deprecated, boolean enumReturnType, Method enumOverlay,
-           String javaName) {
+           String javaName, Type replacedReturnType) {
         this.name = name;
         this.returnType = returnType;
         this.arguments = arguments;
@@ -60,6 +62,7 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.enumReturnType = enumReturnType;
         this.enumOverlay = enumOverlay;
         this.javaName = javaName;
+        this.replacedReturnType=replacedReturnType;
     }
 
     Method(Method method) {
@@ -72,12 +75,13 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.enumReturnType = method.enumReturnType;
         this.enumOverlay = method.enumOverlay;
         this.javaName = method.javaName;
+        this.replacedReturnType=method.replacedReturnType;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
         return (T) new Method(name, returnType, newArguments, staticMethod, genericTypeSpecifiers,
-                deprecated, enumReturnType, enumOverlay, javaName);
+                deprecated, enumReturnType, enumOverlay, javaName, replacedReturnType);
     }
 
     public boolean isStatic() {
@@ -91,6 +95,10 @@ public class Method implements InterfaceMember, Comparable<Method> {
     public Type getReturnType() {
         return returnType == null ?
                 new NativeType("void") : returnType;
+    }
+
+    public Type getReplacedReturnType() {
+        return replacedReturnType;
     }
 
     public void setReturnType(Type returnType) {

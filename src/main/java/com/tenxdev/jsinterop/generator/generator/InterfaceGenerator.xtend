@@ -47,28 +47,115 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     «IF definition.name=="JsObject"»
         @JsOverlay
         public final T get(String propertyName){
-            return JsUtils.<T>get(this, propertyName);
+            return Js.<T>get(this, propertyName);
+        }
+
+        @JsOverlay
+        public final T get(double index){
+            return Js.<T>get(this, index);
+        }
+
+        «FOR String primitiveType: GWT_PRIMITIVE_TYPES»
+            @JsOverlay
+            public final «primitiveType» get«primitiveType.toFirstUpper»(String propertyName){
+                return Js.get«primitiveType.toFirstUpper»(this, propertyName);
+            }
+
+            @JsOverlay
+            public final «primitiveType» get«primitiveType.toFirstUpper»(double index){
+                return Js.get«primitiveType.toFirstUpper»(this, index);
+            }
+
+        «ENDFOR»
+        @JsOverlay
+        public final long getLong(String propertyName){
+            return Js.getLong(this, propertyName);
+        }
+
+        @JsOverlay
+        public final long getLong(double index){
+            return Js.getLong(this, index);
         }
 
         @JsOverlay
         public final void set(String propertyName, T value){
-            JsUtils.<T>set(this, propertyName, value);
+            Js.<T>set(this, propertyName, value);
+        }
+
+        @JsOverlay
+        public final void set(double index , T value){
+            Js.<T>set(this, index, value);
+        }
+
+        «FOR String primitiveType: GWT_PRIMITIVE_TYPES»
+            @JsOverlay
+            public final void set(String propertyName, «primitiveType» value){
+                Js.<T>set(this, propertyName, value);
+            }
+
+            @JsOverlay
+            public final void set(double index , «primitiveType» value){
+                Js.<T>set(this, index, value);
+            }
+
+        «ENDFOR»
+        @JsOverlay
+        public final void set(String propertyName, long value){
+            Js.set(this, propertyName, (double) value);
+        }
+
+        @JsOverlay
+        public final void set(double index, long value){
+            Js.set(this, index, (double) value);
         }
 
         @JsOverlay
         public final void delete(String propertyName){
-            JsUtils.<T>delete(this, propertyName);
+            Js.<T>delete(this, propertyName);
+        }
+
+        @JsOverlay
+        public final void delete(double index){
+            Js.<T>delete(this, index);
         }
 
         @JsOverlay
         public final boolean has(String propertyName){
-            return JsUtils.<T>has(this, propertyName);
+            return Js.<T>has(this, propertyName);
         }
 
         @JsOverlay
-        public static final <T> JsObject<T> of(String key, T value) {
-            return JsUtils.<T>of(key, value);
+        public final boolean has(double index){
+             return Js.<T>has(this, index);
         }
+
+        @JsOverlay
+        public JsObject<T> with(String propertyName, T value){
+            return Js.<T>with(this, propertyName, value);
+        }
+
+        «FOR String primitiveType: GWT_PRIMITIVE_TYPES»
+            @JsOverlay
+            public JsObject<T> with(String propertyName, «primitiveType» value){
+                return Js.<T>with(this, propertyName, value);
+            }
+
+        «ENDFOR»
+        @JsOverlay
+        public JsObject<T> with(String propertyName, long value){
+            return Js.<T>with(this, propertyName, (double)value);
+        }
+
+        @JsOverlay
+        public boolean isEqualTo(Object object){
+            return Js.isEqual(this, object);
+        }
+
+        @JsOverlay
+        public boolean isStrictlyEqualTo(Object object){
+            return Js.isStrictlyEqual(this, object);
+        }
+
     «ENDIF»
 }
 '''
