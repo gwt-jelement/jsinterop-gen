@@ -95,6 +95,7 @@ class Generator {
 
     private void processModel(Model model, Logger logger) throws IOException {
         //ordering of these operations is critical
+        new NamedConstructorHandler(model, logger).process(); //adds new definitions
         new PartialsMerger(model, logger).processModel();
         new RedundantImplementsRemoval().process(model, logger); //before implements merger
         new ImplementsMerger(model, logger).processModel(); //must run after partials merger

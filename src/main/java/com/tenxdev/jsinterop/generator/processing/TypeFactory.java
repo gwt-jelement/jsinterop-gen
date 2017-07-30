@@ -147,4 +147,7 @@ public class TypeFactory {
         });
     }
 
+    public boolean hasType(String name) {
+        return typeMap.containsKey(name);
+    }
 }

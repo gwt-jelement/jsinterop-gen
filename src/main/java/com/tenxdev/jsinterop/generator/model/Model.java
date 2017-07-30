@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.model;
 
 import com.tenxdev.jsinterop.generator.model.interfaces.PartialDefinition;
+import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ public class Model {
     private final Map<String, AbstractDefinition> definitions = new HashMap<>();
     private final Map<String, List<PartialDefinition>> deferredPartials = new HashMap<>();
     private final Map<String, List<ImplementsDefinition>> deferredImplements = new HashMap<>();
+    private TypeFactory typeFactory;
 
     public Collection<AbstractDefinition> getDefinitions() {
         return definitions.values();
@@ -90,6 +92,14 @@ public class Model {
         return "Model{" +
                 "definitions=" + definitions +
                 '}';
+    }
+
+    public TypeFactory getTypeFactory() {
+        return typeFactory;
+    }
+
+    public void setTypeFactory(TypeFactory typeFactory) {
+        this.typeFactory = typeFactory;
     }
 
     public class ConflictingNameException extends Exception {

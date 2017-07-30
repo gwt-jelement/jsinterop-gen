@@ -1,5 +1,11 @@
 ___IDL Extended Attributes Supported by jsinterop-gen___
 
+Standard extended attributes supported by the generator:
+- Constructor and CustomConstructor: adds a constructor to the interface.
+- NamedConstructor: creates a new interface extending from the one where the named
+constructor is defined, with the name of the named constructor, and adds
+the constructor (Example: named constructor `Image` defined in `HTMLImageElement`).
+
 These additional extended attributes are supported by the generator:
 - `GenericReturn`: for a method that returns type X, generate instead a return type of
 <T> <T extends X>`. Applies to interface methods only (including callbacks when defined 

@@ -93,6 +93,7 @@ public class ModelBuilder {
                 }
             }
         }
+        model.setTypeFactory(parsingContext.getTypeFactory());
         return model;
     }
 
@@ -101,6 +102,7 @@ public class ModelBuilder {
             WebIDLLexer lexer = new WebIDLLexer(new ANTLRInputStream(reader));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             WebIDLParser parser = new WebIDLParser(tokens);
+            parsingContext.setParser(parser);
             parser.removeErrorListeners();
             parser.addErrorListener(new FileAwareANTLRErrorListener(file, logger));
             WebIDLParser.DefinitionsContext definitions = parser.definitions();
@@ -114,6 +116,7 @@ public class ModelBuilder {
             WebIDLLexer lexer = new WebIDLLexer(new ANTLRInputStream(reader));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             WebIDLParser parser = new WebIDLParser(tokens);
+            parsingContext.setParser(parser);
             parser.removeErrorListeners();
             parser.addErrorListener(new FileAwareANTLRErrorListener(file, logger));
             WebIDLParser.DefinitionsContext definitions = parser.definitions();

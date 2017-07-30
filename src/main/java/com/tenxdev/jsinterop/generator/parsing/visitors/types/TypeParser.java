@@ -19,7 +19,7 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.types;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.types.*;
-import com.tenxdev.jsinterop.generator.processing.ParserUtil;
+import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import com.tenxdev.jsinterop.generator.processing.TypeFactory;
 import org.antlr.v4.runtime.*;
 import org.antlr4.webidl.TypesBaseVisitor;
@@ -85,7 +85,7 @@ public class TypeParser extends TypesBaseVisitor<Type> {
             return new UnionType(null, types);
 
         }
-        logger.reportError("TypeParser: Unable to parse " + ParserUtil.getText(ctx));
+        logger.reportError("TypeParser: Unable to parse " + ParsingContext.getText(ctx));
         return new NativeType("Object");
     }
 

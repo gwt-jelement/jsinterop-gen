@@ -20,7 +20,6 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Constructor;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import com.tenxdev.jsinterop.generator.processing.ParserUtil;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class DefinitionsVisitor extends ContextWebIDLBaseVisitor<List<AbstractDe
             if (definition != null) {
                 definitionList.add(definition);
             } else {
-                parsingContext.getlogger().reportError("Unexpected missed definition: " + ParserUtil.getText(ctx));
+                parsingContext.getlogger().reportError("Unexpected missed definition: " + ParsingContext.getText(ctx));
             }
             definitions = definitions.definitions();
         }

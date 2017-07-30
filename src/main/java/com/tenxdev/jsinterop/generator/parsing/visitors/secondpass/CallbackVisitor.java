@@ -20,7 +20,6 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import com.tenxdev.jsinterop.generator.processing.ParserUtil;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.Collections;
@@ -47,7 +46,7 @@ class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
             return ctx.callbackRest().accept(this);
         } else {
             parsingContext.getlogger().reportError("unexpected state in CallbackRestOrInterface visitor");
-            parsingContext.getlogger().reportError("Content: " + ParserUtil.getText(ctx));
+            parsingContext.getlogger().reportError("Content: " + parsingContext.getText(ctx));
             return null;
         }
     }

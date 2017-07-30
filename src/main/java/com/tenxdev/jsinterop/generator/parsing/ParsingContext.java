@@ -19,12 +19,17 @@ package com.tenxdev.jsinterop.generator.parsing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.processing.TypeFactory;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.tree.Trees;
 
 public class ParsingContext {
 
     private final TypeFactory typeFactory;
     private final Logger logger;
     private String packageSuffix;
+    private Parser parser;
 
     public ParsingContext(Logger logger) {
         this.logger = logger;
@@ -46,5 +51,25 @@ public class ParsingContext {
     public void setPackageSuffix(String packageSuffix) {
         this.packageSuffix = packageSuffix;
     }
+
+    public void setParser(Parser parser) {
+        this.parser = parser;
+    }
+
+    public String printTree(ParseTree ctx) {
+        return Trees.toStringTree(ctx, parser);
+    }
+
+    public static String getText(ParseTree ctx) {
+        if (ctx instanceof TerminalNode) {
+            return ctx.getText();
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            builder.append(getText(ctx.getChild(i))).append(' ');
+        }
+        return builder.toString();
+    }
+
 
 }

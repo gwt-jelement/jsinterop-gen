@@ -17,7 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.processing.ParserUtil;
+import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
@@ -30,7 +30,7 @@ class GenericExtendedAttribeListVisitor extends WebIDLBaseVisitor<List<String>> 
     public List<String> visitExtendedAttributeList(WebIDLParser.ExtendedAttributeListContext ctx) {
         List<String> extendedAttributes = new ArrayList<>();
         if (ctx.extendedAttribute() != null) {
-            extendedAttributes.add(ParserUtil.getText(ctx.extendedAttribute()).trim());
+            extendedAttributes.add(ParsingContext.getText(ctx.extendedAttribute()).trim());
         }
         processRest(ctx.extendedAttributes(), extendedAttributes);
         return extendedAttributes.isEmpty() ? null : extendedAttributes;
@@ -41,7 +41,7 @@ class GenericExtendedAttribeListVisitor extends WebIDLBaseVisitor<List<String>> 
         WebIDLParser.ExtendedAttributesContext ctx = extendedAttributesContext;
         while (ctx != null) {
             if (ctx.extendedAttribute() != null) {
-                extendedAttributes.add(ParserUtil.getText(ctx.extendedAttribute()).trim());
+                extendedAttributes.add(ParsingContext.getText(ctx.extendedAttribute()).trim());
             }
             ctx = ctx.extendedAttributes();
         }
