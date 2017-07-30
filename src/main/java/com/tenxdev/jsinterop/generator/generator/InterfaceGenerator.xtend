@@ -130,29 +130,29 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
         }
 
         @JsOverlay
-        public JsObject<T> with(String propertyName, T value){
+        public final JsObject<T> with(String propertyName, T value){
             return Js.<T>with(this, propertyName, value);
         }
 
         «FOR String primitiveType: GWT_PRIMITIVE_TYPES»
             @JsOverlay
-            public JsObject<T> with(String propertyName, «primitiveType» value){
+            public final JsObject<T> with(String propertyName, «primitiveType» value){
                 return Js.<T>with(this, propertyName, value);
             }
 
         «ENDFOR»
         @JsOverlay
-        public JsObject<T> with(String propertyName, long value){
+        public final JsObject<T> with(String propertyName, long value){
             return Js.<T>with(this, propertyName, (double)value);
         }
 
         @JsOverlay
-        public boolean isEqualTo(Object object){
+        public final boolean isEqualTo(Object object){
             return Js.isEqual(this, object);
         }
 
         @JsOverlay
-        public boolean isStrictlyEqualTo(Object object){
+        public final boolean isStrictlyEqualTo(Object object){
             return Js.isStrictlyEqual(this, object);
         }
 
