@@ -28,11 +28,20 @@ public abstract class AbstractDefinition {
     private final List<PartialDefinition> partialDefinitions = new ArrayList<>();
     private final List<ImplementsDefinition> implementsDefinitions = new ArrayList<>();
     private final List<String> importedPackages = new ArrayList<>();
-    private  String packageName;
+    private String packageName;
     private String filename;
+    private Extension extension;
 
     AbstractDefinition(String name) {
         this.name = name;
+    }
+
+    public Extension getExtension() {
+        return extension;
+    }
+
+    public void setExtension(Extension extension) {
+        this.extension = extension;
     }
 
     public List<String> getImportedPackages() {

@@ -43,6 +43,7 @@ public class ModelBuilder {
 
     public Model buildFrom(String inputDirectory) throws IOException {
         ParsingContext parsingContext = performFirstPass(inputDirectory);
+        scanExtensions(inputDirectory, parsingContext);
         return performSecondPass(inputDirectory, parsingContext);
     }
 
@@ -55,7 +56,16 @@ public class ModelBuilder {
      */
     private ParsingContext performFirstPass(String inputDirectory) throws IOException {
         logger.info(() -> "Parsing pass 1-scanning object types");
-        List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory, "idl");
+        File directory = new File(inputDirectory);
+        if (!directory.exists()) {
+            logger.formatError("Input directory %s does not exist.", inputDirectory);
+            System.exit(-1);
+        }
+        List<File> fileList = FileListBuilder.INSTANCE.findFiles(directory, "idl");
+        if (fileList.isEmpty()) {
+            logger.formatError("No idl files were found in input directory %s", inputDirectory);
+            System.exit(-1);
+        }
         int offset = new File(inputDirectory).getAbsolutePath().length();
         ParsingContext parsingContext = new ParsingContext(logger);
         for (File file : fileList) {
@@ -66,10 +76,47 @@ public class ModelBuilder {
         return parsingContext;
     }
 
+    private void scanExtensions(String inputDirectory, ParsingContext parsingContext) throws IOException {
+        logger.info(() -> "Scanning extensions");
+        File extensionsDirectory = new File(inputDirectory, "_extensions");
+        if (extensionsDirectory.exists()) {
+            List<File> fileList = FileListBuilder.INSTANCE.findFiles(extensionsDirectory,
+                    "java", "vm");
+            extractExtensionObjectTypes(fileList, parsingContext);
+        }
+    }
+
+    private void extractExtensionObjectTypes(List<File> fileList, ParsingContext parsingContext) throws IOException {
+        for (File file : fileList) {
+            if (!ExtensionsUtils.INSTANCE.isPartialClass(file)) {
+                if (!ExtensionsUtils.INSTANCE.isTemplateFile(file)) {
+                    logger.formatError("Unsupported non velocity Java extension %s. File must" +
+                                    " be a Velocity template with ${basePackage} in the package declaration.",
+                            file.getName());
+                }else{
+                    ExtensionsUtils.INSTANCE.registerExtensionType(file, parsingContext.getTypeFactory(),
+                            logger);
+                }
+            }
+        }
+    }
+
+    private void registerExtensions(String inputDirectory, Model model) throws IOException {
+        logger.info(() -> "Registering extensions");
+        File extensionsDirectory = new File(inputDirectory, "_extensions");
+        if (extensionsDirectory.exists()) {
+            List<File> fileList = FileListBuilder.INSTANCE.findFiles(extensionsDirectory,
+                    "java", "vm");
+            for (File file: fileList){
+                ExtensionsUtils.INSTANCE.registerPartialClassExtension(file, model, logger);
+            }
+        }
+    }
+
     private Model performSecondPass(String inputDirectory, ParsingContext parsingContext) throws IOException {
         logger.info(() -> "Parsing pass 2-building model");
         Model model = new Model();
-        List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory,"idl");
+        List<File> fileList = FileListBuilder.INSTANCE.findFiles(new File(inputDirectory), "idl");
         int offset = new File(inputDirectory).getAbsolutePath().length();
         for (File file : fileList) {
             String packageSuffix = getPackageSuffix(offset, file);
@@ -79,22 +126,27 @@ public class ModelBuilder {
                 try {
                     model.registerDefinition(definition, packageSuffix, file.getAbsolutePath());
                 } catch (Model.ConflictingNameException conflictingNameException) {
-                    logger.formatError("Name collision detected:%n\t%s is defined in package %s in file %s%n" +
-                                    "\t%s is also defined in package %s in file %s",
-                            conflictingNameException.getDefinition().getName(),
-                            conflictingNameException.getDefinition().getPackageName(),
-                            conflictingNameException.getDefinition().getFilename(),
-                            definition.getName(), packageSuffix, file.getAbsolutePath());
-                    logger.reportError("Definition 1:");
-                    logger.reportError(conflictingNameException.getDefinition().toString());
-                    logger.reportError("Definition 2:");
-                    logger.reportError(definition.toString());
-                    logger.reportError("");
+                    reportConflictingNameError(definition, file, packageSuffix, conflictingNameException);
                 }
             }
         }
         model.setTypeFactory(parsingContext.getTypeFactory());
+        registerExtensions(inputDirectory, model);
         return model;
+    }
+
+    private void reportConflictingNameError(AbstractDefinition definition, File file, String packageSuffix, Model.ConflictingNameException conflictingNameException) {
+        logger.formatError("Name collision detected:%n\t%s is defined in package %s in file %s" +
+                        "\t%s is also defined in package %s in file %s",
+                conflictingNameException.getDefinition().getName(),
+                conflictingNameException.getDefinition().getPackageName(),
+                conflictingNameException.getDefinition().getFilename(),
+                definition.getName(), packageSuffix, file.getAbsolutePath());
+        logger.reportError("Definition 1:");
+        logger.reportError(conflictingNameException.getDefinition().toString());
+        logger.reportError("Definition 2:");
+        logger.reportError(definition.toString());
+        logger.reportError("");
     }
 
     private void scanFile(File file, ParsingContext parsingContext) throws IOException {

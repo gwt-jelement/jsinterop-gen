@@ -28,6 +28,7 @@ public class Model {
     private final Map<String, AbstractDefinition> definitions = new HashMap<>();
     private final Map<String, List<PartialDefinition>> deferredPartials = new HashMap<>();
     private final Map<String, List<ImplementsDefinition>> deferredImplements = new HashMap<>();
+    private final List<Extension> extensions=new ArrayList<>();
     private TypeFactory typeFactory;
 
     public Collection<AbstractDefinition> getDefinitions() {
@@ -100,6 +101,10 @@ public class Model {
 
     public void setTypeFactory(TypeFactory typeFactory) {
         this.typeFactory = typeFactory;
+    }
+
+    public List<Extension> getExtensions() {
+        return extensions;
     }
 
     public class ConflictingNameException extends Exception {

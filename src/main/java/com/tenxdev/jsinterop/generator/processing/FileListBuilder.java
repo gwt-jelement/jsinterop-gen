@@ -17,57 +17,39 @@
 
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.tenxdev.jsinterop.generator.logging.Logger;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class FileListBuilder {
+enum FileListBuilder {
 
-    private final Logger logger;
+    INSTANCE;
 
-    public FileListBuilder(Logger logger) {
-        this.logger = logger;
-    }
-
-    public List<File> findFiles(String baseDirectory, String... extensions) {
-        File directory = new File(baseDirectory);
-        if (!directory.exists()) {
-            logger.formatError("Input directory %s does not exist.", baseDirectory);
-            System.exit(-1);
-        }
+    public List<File> findFiles(File directory, String... extensions) {
         List<File> fileList = new ArrayList<>();
         findFiles(directory, fileList, Arrays.asList(extensions));
-        if (fileList.isEmpty()) {
-            logger.formatError("No idl files were found in input directory %s", baseDirectory);
-            System.exit(-1);
-        }
         return fileList;
     }
 
     private void findFiles(File baseDirectory, List<File> fileList, List<String> extensions) {
         File[] files = baseDirectory.listFiles((dir, name) -> {
             File file = new File(dir, name);
-            return file.isDirectory() || (file.isFile() && name.toLowerCase().endsWith(".idl"));
+            return file.isDirectory() || (file.isFile() && extensions.contains(getFileExtension(name)));
         });
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
                     findFiles(file, fileList, extensions);
                 } else {
-                    String fileExtension=getExtension(file);
-                    if (extensions.contains(fileExtension.toLowerCase())) {
-                        fileList.add(file);
-                    }
+                    fileList.add(file);
                 }
             }
         }
     }
 
-    private String getExtension(File file) {
-        int lastDot = file.getName().lastIndexOf(".");
-        return lastDot==-1?"":file.getName().substring(lastDot+1);
+    private String getFileExtension(String filename) {
+        int lastDot = filename.lastIndexOf(".");
+        return lastDot == -1 ? "" : filename.substring(lastDot + 1);
     }
 }

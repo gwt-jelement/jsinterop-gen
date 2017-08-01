@@ -81,7 +81,6 @@ public class TypeFactory {
         typeMap.put("ByteString", new NativeType("String"));
         typeMap.put("Dictionary", new NativeType("Object"));
         typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
-        typeMap.put("record", new ObjectType("JsObject", ".core"));
     }
 
     public Type getTypeNoParse(String typeName) {
