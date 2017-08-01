@@ -31,6 +31,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     private final Type parent;
     private final String jsTypeName;
     private final String genericParameter;
+    private final boolean supressed;
     private List<Constant> constants = new ArrayList<>();
     private List<Feature> features = new ArrayList<>();
     private List<Constructor> constructors = new ArrayList<>();
@@ -53,6 +54,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
                 .map(member -> (Feature) member).collect(Collectors.toList());
         this.jsTypeName = extendedAttributes.extractValue(ExtendedAttributes.JS_TYPE_NAME, name);
         this.genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
+        this.supressed=extendedAttributes.hasExtendedAttribute(ExtendedAttributes.NO_INTERFACE_OBJECT);
     }
 
     protected InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
@@ -65,6 +67,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
         this.features = interfaceDefinition.features;
         this.jsTypeName = interfaceDefinition.jsTypeName;
         this.genericParameter = interfaceDefinition.genericParameter;
+        this.supressed=interfaceDefinition.supressed;
     }
 
     public String getGenericParameter() {
@@ -102,6 +105,10 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
 
     public String getJsTypeName() {
         return jsTypeName;
+    }
+
+    public boolean isSupressed() {
+        return supressed;
     }
 
     @Override

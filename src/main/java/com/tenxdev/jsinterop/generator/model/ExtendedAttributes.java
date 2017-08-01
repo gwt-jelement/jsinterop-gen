@@ -29,6 +29,7 @@ public class ExtendedAttributes {
     static final String JS_TYPE_NAME = "JsTypeName";
     static final String JS_PROPERTY_NAME = "JsPropertyName";
     static final String DEPRECATED = "Deprecated";
+    public static final String NO_INTERFACE_OBJECT = "NoInterfaceObject";
     private final List<String> attributes;
 
     public ExtendedAttributes(List<String> attributes) {

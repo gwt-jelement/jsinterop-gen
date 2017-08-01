@@ -25,10 +25,11 @@ import com.tenxdev.jsinterop.generator.model.Attribute
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.Constructor
 import com.tenxdev.jsinterop.generator.model.types.UnionType
+import com.tenxdev.jsinterop.generator.processing.TemplateFiller
 
 class InterfaceGenerator extends XtendTemplate{
 
-    def generate(String basePackageName, InterfaceDefinition definition){
+    def generate(String basePackageName, InterfaceDefinition definition, TemplateFiller templateFiller){
         Collections.sort(definition.methods)
         return '''
 «copyright»
@@ -44,119 +45,7 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     «constructors(definition)»
     «nonFieldAttributes(definition)»
     «methods(definition)»
-    «IF definition.name=="JsObject"»
-        @JsOverlay
-        public final T get(String propertyName){
-            return Js.<T>get(this, propertyName);
-        }
-
-        @JsOverlay
-        public final T get(double index){
-            return Js.<T>get(this, index);
-        }
-
-        «FOR String primitiveType: GWT_PRIMITIVE_TYPES»
-            @JsOverlay
-            public final «primitiveType» get«primitiveType.toFirstUpper»(String propertyName){
-                return Js.get«primitiveType.toFirstUpper»(this, propertyName);
-            }
-
-            @JsOverlay
-            public final «primitiveType» get«primitiveType.toFirstUpper»(double index){
-                return Js.get«primitiveType.toFirstUpper»(this, index);
-            }
-
-        «ENDFOR»
-        @JsOverlay
-        public final long getLong(String propertyName){
-            return Js.getLong(this, propertyName);
-        }
-
-        @JsOverlay
-        public final long getLong(double index){
-            return Js.getLong(this, index);
-        }
-
-        @JsOverlay
-        public final void set(String propertyName, T value){
-            Js.<T>set(this, propertyName, value);
-        }
-
-        @JsOverlay
-        public final void set(double index , T value){
-            Js.<T>set(this, index, value);
-        }
-
-        «FOR String primitiveType: GWT_PRIMITIVE_TYPES»
-            @JsOverlay
-            public final void set(String propertyName, «primitiveType» value){
-                Js.<T>set(this, propertyName, value);
-            }
-
-            @JsOverlay
-            public final void set(double index , «primitiveType» value){
-                Js.<T>set(this, index, value);
-            }
-
-        «ENDFOR»
-        @JsOverlay
-        public final void set(String propertyName, long value){
-            Js.set(this, propertyName, (double) value);
-        }
-
-        @JsOverlay
-        public final void set(double index, long value){
-            Js.set(this, index, (double) value);
-        }
-
-        @JsOverlay
-        public final void delete(String propertyName){
-            Js.<T>delete(this, propertyName);
-        }
-
-        @JsOverlay
-        public final void delete(double index){
-            Js.<T>delete(this, index);
-        }
-
-        @JsOverlay
-        public final boolean has(String propertyName){
-            return Js.<T>has(this, propertyName);
-        }
-
-        @JsOverlay
-        public final boolean has(double index){
-             return Js.<T>has(this, index);
-        }
-
-        @JsOverlay
-        public final JsObject<T> with(String propertyName, T value){
-            return Js.<T>with(this, propertyName, value);
-        }
-
-        «FOR String primitiveType: GWT_PRIMITIVE_TYPES»
-            @JsOverlay
-            public final JsObject<T> with(String propertyName, «primitiveType» value){
-                return Js.<T>with(this, propertyName, value);
-            }
-
-        «ENDFOR»
-        @JsOverlay
-        public final JsObject<T> with(String propertyName, long value){
-            return Js.<T>with(this, propertyName, (double)value);
-        }
-
-        @JsOverlay
-        public final boolean isEqualTo(Object object){
-            return Js.isEqual(this, object);
-        }
-
-        @JsOverlay
-        public final boolean isStrictlyEqualTo(Object object){
-            return Js.isStrictlyEqual(this, object);
-        }
-
-    «ENDIF»
+    «MarginFxer.INSTANCE.fix(templateFiller.fill(definition, basePackageName))»
 }
 '''
     }

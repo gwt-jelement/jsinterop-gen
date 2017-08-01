@@ -34,6 +34,8 @@ public interface Logger {
 
     OutputStream getPrintStream();
 
+    int getLogLevel();
+
     void setLogLevel(int logLevel);
 
     void info(Supplier<String> messageSupplier);

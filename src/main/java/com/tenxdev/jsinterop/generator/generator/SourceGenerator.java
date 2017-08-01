@@ -19,6 +19,7 @@ package com.tenxdev.jsinterop.generator.generator;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.processing.TemplateFiller;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -51,6 +52,7 @@ public class SourceGenerator extends XtendTemplate {
         CallbackGenerator callbackGenerator = new CallbackGenerator();
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator();
         DictionaryGenerator dictionaryGenerator = new DictionaryGenerator();
+        TemplateFiller templateFiller=new TemplateFiller(model, logger);
         int numOutput = 0;
         for (AbstractDefinition definition : model.getDefinitions()) {
             Path filePath = getSourcePath(outputDirectory, definition.getPackageName(), definition.getName(),
@@ -62,8 +64,11 @@ public class SourceGenerator extends XtendTemplate {
                 outputFile(filePath, callbackGenerator.generate(basePackageName, (CallbackDefinition) definition));
                 ++numOutput;
             } else if (definition instanceof InterfaceDefinition) {
-                outputFile(filePath, interfaceGenerator.generate(basePackageName, (InterfaceDefinition) definition));
-                ++numOutput;
+                if (!((InterfaceDefinition)definition).isSupressed()) {
+                    outputFile(filePath, interfaceGenerator.generate(basePackageName,
+                            (InterfaceDefinition) definition, templateFiller));
+                    ++numOutput;
+                }
             } else if (definition instanceof DictionaryDefinition) {
                 outputFile(filePath, dictionaryGenerator.generate(basePackageName, (DictionaryDefinition) definition));
                 ++numOutput;

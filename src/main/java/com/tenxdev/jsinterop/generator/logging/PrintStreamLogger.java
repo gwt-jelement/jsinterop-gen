@@ -48,6 +48,11 @@ public class PrintStreamLogger implements Logger {
     }
 
     @Override
+    public int getLogLevel() {
+        return logLevel;
+    }
+
+    @Override
     public void setLogLevel(int logLevel) {
         this.logLevel = logLevel;
     }

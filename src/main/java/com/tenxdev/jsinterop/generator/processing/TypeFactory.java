@@ -80,6 +80,7 @@ public class TypeFactory {
         typeMap.put("USVString", new NativeType("String"));
         typeMap.put("ByteString", new NativeType("String"));
         typeMap.put("Dictionary", new NativeType("Object"));
+        typeMap.put("record", new ObjectType("JsObject",".core"));//FIXME
         typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
     }
 
