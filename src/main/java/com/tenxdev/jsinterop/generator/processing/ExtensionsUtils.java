@@ -42,7 +42,7 @@ public enum ExtensionsUtils {
     private Pattern importPattern = Pattern.compile("import\\s+([^\\s;]+)\\s*;");
 
     public boolean isPartialClass(File file) {
-        return file.getName().contains(".fragment.");
+        return file.getName().contains(".partial.");
     }
 
     public boolean isTemplateFile(File file) {
