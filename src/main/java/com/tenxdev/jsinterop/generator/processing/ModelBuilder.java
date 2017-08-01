@@ -55,7 +55,7 @@ public class ModelBuilder {
      */
     private ParsingContext performFirstPass(String inputDirectory) throws IOException {
         logger.info(() -> "Parsing pass 1-scanning object types");
-        List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory);
+        List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory, "idl");
         int offset = new File(inputDirectory).getAbsolutePath().length();
         ParsingContext parsingContext = new ParsingContext(logger);
         for (File file : fileList) {
@@ -69,7 +69,7 @@ public class ModelBuilder {
     private Model performSecondPass(String inputDirectory, ParsingContext parsingContext) throws IOException {
         logger.info(() -> "Parsing pass 2-building model");
         Model model = new Model();
-        List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory);
+        List<File> fileList = new FileListBuilder(logger).findFiles(inputDirectory,"idl");
         int offset = new File(inputDirectory).getAbsolutePath().length();
         for (File file : fileList) {
             String packageSuffix = getPackageSuffix(offset, file);

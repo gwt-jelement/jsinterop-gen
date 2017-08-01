@@ -21,6 +21,7 @@ import com.tenxdev.jsinterop.generator.logging.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class FileListBuilder {
@@ -31,14 +32,14 @@ class FileListBuilder {
         this.logger = logger;
     }
 
-    public List<File> findFiles(String baseDirectory) {
+    public List<File> findFiles(String baseDirectory, String... extensions) {
         File directory = new File(baseDirectory);
         if (!directory.exists()) {
             logger.formatError("Input directory %s does not exist.", baseDirectory);
             System.exit(-1);
         }
         List<File> fileList = new ArrayList<>();
-        findFiles(directory, fileList);
+        findFiles(directory, fileList, Arrays.asList(extensions));
         if (fileList.isEmpty()) {
             logger.formatError("No idl files were found in input directory %s", baseDirectory);
             System.exit(-1);
@@ -46,7 +47,7 @@ class FileListBuilder {
         return fileList;
     }
 
-    private void findFiles(File baseDirectory, List<File> fileList) {
+    private void findFiles(File baseDirectory, List<File> fileList, List<String> extensions) {
         File[] files = baseDirectory.listFiles((dir, name) -> {
             File file = new File(dir, name);
             return file.isDirectory() || (file.isFile() && name.toLowerCase().endsWith(".idl"));
@@ -54,11 +55,19 @@ class FileListBuilder {
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    findFiles(file, fileList);
+                    findFiles(file, fileList, extensions);
                 } else {
-                    fileList.add(file);
+                    String fileExtension=getExtension(file);
+                    if (extensions.contains(fileExtension.toLowerCase())) {
+                        fileList.add(file);
+                    }
                 }
             }
         }
+    }
+
+    private String getExtension(File file) {
+        int lastDot = file.getName().lastIndexOf(".");
+        return lastDot==-1?"":file.getName().substring(lastDot+1);
     }
 }
