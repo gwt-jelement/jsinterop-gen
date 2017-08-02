@@ -33,7 +33,6 @@ public enum MarginFxer {
                 .filter(line -> !line.trim().isEmpty())
                 .map(line -> line.indexOf(line.trim()))
                 .min((o1, o2) -> o1 - o2)
-                .map(Function.identity())
                 .orElse(0);
         if (smallestMargin == 0) {
             return input;

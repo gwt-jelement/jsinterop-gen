@@ -49,7 +49,7 @@ public class NamedConstructorHandler {
             try {
                 model.registerDefinition(definition, definition.getPackageName(), definition.getFilename());
             } catch (Model.ConflictingNameException conflictingNameException) {
-                logger.formatError("Name collision detected:%n\t%s is defined in package %s in file %s%n" +
+                logger.formatError("Name collision detected:%n\t%s is defined in package %s in file %s" +
                                 "\t%s is also defined in package %s in file %s",
                         conflictingNameException.getDefinition().getName(),
                         conflictingNameException.getDefinition().getPackageName(),
@@ -85,7 +85,7 @@ public class NamedConstructorHandler {
 
     private InterfaceDefinition createdNewInterface(InterfaceDefinition parentDefinition, String name) {
         if (model.getTypeFactory().hasType(name)){
-            logger.formatError("Found already existing type %s for named constructor in %s%n", name, parentDefinition.getName());
+            logger.formatError("Found already existing type %s for named constructor in %s", name, parentDefinition.getName());
         }
         Type parentType = model.getTypeFactory().getTypeNoParse(parentDefinition.getName());
         if (!(parentType instanceof ObjectType)) {

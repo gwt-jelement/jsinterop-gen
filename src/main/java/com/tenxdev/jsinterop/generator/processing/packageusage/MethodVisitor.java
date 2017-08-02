@@ -40,7 +40,6 @@ class MethodVisitor {
         }
         return packages.stream()
                 .distinct()
-                .sorted()
                 .collect(Collectors.toList());
     }
 

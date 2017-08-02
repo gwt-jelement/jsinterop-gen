@@ -18,14 +18,45 @@
 package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.types.ObjectType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractModelVisitor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>> {
 
     private static final List<String> NO_IMPLEMENTATION = Collections.emptyList();
+
+    @Override
+    public Map<AbstractDefinition, List<String>> accept(Model model) {
+        return super.accept(model);
+    }
+
+    @Override
+    protected List<String> visitDefinition(Model model, AbstractDefinition definition) {
+        List<String> imports=new ArrayList<>();
+        if (definition.getExtension()!=null){
+            imports.addAll(getExtensionImports(model, definition));
+        }
+        imports.addAll(super.visitDefinition(model, definition));
+        return imports;
+    }
+
+    private List<String> getExtensionImports(Model model, AbstractDefinition definition) {
+        List<String> imports = new ArrayList<>();
+        definition.getExtension().getImports().forEach(importName->{
+            Type type=model.getTypeFactory().getType(importName);
+            if (type instanceof ObjectType){
+                imports.add(((ObjectType)type).getPackageName()+"."+importName);
+            }
+            //TODO should log tyoe not found
+        });
+        return imports;
+    }
 
     @Override
     protected List<String> visitTypeDefinition(TypeDefinition definition) {

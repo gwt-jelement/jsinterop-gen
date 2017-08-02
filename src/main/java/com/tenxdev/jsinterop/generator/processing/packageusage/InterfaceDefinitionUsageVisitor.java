@@ -18,11 +18,10 @@
 package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.model.*;
-import com.tenxdev.jsinterop.generator.model.types.PackageType;
-import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
-import com.tenxdev.jsinterop.generator.model.types.UnionType;
+import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractInterfaceDefinitionVisitor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

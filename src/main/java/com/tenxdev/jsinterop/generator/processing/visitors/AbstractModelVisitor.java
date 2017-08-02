@@ -27,12 +27,13 @@ public abstract class AbstractModelVisitor<T> {
     public Map<AbstractDefinition, T> accept(Model model) {
         Map<AbstractDefinition, T> result = new HashMap<>();
         for (AbstractDefinition definition : model.getDefinitions()) {
-            result.put(definition, visitDefinition(definition));
+            result.put(definition, visitDefinition(model, definition));
         }
+
         return result;
     }
 
-    private T visitDefinition(AbstractDefinition definition) {
+    protected T visitDefinition(Model model, AbstractDefinition definition) {
         if (definition.getClass() == InterfaceDefinition.class) {
             return visitInterfaceDefinition((InterfaceDefinition) definition);
         } else if (definition.getClass() == DictionaryDefinition.class) {
