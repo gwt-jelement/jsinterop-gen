@@ -106,6 +106,7 @@ class Generator {
         new MethodUnionArgsExpander(model, logger).processModel(); //must run after all interface merging
         new MethodOptionalArgsExpander(model, logger).processModel();//must run after union args expansion
         new MethodEnumArgumentProcessor(model, logger).process(); // must run after all method expansions
+        new NativeTypeArrayArgumentHandler(model, logger).process();
 
         new AttributeUnionTypeProcessor(model, logger).process();
         new AttributeEnumTypeProcessor(model, logger).process();
