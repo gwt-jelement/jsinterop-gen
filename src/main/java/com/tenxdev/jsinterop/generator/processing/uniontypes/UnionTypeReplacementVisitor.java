@@ -83,6 +83,11 @@ public class UnionTypeReplacementVisitor extends AbstractTypeVisitor<List<Type>>
     }
 
     @Override
+    protected List<Type> visitExtendedObjectType(ExtensionObjectType type) {
+        return Collections.emptyList();
+    }
+
+    @Override
     protected List<Type> visitNativeType(NativeType type) {
         return Collections.emptyList();
     }

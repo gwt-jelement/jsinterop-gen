@@ -49,6 +49,11 @@ public class HasEnumTypeVisitor extends AbstractTypeVisitor<Boolean> {
     }
 
     @Override
+    protected Boolean visitExtendedObjectType(ExtensionObjectType type) {
+        return false;
+    }
+
+    @Override
     protected Boolean visitNativeType(NativeType type) {
         return false;
     }

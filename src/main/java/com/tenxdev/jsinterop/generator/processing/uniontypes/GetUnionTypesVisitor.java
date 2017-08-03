@@ -64,6 +64,11 @@ public class GetUnionTypesVisitor extends AbstractTypeVisitor<List<UnionType>> {
     }
 
     @Override
+    protected List<UnionType> visitExtendedObjectType(ExtensionObjectType type) {
+        return Collections.emptyList();
+    }
+
+    @Override
     protected List<UnionType> visitNativeType(NativeType type) {
         return Collections.emptyList();
     }

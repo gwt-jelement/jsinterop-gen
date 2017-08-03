@@ -20,6 +20,7 @@ package com.tenxdev.jsinterop.generator.processing;
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.logging.VelocityLogger;
 import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
+import com.tenxdev.jsinterop.generator.model.Extension;
 import com.tenxdev.jsinterop.generator.model.Model;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -43,6 +44,17 @@ public class TemplateFiller {
         velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("runtime.log.logsystem", new VelocityLogger(logger));
         velocityEngine.init();
+    }
+
+    public String fill(Extension extension, String basePackage){
+        VelocityContext context = new VelocityContext();
+        context.put("GWT_PRIMITIVE_TYPES", GWT_PRIMITIVE_TYPES);
+        context.put("model", model);
+        context.put("basePackage", basePackage);
+        context.put("display", new DisplayTool());
+        StringWriter writer = new StringWriter();
+        return velocityEngine.evaluate(context, writer, extension.getClassName(),
+                extension.getTemplate()) ? writer.toString() : "";
     }
 
     public String fill(AbstractDefinition definition, String basePackage) {

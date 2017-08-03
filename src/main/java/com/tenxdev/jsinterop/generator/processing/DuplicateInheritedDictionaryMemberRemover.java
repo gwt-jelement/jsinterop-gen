@@ -22,6 +22,8 @@ import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.types.ExtensionObjectType;
+import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,12 +62,12 @@ public class DuplicateInheritedDictionaryMemberRemover {
     }
 
     private DictionaryDefinition getParentDefinition(DictionaryDefinition definition) {
-        if (definition.getParent() != null && !"Object".equals(definition.getParent().getTypeName())) {
+        if (definition.getParent() != null && !(definition.getParent() instanceof ObjectType)) {
             AbstractDefinition parentDefinition = model.getDefinition(definition.getParent().getTypeName());
             if (parentDefinition instanceof DictionaryDefinition) {
                 return (DictionaryDefinition) parentDefinition;
-            } else if (!"JsObject".equals(parentDefinition.getName())) {
-                logger.formatError("DuplicateInheritedDictionaryMemberRemover: Inconsitent parent type for %s",
+            } else {
+                logger.formatError("DuplicateInheritedDictionaryMemberRemover: Inconsistent parent type for %s",
                         definition.getName());
             }
         }

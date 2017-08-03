@@ -74,8 +74,13 @@ public class SourceGenerator extends XtendTemplate {
                 ++numOutput;
             }
         }
-        Path filePath = getSourcePath(outputDirectory, ".core","Js", basePackageName);
-        outputFile(filePath, new JsGenerator().generate(basePackageName));
+        for (Extension extension: model.getExtensions()){
+            String content=templateFiller.fill(extension, basePackageName);
+            Path filePath=getSourcePath(outputDirectory,extension.getPackageSuffix(), extension.getClassName(),
+                    basePackageName);
+            outputFile(filePath, content);
+            ++numOutput;
+        }
         int count = numOutput;
         logger.info(() -> String.format("Generated %d Java file%s in %s", count, count != 1 ? "s" : "", outputDirectory));
     }

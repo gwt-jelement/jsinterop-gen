@@ -80,6 +80,11 @@ public class RemoveEnumUnionTypeVisitor extends AbstractTypeVisitor<Type> {
     }
 
     @Override
+    protected Type visitExtendedObjectType(ExtensionObjectType type) {
+        return type;
+    }
+
+    @Override
     protected Type visitNativeType(NativeType type) {
         return type;
     }

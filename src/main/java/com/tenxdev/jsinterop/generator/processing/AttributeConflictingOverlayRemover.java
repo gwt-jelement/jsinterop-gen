@@ -22,6 +22,7 @@ import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Attribute;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.types.ExtensionObjectType;
 import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
@@ -50,7 +51,7 @@ public class AttributeConflictingOverlayRemover {
     private void process(InterfaceDefinition definition) {
         Type parentType = definition.getParent() instanceof ParameterisedType ?
                 ((ParameterisedType) definition.getParent()).getBaseType() : definition.getParent();
-        if ("Object".equals(parentType.getTypeName())) {
+        if (parentType instanceof ExtensionObjectType) {
             return;
         }
         AbstractDefinition parentDefinition = model.getDefinition(parentType.getTypeName());

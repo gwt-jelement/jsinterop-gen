@@ -43,6 +43,9 @@ public abstract class AbstractTypeVisitor<T> {
         if (type.getClass() == GenericType.class) {
             return visitGenericType((GenericType) type);
         }
+        if (type.getClass() == ExtensionObjectType.class) {
+            return visitExtendedObjectType((ExtensionObjectType) type);
+        }
         throw new IllegalStateException("Unknown type " + type.getClass().getName());
     }
 
@@ -55,6 +58,8 @@ public abstract class AbstractTypeVisitor<T> {
     protected abstract T visitEnumType(EnumType type);
 
     protected abstract T visitObjectType(ObjectType type);
+
+    protected abstract T visitExtendedObjectType(ExtensionObjectType type);
 
     protected abstract T visitNativeType(NativeType type);
 

@@ -22,6 +22,7 @@ import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Constructor;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.types.ExtensionObjectType;
 import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
@@ -59,7 +60,7 @@ public class SuperCallConstructorProcessor {
     private InterfaceDefinition findParentInterface(InterfaceDefinition interfaceDefinition) {
         Type parentType= interfaceDefinition.getParent() instanceof ParameterisedType ?
                 ((ParameterisedType)interfaceDefinition.getParent()).getBaseType(): interfaceDefinition.getParent();
-        if ("Object".equals(parentType.getTypeName())) {
+        if (parentType instanceof ExtensionObjectType) {
             return null;
         }
         AbstractDefinition parentDefinition = model.getDefinition(parentType.getTypeName());

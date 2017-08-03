@@ -69,6 +69,11 @@ public class PackageUsageTypeVisitor extends AbstractTypeVisitor<List<String>> {
     }
 
     @Override
+    protected List<String> visitExtendedObjectType(ExtensionObjectType type) {
+        return Collections.emptyList();
+    }
+
+    @Override
     protected List<String> visitNativeType(NativeType type) {
         return Collections.emptyList();
     }

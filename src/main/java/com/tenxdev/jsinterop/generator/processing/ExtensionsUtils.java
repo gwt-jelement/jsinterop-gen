@@ -21,7 +21,7 @@ import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Extension;
 import com.tenxdev.jsinterop.generator.model.Model;
-import com.tenxdev.jsinterop.generator.model.types.ObjectType;
+import com.tenxdev.jsinterop.generator.model.types.ExtensionObjectType;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public enum ExtensionsUtils {
             logger.formatError("Missing package declation for extension %s in file %s",
                     className, file.getName());
         } else {
-            typeFactory.registerType(className, new ObjectType(className, packageSuffix));
+            typeFactory.registerType(className, new ExtensionObjectType(className, packageSuffix));
         }
     }
 
@@ -103,10 +103,10 @@ public enum ExtensionsUtils {
     }
 
     private void registerPartialClassExtension(Model model, Extension extension, Logger logger) {
-        AbstractDefinition definition=model.getDefinition(extension.getClassName());
-        if (definition!=null){
+        AbstractDefinition definition = model.getDefinition(extension.getClassName());
+        if (definition != null) {
             definition.setExtension(extension);
-        }else{
+        } else {
             logger.formatError("Unable to find definition for %s while processing extensions",
                     extension.getClassName());
         }

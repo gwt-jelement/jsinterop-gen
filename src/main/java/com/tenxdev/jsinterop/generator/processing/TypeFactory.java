@@ -82,7 +82,6 @@ public class TypeFactory {
         typeMap.put("Dictionary", new NativeType("Object"));
         typeMap.put("record", new ObjectType("JsObject",".core"));//FIXME
         typeMap.put("Promise", new ObjectType("Promise", "elemental2.promise"));
-        typeMap.put("Array", new ObjectType("Array", "elemental2.core"));
     }
 
     public Type getTypeNoParse(String typeName) {

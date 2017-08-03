@@ -56,7 +56,6 @@ public class NativeTypeArrayArgumentHandler {
             }
         });
         definition.getConstructors().addAll(newConstructors);
-
     }
 
     private void processMethods(Model model, InterfaceDefinition definition) {
