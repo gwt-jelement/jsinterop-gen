@@ -21,16 +21,21 @@ import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.model.types.GenericType;
-import com.tenxdev.jsinterop.generator.model.types.ObjectType;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
 
+    private static final Pattern TYPE_PARAMETER_PATTERN = Pattern.compile("<([A-Z])>");
     private final Type returnType;
     private final boolean staticMethod;
     private final List<String> extendedAttributes;
@@ -50,20 +55,45 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
         String genericTypeSpecifiers = null;
         ExtendedAttributes extendedAttributes = new ExtendedAttributes(this.extendedAttributes);
         Type effectiveReturnType = returnType;
-        Type replacedReturnedType=null;
+        Type replacedReturnedType = null;
         if (extendedAttributes.hasExtendedAttribute(ExtendedAttributes.GENERIC_RETURN)) {
-            genericTypeSpecifiers = "T extends "+returnType.displayValue();
+            genericTypeSpecifiers = "T extends " + returnType.displayValue();
             effectiveReturnType = new GenericType("T");
-            replacedReturnedType=returnType;
+            replacedReturnedType = returnType;
         }
         String genericSubstitution = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null);
         if (genericSubstitution != null) {
             effectiveReturnType = new GenericType(genericSubstitution);
-            if (staticMethod){
-                genericTypeSpecifiers=genericSubstitution;
-            }
+        }
+        String[] genericParameterNames = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_PARAMETER, null);
+        if (genericParameterNames != null) {
+            List<Type> genericParameters = Arrays.stream(genericParameterNames)
+                    .map(param -> param.length() == 1 ?
+                            new GenericType(param) :
+                            parsingContext.getTypeFactory().getTypeNoParse(param))
+                    .collect(Collectors.toList());
+            effectiveReturnType = new ParameterisedType(returnType, genericParameters);
+            replacedReturnedType = returnType;
         }
         return new Method(name, effectiveReturnType, parameters, staticMethod, genericTypeSpecifiers,
                 extendedAttributes, replacedReturnedType);
+    }
+
+    private String extractGenericTypeSpecifiers(String[] genericParameterNames) {
+        return Arrays.stream(genericParameterNames)
+                .map(this::extractGenericTypeSpecifier)
+                .filter(typeSpecifier -> typeSpecifier != null)
+                .collect(Collectors.joining(","));
+    }
+
+    private String extractGenericTypeSpecifier(String genericParameterName) {
+        if (genericParameterName.length() == 1) {
+            return genericParameterName;
+        }
+        Matcher matcher = TYPE_PARAMETER_PATTERN.matcher(genericParameterName);
+        if (matcher.find() && matcher.groupCount() == 1) {
+            return matcher.group(1);
+        }
+        return null;
     }
 }

@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.model.Attribute;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,11 @@ import java.util.stream.Collectors;
 class AttributesVisitor {
 
     private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
+    private Type jsType;
+
+    public AttributesVisitor(Type jsType) {
+        this.jsType = jsType;
+    }
 
     List<String> accept(List<Attribute> attributes) {
         return attributes.stream()
@@ -41,7 +47,7 @@ class AttributesVisitor {
         result.addAll(typeVisitor.accept(attribute.getType()));
         if (attribute.isWriteOnly()) {
             result.add("jsinterop.annotations.JsOverlay");
-            result.add("jsinterop.base.Js");
+            result.addAll(typeVisitor.accept(jsType));
         }
         return result;
     }

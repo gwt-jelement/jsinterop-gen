@@ -21,13 +21,16 @@ import com.tenxdev.jsinterop.generator.model.Constructor;
 import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
+import com.tenxdev.jsinterop.generator.model.types.GenericType;
 import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
 
@@ -47,14 +50,16 @@ class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
                 ? parsingContext.getTypeFactory().getTypeNoParse("IsObject")
                 : parsingContext.getTypeFactory().getTypeNoParse(ctx.inheritance().IDENTIFIER_WEBIDL().getText());
         ExtendedAttributes extendedAttributes = new ExtendedAttributes(this.extendedAttributes);
-        String genericTypeName = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_EXTEND, null);
-        if (genericTypeName != null) {
-            Type genericType = parsingContext.getTypeFactory().getTypeNoParse(genericTypeName);
-            parent = new ParameterisedType(parent, Collections.singletonList(genericType));
+        String[] genericExtendTypeNames = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_EXTEND, null);
+        if (genericExtendTypeNames != null) {
+            List<Type> genericTypes = Arrays.stream(genericExtendTypeNames)
+                    .map(genericTypeName->
+                    genericTypeName.length()==1? new GenericType(genericTypeName):
+                    parsingContext.getTypeFactory().getTypeNoParse(genericTypeName))
+                    .collect(Collectors.toList());
+            parent = new ParameterisedType(parent, genericTypes);
         }
         List<InterfaceMember> members = ctx.interfaceMembers().accept(new InterfaceMembersVisitor(parsingContext, name));
-
-
         return new InterfaceDefinition(name, parent.getTypeName().equals(name) ? null : parent, constructors,
                 members, extendedAttributes);
     }

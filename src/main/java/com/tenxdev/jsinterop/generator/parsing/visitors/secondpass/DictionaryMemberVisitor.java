@@ -26,8 +26,10 @@ import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<DictionaryMember>> {
 
@@ -48,10 +50,14 @@ class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<DictionaryMe
             boolean required = memberContext.required() != null && "required".equals(memberContext.required().getText());
 
             Type type = memberContext.type().accept(new TypeVisitor(parsingContext));
-            String genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
-            if (genericParameter!=null){
-                type=new ParameterisedType(type,
-                        Collections.singletonList(parsingContext.getTypeFactory().getTypeNoParse(genericParameter)));
+            String[] genericParameterNames = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_PARAMETER, null);
+            if (genericParameterNames!=null){
+                List<Type> genericParameters = Arrays.stream(genericParameterNames)
+                        .map(param -> param.length() == 1 ?
+                                new GenericType(param) :
+                                parsingContext.getTypeFactory().getTypeNoParse(param))
+                        .collect(Collectors.toList());
+                type=new ParameterisedType(type, genericParameters);
             }
             String genericSubstitution = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null);
             if (genericSubstitution!=null) {

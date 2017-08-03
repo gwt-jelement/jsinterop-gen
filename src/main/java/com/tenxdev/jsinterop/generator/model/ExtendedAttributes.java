@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.model;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ExtendedAttributes {
@@ -24,12 +25,12 @@ public class ExtendedAttributes {
     public static final String GENERIC_EXTEND = "GenericExtend";
     public static final String GENERIC_RETURN = "GenericReturn";
     public static final String GENERIC_SUB = "GenericSub";
-    static final String JAVA_NAME = "JavaName";
     public static final String GENERIC_PARAMETER = "GenericParameter";
+    public static final String NO_INTERFACE_OBJECT = "NoInterfaceObject";
+    static final String JAVA_NAME = "JavaName";
     static final String JS_TYPE_NAME = "JsTypeName";
     static final String JS_PROPERTY_NAME = "JsPropertyName";
     static final String DEPRECATED = "Deprecated";
-    public static final String NO_INTERFACE_OBJECT = "NoInterfaceObject";
     private final List<String> attributes;
 
     public ExtendedAttributes(List<String> attributes) {
@@ -49,5 +50,12 @@ public class ExtendedAttributes {
                 .map(s -> s.replace(attributeName, "").replace("(", "")
                         .replace(")", "").replace(" ", "").trim())
                 .orElse(defaultValue);
+    }
+
+    public String[] extractValues(String attributeName, String[] defaultValue) {
+        String values = extractValue(attributeName, null);
+        return values == null ?
+                defaultValue :
+                Arrays.stream(values.split(",")).map(String::trim).toArray(String[]::new);
     }
 }

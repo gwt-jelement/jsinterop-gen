@@ -29,6 +29,11 @@ import java.util.stream.Collectors;
 
 public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefinitionVisitor<List<String>> {
     private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
+    private Type jsType;
+
+    public DictionaryDefinitionUsageVisitor(Type jsType){
+        this.jsType = jsType;
+    }
 
     @Override
     public List<String> accept(DictionaryDefinition definition) {
@@ -38,7 +43,7 @@ public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefiniti
         result.add("jsinterop.annotations.JsType");
         result.add("jsinterop.annotations.JsOverlay");
         if (!definition.getUnionReturnTypes().isEmpty()) {
-            result.add("jsinterop.base.Js");
+            result.addAll(typeVisitor.accept(jsType));
             result.addAll(definition.getUnionReturnTypes().stream()
                     .map(UnionType::getTypes)
                     .flatMap(List::stream)

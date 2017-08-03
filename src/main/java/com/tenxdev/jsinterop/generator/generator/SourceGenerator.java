@@ -29,8 +29,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Collections;
-import java.util.List;
 
 public class SourceGenerator extends XtendTemplate {
 
@@ -52,7 +50,7 @@ public class SourceGenerator extends XtendTemplate {
         CallbackGenerator callbackGenerator = new CallbackGenerator();
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator();
         DictionaryGenerator dictionaryGenerator = new DictionaryGenerator();
-        TemplateFiller templateFiller=new TemplateFiller(model, logger);
+        TemplateFiller templateFiller = new TemplateFiller(model, logger);
         int numOutput = 0;
         for (AbstractDefinition definition : model.getDefinitions()) {
             Path filePath = getSourcePath(outputDirectory, definition.getPackageName(), definition.getName(),
@@ -64,19 +62,17 @@ public class SourceGenerator extends XtendTemplate {
                 outputFile(filePath, callbackGenerator.generate(basePackageName, (CallbackDefinition) definition));
                 ++numOutput;
             } else if (definition instanceof InterfaceDefinition) {
-                if (!((InterfaceDefinition)definition).isSupressed()) {
-                    outputFile(filePath, interfaceGenerator.generate(basePackageName,
-                            (InterfaceDefinition) definition, templateFiller));
-                    ++numOutput;
-                }
+                outputFile(filePath, interfaceGenerator.generate(basePackageName,
+                        (InterfaceDefinition) definition, templateFiller));
+                ++numOutput;
             } else if (definition instanceof DictionaryDefinition) {
                 outputFile(filePath, dictionaryGenerator.generate(basePackageName, (DictionaryDefinition) definition));
                 ++numOutput;
             }
         }
-        for (Extension extension: model.getExtensions()){
-            String content=templateFiller.fill(extension, basePackageName);
-            Path filePath=getSourcePath(outputDirectory,extension.getPackageSuffix(), extension.getClassName(),
+        for (Extension extension : model.getExtensions()) {
+            String content = templateFiller.fill(extension, basePackageName);
+            Path filePath = getSourcePath(outputDirectory, extension.getPackageSuffix(), extension.getClassName(),
                     basePackageName);
             outputFile(filePath, content);
             ++numOutput;

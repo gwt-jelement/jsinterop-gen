@@ -56,7 +56,7 @@ public class ParsingContext {
         this.parser = parser;
     }
 
-    public String printTree(ParseTree ctx) {
+    public String getTree(ParseTree ctx) {
         return Trees.toStringTree(ctx, parser);
     }
 

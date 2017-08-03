@@ -111,7 +111,7 @@ public class «definition.name»«generic(definition)»«
     }
 
     def generic(DictionaryDefinition definition){
-        if (definition.genericParameter!==null) '''<«definition.genericParameter»>''' else ""
+        if (definition.genericParameters!==null) '''<«FOR String p: definition.genericParameters SEPARATOR ","»«p»«ENDFOR»>'''
     }
 
 }

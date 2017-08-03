@@ -49,17 +49,25 @@ public class SuperCallConstructorProcessor {
     }
 
     private void processInterfaceDefinition(InterfaceDefinition interfaceDefinition) {
-        if (interfaceDefinition.getConstructors().isEmpty()) {
-            addDefaultConstructor(interfaceDefinition);
-        }
         InterfaceDefinition parentInterface = findParentInterface(interfaceDefinition);
-        interfaceDefinition.getConstructors().forEach(
-                constructor -> findSuperCallArguments(constructor, parentInterface));
+        if (parentInterface != null) {
+            processInterfaceDefinition(parentInterface);
+            if (!parentInterface.getConstructors().isEmpty()) {
+                if (interfaceDefinition.getConstructors().isEmpty()) {
+                    addDefaultConstructor(interfaceDefinition);
+                }
+                Constructor parentConstructor = parentInterface.getConstructors().get(0);
+                interfaceDefinition.getConstructors().stream()
+                        .filter(constructor -> constructor.getSuperArguments().isEmpty())
+                        .forEach(constructor ->
+                                constructor.getSuperArguments().addAll(parentConstructor.getArguments()));
+            }
+        }
     }
 
     private InterfaceDefinition findParentInterface(InterfaceDefinition interfaceDefinition) {
-        Type parentType= interfaceDefinition.getParent() instanceof ParameterisedType ?
-                ((ParameterisedType)interfaceDefinition.getParent()).getBaseType(): interfaceDefinition.getParent();
+        Type parentType = interfaceDefinition.getParent() instanceof ParameterisedType ?
+                ((ParameterisedType) interfaceDefinition.getParent()).getBaseType() : interfaceDefinition.getParent();
         if (parentType instanceof ExtensionObjectType) {
             return null;
         }
@@ -78,7 +86,6 @@ public class SuperCallConstructorProcessor {
 
     private void addDefaultConstructor(InterfaceDefinition interfaceDefinition) {
         Constructor newConstructor = getDefaultConstructor();
-
         interfaceDefinition.getConstructors().add(newConstructor);
     }
 
@@ -86,11 +93,4 @@ public class SuperCallConstructorProcessor {
         return new Constructor(null, null, Collections.emptyList());
     }
 
-    private void findSuperCallArguments(Constructor constructor, InterfaceDefinition parentInterface) {
-        if (constructor.getSuperArguments().isEmpty() && parentInterface != null
-                && !parentInterface.getConstructors().isEmpty()) {
-            Constructor parentConstructor = parentInterface.getConstructors().get(0);
-            constructor.getSuperArguments().addAll(parentConstructor.getArguments());
-        }
-    }
 }

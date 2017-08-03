@@ -17,43 +17,36 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
 import java.util.List;
 
-class OperationVisitor extends ContextWebIDLBaseVisitor<Method> {
+class OperationVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
 
     private final String containingType;
     private final List<String> extendedAttributes;
 
-    public OperationVisitor(ParsingContext context, String containingType, List<String> extendedAttributes) {
+    public OperationVisitor(ParsingContext context, String containingType,
+                            List<String> extendedAttributes) {
         super(context);
         this.containingType = containingType;
         this.extendedAttributes = extendedAttributes;
     }
 
     @Override
-    public Method visitOperation(WebIDLParser.OperationContext ctx) {
+    public InterfaceMember visitOperation(WebIDLParser.OperationContext ctx) {
         if (ctx.specialOperation() != null) {
-            //FIXME, definition below is not correct
-//            Type returnType = ctx.specialOperation().returnType().accept(new PackageUsageTypeVisitor(parsingContext));
-//            String name =
-//                    ctx.specialOperation().IDENTIFIER_WEBIDL() != null &&
-//                            ctx.specialOperation().IDENTIFIER_WEBIDL().getText() != null ?
-//                            ctx.specialOperation().IDENTIFIER_WEBIDL().getText() :
-//                            ctx.specialOperation().special().getText();
-//            List<MethodArgument> parameters = ctx.specialOperation().argumentList() == null ||
-//                    ctx.specialOperation().argumentList().argument() == null ?
-//                    Collections.emptyList() :
-//                    ctx.specialOperation().argumentList().accept(new ArgumentsVisitor(parsingContext));
-//            return new Method(name, returnType, parameters, false);
-            return null;
+            return ctx.specialOperation().accept(
+                    new SpecialOperationVisitor(parsingContext, containingType, extendedAttributes));
         } else if (ctx.operationRest() != null) {
             Type returnType = ctx.returnType().accept(new TypeVisitor(parsingContext));
-            return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType, false, extendedAttributes));
+            return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType,
+                    false, extendedAttributes));
         } else {
             parsingContext.getlogger().reportError("Unexpected condition in operation");
             return null;

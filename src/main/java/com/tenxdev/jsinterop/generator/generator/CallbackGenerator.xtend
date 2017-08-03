@@ -45,7 +45,7 @@ public interface «definition.name»«generic(definition)»{
     }
 
     def generic(CallbackDefinition definition){
-        if (definition.genericParameter!==null) '''<«definition.genericParameter»>'''
+        if (definition.genericParameters!==null) '''<«FOR String p: definition.genericParameters SEPARATOR ","»«p»«ENDFOR»>'''
     }
 
 }

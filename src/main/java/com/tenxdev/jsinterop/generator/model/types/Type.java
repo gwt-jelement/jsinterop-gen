@@ -27,4 +27,20 @@ public interface Type {
 
     String getTypeName();
 
+    default boolean isGwtPrimitiveType() {
+        return this instanceof NativeType &&
+                ("byte".equals(((NativeType) this).getTypeName())
+                        || "char".equals(((NativeType) this).getTypeName())
+                        || "short".equals(((NativeType) this).getTypeName())
+                        || "int".equals(((NativeType) this).getTypeName())
+                        || "float".equals(((NativeType) this).getTypeName())
+                        || "double".equals(((NativeType) this).getTypeName())
+                        || "boolean".equals(((NativeType) this).getTypeName()));
+
+    }
+
+    default boolean isLongPrimitiveType() {
+        return this instanceof NativeType && "long".equals(((NativeType) this).getTypeName());
+    }
+
 }

@@ -18,10 +18,12 @@
 package com.tenxdev.jsinterop.generator.processing.packageusage;
 
 import com.tenxdev.jsinterop.generator.model.*;
-import com.tenxdev.jsinterop.generator.model.types.*;
+import com.tenxdev.jsinterop.generator.model.types.PackageType;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
+import com.tenxdev.jsinterop.generator.model.types.Type;
+import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractInterfaceDefinitionVisitor;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,12 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
 
     private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
     private final MethodVisitor methodVisitor = new MethodVisitor();
+    private Type jsType;
+
+    public InterfaceDefinitionUsageVisitor(Type jsType) {
+        super();
+        this.jsType = jsType;
+    }
 
     @Override
     public List<String> accept(InterfaceDefinition interfaceDefinition) {
@@ -37,9 +45,8 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         result.add("jsinterop.annotations.JsPackage");
         result.add("jsinterop.annotations.JsType");
         result.add("jsinterop.annotations.JsOverlay");
-        if (interfaceDefinition.getParent() instanceof PackageType) {
-            PackageType packageType = (PackageType) interfaceDefinition.getParent();
-            result.add(packageType.getPackageName() + "." + packageType.getTypeName());
+        if (interfaceDefinition.getParent() !=null) {
+            result.addAll(typeVisitor.accept(interfaceDefinition.getParent()));
         } else if (interfaceDefinition.getParent() instanceof ParameterisedType
                 && ((ParameterisedType) interfaceDefinition.getParent()).getBaseType() instanceof PackageType) {
             PackageType packageType = (PackageType) ((ParameterisedType) interfaceDefinition.getParent()).getBaseType();
@@ -50,7 +57,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         }
         if (!interfaceDefinition.getUnionReturnTypes().isEmpty()) {
             result.add("jsinterop.annotations.JsType");
-            result.add("jsinterop.base.Js");
+            result.addAll(typeVisitor.accept(jsType));
             result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
                     .map(UnionType::getTypes)
                     .flatMap(List::stream)
@@ -113,7 +120,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
 
     @Override
     protected List<String> visitAttributes(List<Attribute> attributes) {
-        return new AttributesVisitor().accept(attributes);
+        return new AttributesVisitor(jsType).accept(attributes);
     }
 
     @Override

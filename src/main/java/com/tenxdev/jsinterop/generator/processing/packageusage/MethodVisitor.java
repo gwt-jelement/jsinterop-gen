@@ -35,8 +35,14 @@ class MethodVisitor {
                 .distinct()
                 .collect(Collectors.toCollection(ArrayList::new));
         packages.addAll(typeVisitor.accept(method.getReturnType()));
-        if (method.getReplacedReturnType()!=null){
+        if (method.getReplacedReturnType() != null) {
             packages.addAll(typeVisitor.accept(method.getReplacedReturnType()));
+        }
+        if (method.getExtraTypes() != null) {
+            packages.addAll(method.getExtraTypes().stream()
+                    .map(typeVisitor::accept)
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList()));
         }
         return packages.stream()
                 .distinct()

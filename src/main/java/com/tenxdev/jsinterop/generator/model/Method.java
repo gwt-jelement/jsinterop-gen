@@ -29,14 +29,17 @@ public class Method implements InterfaceMember, Comparable<Method> {
     final String name;
     final List<MethodArgument> arguments;
     private final boolean staticMethod;
-    private final String genericTypeSpecifiers;
+
+    private String genericTypeSpecifiers;
+
     final boolean deprecated;
     private final Type replacedReturnType;
     private Method enumOverlay;
     private String javaName;
     Type returnType;
+    private String body;
+    private List<Type> extraTypes;
     private boolean enumReturnType;
-
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
                   String genericTypeSpecifiers, ExtendedAttributes extendedAttributes, Type replacedReturnType) {
         this.name = name;
@@ -113,6 +116,10 @@ public class Method implements InterfaceMember, Comparable<Method> {
         return genericTypeSpecifiers;
     }
 
+    public void setGenericTypeSpecifiers(String genericTypeSpecifiers) {
+        this.genericTypeSpecifiers = genericTypeSpecifiers;
+    }
+
     public boolean isDeprecated() {
         return deprecated;
     }
@@ -148,6 +155,22 @@ public class Method implements InterfaceMember, Comparable<Method> {
 
     public void setJavaName(String javaName) {
         this.javaName = javaName;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public List<Type> getExtraTypes() {
+        return extraTypes;
+    }
+
+    public void setExtraTypes(List<Type> extraTypes) {
+        this.extraTypes = extraTypes;
     }
 
     @Override

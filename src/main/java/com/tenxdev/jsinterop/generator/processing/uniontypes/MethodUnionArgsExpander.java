@@ -22,9 +22,7 @@ import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * This class generates new methods for methods with union type arguments, and removes the definition of methods with
@@ -72,19 +70,28 @@ public class MethodUnionArgsExpander {
     }
 
     private void findUnionReturnTypes(InterfaceDefinition definition) {
-        List<UnionType> unionReturnTypes = definition.getMethods().stream()
-                .map(method -> getUnionTypesVisitor.accept(method.getReturnType()))
-                .flatMap(List::stream)
-                .distinct()
-                .collect(Collectors.toList());
-        unionReturnTypes.addAll(definition.getMethods().stream()
-                .filter(method -> method.getReplacedReturnType()!=null)
-                .map(method -> getUnionTypesVisitor.accept(method.getReplacedReturnType()))
-                .flatMap(List::stream)
-                .distinct()
-                .collect(Collectors.toList()));
-        removeEnumUnionTypeVisitor.visitUnionTypes(unionReturnTypes)
-                .forEach(unionType -> definition.addUnionReturnType(definition, unionType, unionType.getName()));
+        Map<String, UnionType> unionReturnTypes = new HashMap<>();
+        Set<UnionType> uniqueValues = new HashSet<>();
+        for (Method method : definition.getMethods()) {
+            List<UnionType> accept = getUnionTypesVisitor.accept(method.getReturnType());
+            for (UnionType type : accept) {
+                if (uniqueValues.add(type)) {
+                    unionReturnTypes.put(method.getName(), type);
+                }
+            }
+        }
+        for (Method method : definition.getMethods()) {
+            if (method.getReplacedReturnType() != null) {
+                List<UnionType> unionTypes = getUnionTypesVisitor.accept(method.getReplacedReturnType());
+                for (UnionType type : unionTypes) {
+                    if (uniqueValues.add(type)) {
+                        unionReturnTypes.put(method.getName(), type);
+                    }
+                }
+            }
+        }
+        unionReturnTypes.forEach((name, unionType) ->
+                definition.addUnionReturnType(definition, removeEnumUnionTypeVisitor.visitUnionType(unionType), name));
     }
 
     private <T extends Method> List<T> processMethods(List<T> methods) {
@@ -112,7 +119,6 @@ public class MethodUnionArgsExpander {
             List<MethodArgument> newArguments = new ArrayList<>(method.getArguments());
             newArguments.set(argumentIndex, argument.newMethodArgumentWithType(type));
             T newMethod = method.newMethodWithArguments(newArguments);
-            newMethod.setEnumOverlay(method.getEnumOverlay());
             processMethod(newMethod, newMethods);
         }
     }

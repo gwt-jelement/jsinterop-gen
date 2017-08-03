@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Feature;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
@@ -30,7 +31,8 @@ class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
     private final String containingType;
     private final List<String> extendedAttributes;
 
-    public InterfaceMemberVisitor(ParsingContext context, String containingType, List<String> extendedAttributes) {
+    public InterfaceMemberVisitor(ParsingContext context, String containingType,
+                                  List<String> extendedAttributes) {
         super(context);
         this.containingType = containingType;
         this.extendedAttributes = extendedAttributes;
@@ -39,7 +41,8 @@ class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
     @Override
     public InterfaceMember visitInterfaceMember(WebIDLParser.InterfaceMemberContext ctx) {
         if (ctx.operation() != null) {
-            return ctx.operation().accept(new OperationVisitor(parsingContext, containingType, extendedAttributes));
+            return ctx.operation().accept(
+                    new OperationVisitor(parsingContext, containingType, extendedAttributes));
         }
         if (ctx.const_() != null) {
             return ctx.const_().accept(new ConstantVisitor(parsingContext, extendedAttributes));

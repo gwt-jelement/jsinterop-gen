@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
+import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -28,6 +29,7 @@ import java.util.List;
 class InterfaceMembersVisitor extends ContextWebIDLBaseVisitor<List<InterfaceMember>> {
 
     private final String containingType;
+    private AbstractDefinition definition;
 
     public InterfaceMembersVisitor(ParsingContext parsingContext, String containingType) {
         super(parsingContext);
@@ -46,7 +48,8 @@ class InterfaceMembersVisitor extends ContextWebIDLBaseVisitor<List<InterfaceMem
                     members.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) :
                     null;
             if (members.interfaceMember() != null) {
-                member = members.interfaceMember().accept(new InterfaceMemberVisitor(parsingContext, containingType, extendedAttributes));
+                member = members.interfaceMember().accept(
+                        new InterfaceMemberVisitor(parsingContext, containingType, extendedAttributes));
             }
             if (member != null) {
                 interfaceMembers.add(member);

@@ -27,6 +27,7 @@ import com.tenxdev.jsinterop.generator.processing.*;
 import com.tenxdev.jsinterop.generator.processing.enumtypes.AttributeEnumTypeProcessor;
 import com.tenxdev.jsinterop.generator.processing.enumtypes.DictionaryMemberEnumTypeProcessor;
 import com.tenxdev.jsinterop.generator.processing.enumtypes.MethodEnumArgumentProcessor;
+import com.tenxdev.jsinterop.generator.processing.generictypes.GenericTypesProcessor;
 import com.tenxdev.jsinterop.generator.processing.packageusage.ImportResolver;
 import com.tenxdev.jsinterop.generator.processing.uniontypes.AttributeUnionTypeProcessor;
 import com.tenxdev.jsinterop.generator.processing.uniontypes.DictionaryMemberUnionTypeProcessor;
@@ -103,6 +104,7 @@ class Generator {
         new DuplicateInheritedDictionaryMemberRemover(model, logger).process();
         new DuplicateInheritedInterfaceMembersRemover(model, logger).process();
 
+        new GenericTypesProcessor(model, logger).process();
         new MethodUnionArgsExpander(model, logger).processModel(); //must run after all interface merging
         new MethodOptionalArgsExpander(model, logger).processModel();//must run after union args expansion
         new MethodEnumArgumentProcessor(model, logger).process(); // must run after all method expansions

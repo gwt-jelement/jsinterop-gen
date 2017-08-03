@@ -177,7 +177,14 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
 
     def methods(InterfaceDefinition definition)'''
         «FOR method: definition.methods»
-            «IF method.enumOverlay===null»
+            «IF method.body !== null»
+                «method.checkDeprecated»
+                @JsOverlay
+                public «staticModifier(method)»final «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»){
+                    «method.body.replace("$RETURN_TYPE", method.returnType.displayValue)»
+                }
+
+            «ELSEIF method.enumOverlay===null»
                 «method.checkDeprecated»
                 @JsMethod(name = "«method.name»")
                 public «staticModifier(method)»native «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»);
@@ -257,10 +264,11 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     }
 
     def generic(InterfaceDefinition definition){
-        if (definition.genericParameter!==null) '''<«definition.genericParameter»>'''
+        if (definition.genericParameters!==null)
+            '''<«FOR String p: definition.genericParameters SEPARATOR ","»«p»«ENDFOR»>'''
     }
 
     def typeSpecifier(Method method){
         if (method.genericTypeSpecifiers!==null) '''<«method.genericTypeSpecifiers»> '''
-    }
+    }s
 }

@@ -30,9 +30,11 @@ import java.util.Map;
 public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>> {
 
     private static final List<String> NO_IMPLEMENTATION = Collections.emptyList();
+    private Type jsType;
 
     @Override
     public Map<AbstractDefinition, List<String>> accept(Model model) {
+        jsType =model.getTypeFactory().getTypeNoParse("Js");
         return super.accept(model);
     }
 
@@ -75,12 +77,12 @@ public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>>
 
     @Override
     protected List<String> visitDictionaryDefinition(DictionaryDefinition definition) {
-        return new DictionaryDefinitionUsageVisitor().accept(definition);
+        return new DictionaryDefinitionUsageVisitor(jsType).accept(definition);
     }
 
     @Override
     public List<String> visitInterfaceDefinition(InterfaceDefinition interfaceDefinition) {
-        return new InterfaceDefinitionUsageVisitor().accept(interfaceDefinition);
+        return new InterfaceDefinitionUsageVisitor(jsType).accept(interfaceDefinition);
     }
 
     @Override

@@ -20,7 +20,6 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.Constructor;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import org.antlr.v4.runtime.tree.Trees;
 import org.antlr4.webidl.WebIDLBaseVisitor;
 import org.antlr4.webidl.WebIDLParser;
 
@@ -50,7 +49,7 @@ public class NamedConstructorVisitor extends WebIDLBaseVisitor<Constructor> {
         }else{
             parsingContext.getlogger().reportError("Unexpected state in NamedConstructorVisitor");
             parsingContext.getlogger().reportError(ParsingContext.getText(ctx));
-            parsingContext.getlogger().reportError(parsingContext.printTree(ctx));
+            parsingContext.getlogger().reportError(parsingContext.getTree(ctx));
             return null;
         }
     }

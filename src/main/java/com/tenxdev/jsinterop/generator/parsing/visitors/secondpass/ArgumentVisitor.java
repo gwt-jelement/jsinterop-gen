@@ -25,8 +25,10 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
 
@@ -66,10 +68,14 @@ class ArgumentVisitor extends ContextWebIDLBaseVisitor<MethodArgument> {
 
     private Type adjustType(Type type){
         ExtendedAttributes extendedAttributes=new ExtendedAttributes(this.extendedAttributes);
-        String genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
-        if (genericParameter!=null){
-            return new ParameterisedType(type,
-                    Collections.singletonList(parsingContext.getTypeFactory().getTypeNoParse(genericParameter)));
+        String[] genericParameterNames = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_PARAMETER, null);
+        if (genericParameterNames!=null){
+            List<Type> genericParameters = Arrays.stream(genericParameterNames)
+                    .map(param -> param.length() == 1 ?
+                            new GenericType(param) :
+                            parsingContext.getTypeFactory().getTypeNoParse(param))
+                    .collect(Collectors.toList());
+            return new ParameterisedType(type, genericParameters);
         }
         String genericSubstitution = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_SUB, null);
         if (genericSubstitution!=null) {

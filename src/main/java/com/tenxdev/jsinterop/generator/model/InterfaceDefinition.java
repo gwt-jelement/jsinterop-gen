@@ -30,31 +30,41 @@ import java.util.stream.Collectors;
 public class InterfaceDefinition extends AbstractDefinition implements HasUnionReturnTypes {
     private final Type parent;
     private final String jsTypeName;
-    private final String genericParameter;
-    private final boolean supressed;
+    private final List<UnionType> unionReturnTypes = new ArrayList<>();
+    private final String[] genericParameters;
     private List<Constant> constants = new ArrayList<>();
     private List<Feature> features = new ArrayList<>();
     private List<Constructor> constructors = new ArrayList<>();
     private List<Method> methods = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
-    private final List<UnionType> unionReturnTypes = new ArrayList<>();
 
     public InterfaceDefinition(String name, Type parent, List<Constructor> constructors,
                                List<InterfaceMember> members, ExtendedAttributes extendedAttributes) {
         super(name);
         this.parent = parent;
         this.constructors = constructors == null ? Collections.emptyList() : constructors;
-        this.methods = members.stream().filter(member -> member instanceof Method)
-                .map(member -> (Method) member).collect(Collectors.toList());
-        this.attributes = members.stream().filter(member -> member instanceof Attribute)
-                .map(member -> (Attribute) member).collect(Collectors.toList());
-        this.constants = members.stream().filter(member -> member instanceof Constant)
-                .map(member -> (Constant) member).collect(Collectors.toList());
-        this.features = members.stream().filter(member -> member instanceof Feature)
-                .map(member -> (Feature) member).collect(Collectors.toList());
+        this.methods = members.stream()
+                .filter(member -> member instanceof Method)
+                .map(member -> (Method) member)
+                .collect(Collectors.toCollection(ArrayList::new));
+        this.attributes = members.stream()
+                .filter(member -> member instanceof Attribute)
+                .map(member -> (Attribute) member)
+                .collect(Collectors.toList());
+        this.constants = members.stream()
+                .filter(member -> member instanceof Constant)
+                .map(member -> (Constant) member)
+                .collect(Collectors.toList());
+        this.features = members.stream()
+                .filter(member -> member instanceof Feature)
+                .map(member -> (Feature) member)
+                .collect(Collectors.toList());
+        members.stream()
+                .filter(member -> member instanceof SpecialOperationMembers)
+                .map(member -> (SpecialOperationMembers) member)
+                .forEach(member -> this.methods.addAll(member.getMethods()));
         this.jsTypeName = extendedAttributes.extractValue(ExtendedAttributes.JS_TYPE_NAME, name);
-        this.genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
-        this.supressed=extendedAttributes.hasExtendedAttribute(ExtendedAttributes.NO_INTERFACE_OBJECT);
+        this.genericParameters = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_PARAMETER, null);
     }
 
     protected InterfaceDefinition(InterfaceDefinition interfaceDefinition) {
@@ -66,12 +76,11 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
         this.constants = interfaceDefinition.constants;
         this.features = interfaceDefinition.features;
         this.jsTypeName = interfaceDefinition.jsTypeName;
-        this.genericParameter = interfaceDefinition.genericParameter;
-        this.supressed=interfaceDefinition.supressed;
+        this.genericParameters = interfaceDefinition.genericParameters;
     }
 
-    public String getGenericParameter() {
-        return genericParameter;
+    public String[] getGenericParameters() {
+        return genericParameters;
     }
 
     public Type getParent() {
@@ -105,10 +114,6 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
 
     public String getJsTypeName() {
         return jsTypeName;
-    }
-
-    public boolean isSupressed() {
-        return supressed;
     }
 
     @Override

@@ -15,8 +15,9 @@
  * the License.
  */
 
-package com.tenxdev.jsinterop.generator.processing.packageusage;
+package com.tenxdev.jsinterop.generator.processing.generictypes;
 
+import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractTypeVisitor;
 
@@ -25,14 +26,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PackageUsageTypeVisitor extends AbstractTypeVisitor<List<String>> {
+public class MethodGenericTypesVisitor extends AbstractTypeVisitor<List<String>> {
 
-    @Override
-    public List<String> accept(Type type) {
-        if (type == null) {
-            return Collections.emptyList();
-        }
-        return super.accept(type);
+    public List<String> accept(Method method){
+        ArrayList<String> result=new ArrayList<>();
+        result.addAll(accept(method.getReturnType()));
+        method.getArguments().forEach(argument->result.addAll(accept(argument.getType())));
+        return result.stream().distinct().sorted().collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -42,35 +42,32 @@ public class PackageUsageTypeVisitor extends AbstractTypeVisitor<List<String>> {
 
     @Override
     protected List<String> visitUnionType(UnionType type) {
-        return type.getTypes().stream()
-                .map(this::accept)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+        ArrayList<String> result = new ArrayList<String>();
+        type.getTypes().forEach(subtype-> result.addAll(accept(subtype)));
+        return result.isEmpty()? Collections.emptyList():result;
     }
 
     @Override
     protected List<String> visitParameterisedType(ParameterisedType type) {
-        List<String> result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<String>();
         result.addAll(accept(type.getBaseType()));
-        for (Type parameterType : type.getTypeParameters()) {
-            result.addAll(accept(parameterType));
-        }
-        return result;
+        type.getTypeParameters().forEach(subtype-> result.addAll(accept(subtype)));
+        return result.isEmpty()? Collections.emptyList():result;
     }
 
     @Override
     protected List<String> visitEnumType(EnumType type) {
-        return Collections.singletonList(type.getPackageName() + "." + type.getTypeName());
+        return Collections.emptyList();
     }
 
     @Override
     protected List<String> visitObjectType(ObjectType type) {
-        return Collections.singletonList(type.getPackageName() + "." + type.getTypeName());
+        return Collections.emptyList();
     }
 
     @Override
     protected List<String> visitExtendedObjectType(ExtensionObjectType type) {
-        return Collections.singletonList(type.getPackageName() + "." + type.getTypeName());
+        return Collections.emptyList();
     }
 
     @Override
@@ -80,6 +77,8 @@ public class PackageUsageTypeVisitor extends AbstractTypeVisitor<List<String>> {
 
     @Override
     protected List<String> visitGenericType(GenericType type) {
-        return Collections.emptyList();
+        return type.getTypeName().length()==1?
+                Collections.singletonList(type.getTypeName()):
+                Collections.emptyList();
     }
 }

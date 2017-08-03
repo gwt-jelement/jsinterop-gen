@@ -19,20 +19,20 @@ package com.tenxdev.jsinterop.generator.model;
 
 public class CallbackDefinition extends AbstractDefinition {
     private final Method method;
-    private final String genericParameter;
+    private final String[] genericParameters;
 
     public CallbackDefinition(String name, Method method, ExtendedAttributes extendedAttributes) {
         super(name);
         this.method = method;
-        this.genericParameter = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
+        this.genericParameters = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_PARAMETER, null);
     }
 
     public Method getMethod() {
         return method;
     }
 
-    public String getGenericParameter() {
-        return genericParameter;
+    public String[] getGenericParameters() {
+        return genericParameters;
     }
 
     @Override
