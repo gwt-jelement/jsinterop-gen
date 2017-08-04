@@ -25,6 +25,9 @@ import com.tenxdev.jsinterop.generator.model.Model;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GenericTypesProcessor {
@@ -32,6 +35,7 @@ public class GenericTypesProcessor {
     private final MethodGenericTypesVisitor methodVisitor;
     private Model model;
     private Logger logger;
+    private Pattern TYPE_PATTERN = Pattern.compile("([A-Z]) extends .*");
 
     public GenericTypesProcessor(Model model, Logger logger) {
         this.model = model;
@@ -54,9 +58,33 @@ public class GenericTypesProcessor {
     private void processMethod(Method method, List<String> definitionGenericTypes) {
         List<String> methodGenericTypes = methodVisitor.accept(method);
         if (!method.isStatic()) {
-            definitionGenericTypes.forEach(defitionGenericType -> methodGenericTypes.remove(defitionGenericType));
+            methodGenericTypes.removeAll(definitionGenericTypes);
         }
-        method.setGenericTypeSpecifiers(methodGenericTypes.isEmpty() ? null :
-                methodGenericTypes.stream().collect(Collectors.joining(",")));
+        if (method.getGenericTypeSpecifiers() != null) {
+            methodGenericTypes.removeAll(extractExistingGenericTypes(method.getGenericTypeSpecifiers()));
+            methodGenericTypes.add(0, method.getGenericTypeSpecifiers());
+        }
+        if (!methodGenericTypes.isEmpty()) {
+            method.setGenericTypeSpecifiers(methodGenericTypes.stream().collect(Collectors.joining(", ")));
+        }
+    }
+
+    private List<String> extractExistingGenericTypes(String genericTypeSpecifiers) {
+        return Arrays.stream(genericTypeSpecifiers.split(","))
+                .map(String::trim)
+                .map(this::extractGenericType)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private String extractGenericType(String type) {
+        if (type.length() == 1) {
+            return type;
+        }
+        Matcher matcher = TYPE_PATTERN.matcher(type);
+        if (matcher.find() && matcher.groupCount() == 1) {
+            return matcher.group(1);
+        }
+        return null;
     }
 }

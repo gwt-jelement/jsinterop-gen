@@ -45,10 +45,10 @@ public class ExtendedAttributes {
     public String extractValue(String attributeName, String defaultValue) {
         return attributes == null ? defaultValue : attributes.stream()
                 .map(String::trim)
-                .filter(s -> s.startsWith(attributeName + " "))
+                .filter(s -> s.startsWith(attributeName + "("))
                 .findFirst()
                 .map(s -> s.replace(attributeName, "").replace("(", "")
-                        .replace(")", "").replace(" ", "").trim())
+                        .replace(")", "").trim())
                 .orElse(defaultValue);
     }
 

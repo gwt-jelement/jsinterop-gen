@@ -36,7 +36,7 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
     private String containingType;
     private List<String> extendedAttributes;
 
-    public SpecialOperationVisitor(ParsingContext parsingContext, String containingType,
+    SpecialOperationVisitor(ParsingContext parsingContext, String containingType,
                                    List<String> extendedAttributes) {
         super(parsingContext);
         this.containingType = containingType;
@@ -74,7 +74,7 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
         String defaultName = getDefaultName(specialOperation, ctx);
         if (defaultName != null) {
             Method defaultMethod = new Method(defaultName, effectiveReturnType, arguments, false,
-                    genericTypeSpecifiers, extendedAttributes, returnType);
+                    genericTypeSpecifiers, extendedAttributes, replacedReturnedType);
             addMethodBody(defaultMethod, specialOperation);
             specialOperationMembers.getMethods().add(defaultMethod);
         }

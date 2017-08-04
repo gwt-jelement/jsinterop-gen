@@ -116,12 +116,12 @@ public class Method implements InterfaceMember, Comparable<Method> {
         return genericTypeSpecifiers;
     }
 
-    public void setGenericTypeSpecifiers(String genericTypeSpecifiers) {
-        this.genericTypeSpecifiers = genericTypeSpecifiers;
-    }
-
     public boolean isDeprecated() {
         return deprecated;
+    }
+
+    public void setGenericTypeSpecifiers(String genericTypeSpecifiers) {
+        this.genericTypeSpecifiers = genericTypeSpecifiers;
     }
 
     @Override
