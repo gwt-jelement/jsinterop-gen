@@ -26,25 +26,24 @@ import java.util.function.Supplier;
 public class PrintStreamLogger implements Logger {
     private final DateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss.SSS Z");
     private final PrintStream printStream;
+    private PrintStream errorStream;
     private int logLevel;
 
-    public PrintStreamLogger(PrintStream printStream) {
+    public PrintStreamLogger(PrintStream printStream, PrintStream errorStream) {
         this.printStream = printStream;
+        this.errorStream = errorStream;
     }
 
     @Override
     public void reportError(String error) {
-        printStream.println(error);
+        errorStream.println(error);
+        errorStream.flush();
     }
 
     @Override
     public void formatError(String format, Object... args) {
-        printStream.println(timestamp() + " ERROR " + String.format(format, args));
-    }
-
-    @Override
-    public PrintStream getPrintStream() {
-        return printStream;
+        errorStream.println(timestamp() + " ERROR " + String.format(format, args));
+        errorStream.flush();
     }
 
     @Override
@@ -61,6 +60,7 @@ public class PrintStreamLogger implements Logger {
     public void info(Supplier<String> messageSupplier) {
         if (logLevel >= Logger.LEVEL_INFO) {
             printStream.println(timestamp() + " INFO  " + messageSupplier.get());
+            printStream.flush();
         }
     }
 
@@ -68,6 +68,7 @@ public class PrintStreamLogger implements Logger {
     public void debug(Supplier<String> messageSupplier) {
         if (logLevel >= Logger.LEVEL_DEBUG) {
             printStream.println(timestamp() + " DEBUG \t" + messageSupplier.get());
+            printStream.flush();
         }
     }
 
@@ -75,6 +76,7 @@ public class PrintStreamLogger implements Logger {
     public void rawOutput(Supplier<String> messageSupplier) {
         if (logLevel >= Logger.LEVEL_INFO) {
             printStream.println(messageSupplier.get());
+            printStream.flush();
         }
     }
 

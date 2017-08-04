@@ -75,7 +75,7 @@ class Generator {
     }
 
     private void execute(String[] args) {
-        Logger logger = new PrintStreamLogger(System.err);
+        Logger logger = new PrintStreamLogger(System.out, System.err);
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);
@@ -176,7 +176,7 @@ class Generator {
     private void printUsage(CmdLineParser parser, Logger logger, CmdLineException e) {
         logger.reportError(e.getMessage());
         logger.reportError("java Generator [options...]");
-        parser.printUsage(logger.getPrintStream());
+        parser.printUsage(System.out);
     }
 
     private void banner(Logger logger) {

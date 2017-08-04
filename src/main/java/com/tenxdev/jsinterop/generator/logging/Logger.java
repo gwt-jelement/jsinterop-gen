@@ -32,8 +32,6 @@ public interface Logger {
 
     void formatError(String format, Object... args);
 
-    OutputStream getPrintStream();
-
     int getLogLevel();
 
     void setLogLevel(int logLevel);
