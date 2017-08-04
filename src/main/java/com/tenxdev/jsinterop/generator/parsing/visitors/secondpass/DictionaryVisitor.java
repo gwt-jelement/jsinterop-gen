@@ -20,19 +20,23 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
+import com.tenxdev.jsinterop.generator.model.types.GenericType;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class DictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
 
-    private final List<String> extendedAttributes;
+    private final ExtendedAttributes extendedAttributes;
 
     public DictionaryVisitor(ParsingContext parsingContext, List<String> extendedAttributes) {
         super(parsingContext);
-        this.extendedAttributes = extendedAttributes;
+        this.extendedAttributes = new ExtendedAttributes(extendedAttributes);
     }
 
     @Override
@@ -44,6 +48,15 @@ class DictionaryVisitor extends ContextWebIDLBaseVisitor<DictionaryDefinition> {
         Type parentType = parent == null
                 ? parsingContext.getTypeFactory().getTypeNoParse("JsObject")
                 : parsingContext.getTypeFactory().getTypeNoParse(parent);
-        return new DictionaryDefinition(name, parentType, members, new ExtendedAttributes(extendedAttributes));
+        String[] genericExtendTypeNames = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_EXTEND, null);
+        if (genericExtendTypeNames != null) {
+            List<Type> genericTypes = Arrays.stream(genericExtendTypeNames)
+                    .map(genericTypeName->
+                            genericTypeName.length()==1? new GenericType(genericTypeName):
+                                    parsingContext.getTypeFactory().getTypeNoParse(genericTypeName))
+                    .collect(Collectors.toList());
+            parentType = new ParameterisedType(parentType, genericTypes);
+        }
+        return new DictionaryDefinition(name, parentType, members, extendedAttributes);
     }
 }
