@@ -118,6 +118,9 @@ class Generator {
 
         new SuperCallConstructorProcessor(model, logger).process();//after method expansion
         new AttributeConflictingOverlayRemover(model, logger).process();
+
+        new InterfaceDetector(model, logger).process();
+
         new ImportResolver().processModel(model, logger); //must run after all type substitutions
         new SourceGenerator(logger).processModel(model, outputDirectory, basePackage);
     }

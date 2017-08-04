@@ -28,10 +28,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InterfaceDefinition extends AbstractDefinition implements HasUnionReturnTypes {
-    private final Type parent;
     private final String jsTypeName;
     private final List<UnionType> unionReturnTypes = new ArrayList<>();
     private final String[] genericParameters;
+    private Type parent;
     private List<Constant> constants = new ArrayList<>();
     private List<Feature> features = new ArrayList<>();
     private List<Constructor> constructors = new ArrayList<>();
@@ -85,6 +85,10 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
 
     public Type getParent() {
         return parent;
+    }
+
+    public void setParent(Type parent) {
+        this.parent = parent;
     }
 
     public List<Method> getMethods() {
@@ -158,6 +162,5 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
                 ", features=" + features +
                 '}';
     }
-
 }
 

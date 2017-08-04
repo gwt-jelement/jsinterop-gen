@@ -41,6 +41,7 @@ public class AttributeConflictingOverlayRemover {
     }
 
     public void process() {
+        logger.info(()->"Removing conflicting overlay methods");
         model.getDefinitions().stream()
                 .filter(definition -> definition instanceof InterfaceDefinition)
                 .map(definition -> (InterfaceDefinition) definition)

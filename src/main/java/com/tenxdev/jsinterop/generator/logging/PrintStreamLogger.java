@@ -67,7 +67,7 @@ public class PrintStreamLogger implements Logger {
     @Override
     public void debug(Supplier<String> messageSupplier) {
         if (logLevel >= Logger.LEVEL_DEBUG) {
-            printStream.println(timestamp() + " DEBUG " + messageSupplier.get());
+            printStream.println(timestamp() + " DEBUG \t" + messageSupplier.get());
         }
     }
 

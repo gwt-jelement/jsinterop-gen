@@ -35,7 +35,16 @@ public class VelocityLogger implements LogChute {
     @Override
     public void log(int level, String message) {
         if (isLevelEnabled(level)) {
-            logger.info(() -> message);
+            switch(level) {
+                case DEBUG_ID:
+                case INFO_ID:
+                case WARN_ID:
+                    logger.debug(() -> message);
+                    break;
+                case ERROR_ID:
+                    logger.reportError(message);
+                    break;
+            }
         }
     }
 
