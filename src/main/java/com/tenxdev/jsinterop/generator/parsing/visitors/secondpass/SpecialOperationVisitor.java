@@ -17,7 +17,10 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
+import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.model.MethodArgument;
+import com.tenxdev.jsinterop.generator.model.SpecialOperationMembers;
 import com.tenxdev.jsinterop.generator.model.types.GenericType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
@@ -135,11 +138,18 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
                     return null;
                 }
                 Type propertyType = arguments.get(1).getType();
-                if (propertyType.isLongPrimitiveType()) {
-                    return String.format("Js.set(this.object(), %s, (double) %s);",
+                if (propertyType.isGwtPrimitiveType()) {
+                    return String.format("%sJs.set(this.object(), %s, %s);",
+                            isVoid(returnType) ? "" : "return ",
+                            arguments.get(0).getName(), arguments.get(1).getName());
+                } else if (propertyType.isLongPrimitiveType()) {
+                    return String.format("%sJs.set(this.object(), %s, (double) %s);",
+                            isVoid(returnType) ? "" : "return ",
                             arguments.get(0).getName(), arguments.get(1).getName());
                 } else {
-                    return String.format("Js.set(this.object(), %s, %s);",
+                    return String.format("%sJs.<%s>set(this.object(), %s, %s);",
+                            isVoid(returnType) ? "" : "return ",
+                            arguments.get(1).getType().displayValue(),
                             arguments.get(0).getName(), arguments.get(1).getName());
                 }
             case "deleter":
@@ -148,9 +158,10 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
                             arguments.size(), containingType);
                     return null;
                 }
-                return String.format("Js.delete(this.object(), %s);", arguments.get(0).getName());
+                return String.format("%sJs.delete(this.object(), %s);", isVoid(returnType) ? "" : "return ",
+                        arguments.get(0).getName());
             case "legacycaller":
-                if (arguments.size()!=1){
+                if (arguments.size() != 1) {
                     parsingContext.getlogger().formatError("Unexpected number of arguments (%d) in legacy caller for %s",
                             arguments.size(), containingType);
                     return null;
@@ -159,5 +170,9 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
             default:
                 return null;
         }
+    }
+
+    private boolean isVoid(Type returnType) {
+        return "void".equals(returnType.displayValue());
     }
 }
