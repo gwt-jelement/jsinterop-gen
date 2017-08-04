@@ -68,8 +68,21 @@ public class ParsingContext {
         for (int i = 0; i < ctx.getChildCount(); i++) {
             builder.append(getText(ctx.getChild(i))).append(' ');
         }
-        return builder.toString();
+        return cleanup(builder.toString());
     }
+
+    private static String cleanup(String value) {
+        return value.trim()
+                .replaceAll("\\s+\\(","(")
+                .replaceAll("\\s+"," ")
+                .replaceAll("\\(\\s+","(")
+                .replaceAll("\\s+\\)",")")
+                .replaceAll("<\\s+","<")
+                .replaceAll("\\s+>",">")
+                .replaceAll("\\s+=\\s+","=")
+                .replaceAll("\\s+,",",");
+    }
+
 
 
 }

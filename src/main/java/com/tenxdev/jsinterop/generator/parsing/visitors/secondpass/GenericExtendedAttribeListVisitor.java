@@ -30,7 +30,7 @@ class GenericExtendedAttribeListVisitor extends WebIDLBaseVisitor<List<String>> 
     public List<String> visitExtendedAttributeList(WebIDLParser.ExtendedAttributeListContext ctx) {
         List<String> extendedAttributes = new ArrayList<>();
         if (ctx.extendedAttribute() != null) {
-            extendedAttributes.add(cleanup(ParsingContext.getText(ctx.extendedAttribute())));
+            extendedAttributes.add(ParsingContext.getText(ctx.extendedAttribute()));
         }
         processRest(ctx.extendedAttributes(), extendedAttributes);
         return extendedAttributes.isEmpty() ? null : extendedAttributes;
@@ -41,19 +41,9 @@ class GenericExtendedAttribeListVisitor extends WebIDLBaseVisitor<List<String>> 
         WebIDLParser.ExtendedAttributesContext ctx = extendedAttributesContext;
         while (ctx != null) {
             if (ctx.extendedAttribute() != null) {
-                extendedAttributes.add(cleanup(ParsingContext.getText(ctx.extendedAttribute())));
+                extendedAttributes.add(ParsingContext.getText(ctx.extendedAttribute()));
             }
             ctx = ctx.extendedAttributes();
         }
-    }
-
-    private String cleanup(String value) {
-        return value.trim()
-                .replaceAll("\\s+\\(","(")
-                .replaceAll("\\s+"," ")
-                .replaceAll("\\(\\s+","(")
-                .replaceAll("\\s+\\)",")")
-                .replaceAll("\\s+=\\s+","=")
-                .replaceAll("\\s+,",",");
     }
 }
