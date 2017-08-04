@@ -18,45 +18,61 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
+import com.tenxdev.jsinterop.generator.model.Attribute;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
+import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
+import java.util.Optional;
+
 public class InterfaceDetector {
 
+    private final Type arrayLikeType;
     private Model model;
     private Logger logger;
 
-    public InterfaceDetector(Model model, Logger logger){
+    public InterfaceDetector(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
+        this.arrayLikeType = model.getTypeFactory().getTypeNoParse("ArrayLike");
     }
 
-    public void process(){
-        logger.info(()->"Detecting implied interfaces");
-        Type baseType=model.getTypeFactory().getTypeNoParse("IsObject");
+    public void process() {
+        logger.info(() -> "Detecting implied interfaces");
+        Type baseType = model.getTypeFactory().getTypeNoParse("IsObject");
         model.getInterfaceDefinitions().stream()
-                .filter(definition->baseType.equals(definition.getParent()))
+                .filter(definition -> baseType.equals(definition.getParent()))
                 .forEach(this::processInterfaceDefinition);
     }
 
     private void processInterfaceDefinition(InterfaceDefinition definition) {
-        if (arrayLikeDetected(definition)){
-            Type baseType=model.getTypeFactory().getTypeNoParse("ArrayLike");
-            logger.debug(()->"Adding ArrayLike to "+definition.getName());
-            definition.setParent(baseType);
-        }
+        detectArrayLike(definition);
     }
 
-    private boolean arrayLikeDetected(InterfaceDefinition definition) {
-        boolean hasLengthAttribute = definition.getAttributes().stream()
-                .anyMatch(attribute -> "length".equals(attribute.getName()) &&
-                        "double".equals(attribute.getType().displayValue()));
-        if (hasLengthAttribute){
-            return definition.getMethods().stream()
-                    .anyMatch(method -> "get".equals(method.getName())
-                    && method.getArguments().size()==1);
-        }
-        return false;
+    private void detectArrayLike(InterfaceDefinition definition) {
+        getLengthAttribute(definition).ifPresent(lengthAttribute->
+            getIndexedGetter(definition).ifPresent(getterMethod->{
+                definition.getMethods().remove(getterMethod);
+                definition.getAttributes().remove(lengthAttribute);
+                definition.setParent(arrayLikeType);
+                logger.debug(() -> "Adding ArrayLike to " + definition.getName());
+            }));
     }
+
+    private Optional<Attribute> getLengthAttribute(InterfaceDefinition definition) {
+        return definition.getAttributes().stream()
+                .filter(attribute -> "length".equals(attribute.getName()) &&
+                        "double".equals(attribute.getType().displayValue()))
+                .findAny();
+    }
+
+    private Optional<Method> getIndexedGetter(InterfaceDefinition definition) {
+        return definition.getMethods().stream()
+                .filter(method -> "get".equals(method.getName())
+                        && method.getArguments().size() == 1
+                        && "double".equals(method.getArguments().get(0).getType().displayValue()))
+                .findAny();
+    }
+
 }
