@@ -19,10 +19,12 @@ package com.tenxdev.jsinterop.generator.generator
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition
 import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.types.UnionType
+import com.tenxdev.jsinterop.generator.processing.TemplateFiller
+import com.tenxdev.jsinterop.generator.model.DictionaryMember
 
 class DictionaryGenerator extends XtendTemplate{
 
-    def generate(String basePackageName, DictionaryDefinition definition){
+    def generate(String basePackageName, DictionaryDefinition definition, TemplateFiller templateFiller){
         return '''
 «copyright»
 package «basePackageName»«definition.getPackageName()»;
@@ -95,7 +97,7 @@ public class «definition.name»«generic(definition)»«
             «ENDFOR»
         «ELSE»
             @JsOverlay
-            public final «member.type.displayValue» get«member.name.toFirstUpper»(){
+            public final «member.type.displayValue» «getterPrefix(member)»«member.name.toFirstUpper»(){
                 return this.«member.name.adjustJavaName»;
             }
 
@@ -106,12 +108,18 @@ public class «definition.name»«generic(definition)»«
 
         «ENDIF»
     «ENDFOR»
+
+    «MarginFxer.INSTANCE.fix(templateFiller.fill(definition, basePackageName))»
 }
     '''
     }
 
     def generic(DictionaryDefinition definition){
         if (definition.genericParameters!==null) '''<«FOR String p: definition.genericParameters SEPARATOR ","»«p»«ENDFOR»>'''
+    }
+
+    def getterPrefix(DictionaryMember member){
+        if ("boolean".equals(member.type.displayValue())) "is" else "get"
     }
 
 }

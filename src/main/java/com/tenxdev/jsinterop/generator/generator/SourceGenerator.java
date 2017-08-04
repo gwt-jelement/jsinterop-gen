@@ -66,7 +66,8 @@ public class SourceGenerator extends XtendTemplate {
                         (InterfaceDefinition) definition, templateFiller));
                 ++numOutput;
             } else if (definition instanceof DictionaryDefinition) {
-                outputFile(filePath, dictionaryGenerator.generate(basePackageName, (DictionaryDefinition) definition));
+                outputFile(filePath, dictionaryGenerator.generate(basePackageName,
+                        (DictionaryDefinition) definition, templateFiller));
                 ++numOutput;
             }
         }
