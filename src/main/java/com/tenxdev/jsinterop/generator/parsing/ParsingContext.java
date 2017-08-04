@@ -84,5 +84,7 @@ public class ParsingContext {
     }
 
 
-
+    public Parser getParser() {
+        return parser;
+    }
 }

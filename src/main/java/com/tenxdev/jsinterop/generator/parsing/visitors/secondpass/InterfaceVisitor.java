@@ -45,7 +45,7 @@ class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
 
     @Override
     public InterfaceDefinition visitInterface_(WebIDLParser.Interface_Context ctx) {
-        String name = ctx.IDENTIFIER_WEBIDL().getText();
+        String name = ctx.name.getText();
         Type parent = ctx.inheritance() == null || ctx.inheritance().IDENTIFIER_WEBIDL() == null
                 ? parsingContext.getTypeFactory().getTypeNoParse("IsObject")
                 : parsingContext.getTypeFactory().getTypeNoParse(ctx.inheritance().IDENTIFIER_WEBIDL().getText());

@@ -63,6 +63,10 @@ webIDL
 	: definitions EOF
 ;
 
+constructorArgs
+    : argumentList EOF
+;
+
 
 definitions
 	: extendedAttributeList definition definitions
@@ -90,7 +94,8 @@ callbackRestOrInterface
 ;
 
 interface_
-	: 'interface' IDENTIFIER_WEBIDL inheritance '{' interfaceMembers '}' ';'
+	: 'interface' name=IDENTIFIER_WEBIDL inheritance '{' interfaceMembers '}' ';'
+    | 'interface' name='Promise' inheritance '{' interfaceMembers '}' ';'
 ;
 
 /*class_

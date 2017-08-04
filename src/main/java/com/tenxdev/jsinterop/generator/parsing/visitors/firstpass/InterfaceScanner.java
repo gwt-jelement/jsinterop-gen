@@ -30,7 +30,7 @@ class InterfaceScanner extends ContextWebIDLBaseVisitor<Void> {
 
     @Override
     public Void visitInterface_(WebIDLParser.Interface_Context ctx) {
-        String name = ctx.IDENTIFIER_WEBIDL().getText();
+        String name = ctx.name.getText();
         parsingContext.getTypeFactory()
                 .registerType(name, new ObjectType(name, parsingContext.getPackageSuffix()));
         return null;
