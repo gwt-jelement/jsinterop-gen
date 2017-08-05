@@ -26,20 +26,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Method implements InterfaceMember, Comparable<Method> {
-    final String name;
-    final List<MethodArgument> arguments;
+    private final String name;
+    private final List<MethodArgument> arguments;
     private final boolean staticMethod;
-
     private String genericTypeSpecifiers;
-
-    final boolean deprecated;
+    private final boolean deprecated;
     private final Type replacedReturnType;
     private Method enumOverlay;
     private String javaName;
-    Type returnType;
+    private Type returnType;
     private String body;
     private List<Type> extraTypes;
     private boolean enumReturnType;
+
     public Method(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
                   String genericTypeSpecifiers, ExtendedAttributes extendedAttributes, Type replacedReturnType) {
         this.name = name;
@@ -89,6 +88,10 @@ public class Method implements InterfaceMember, Comparable<Method> {
 
     public boolean isStatic() {
         return staticMethod;
+    }
+
+    public boolean hasVarargs(){
+        return arguments.stream().anyMatch(MethodArgument::isVararg);
     }
 
     public String getName() {

@@ -62,6 +62,7 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
 
     def constructors(InterfaceDefinition definition)'''
         «FOR constructor: definition.constructors»
+            «safeVarArgs(constructor)»
             @JsConstructor
             public «definition.name»(«arguments(constructor)»){
                 «IF definition.parent!==null»
@@ -178,6 +179,7 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     def methods(InterfaceDefinition definition)'''
         «FOR method: definition.methods»
             «IF method.body !== null»
+                «safeVarArgs(method)»
                 «method.checkDeprecated»
                 @JsOverlay
                 public «staticModifier(method)»final «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»){
@@ -185,11 +187,13 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
                 }
 
             «ELSEIF method.enumOverlay===null»
+                «safeVarArgs(method)»
                 «method.checkDeprecated»
                 @JsMethod(name = "«method.name»")
                 public «staticModifier(method)»native «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»);
 
             «ELSE»
+                «safeVarArgs(method)»
                 «method.checkDeprecated»
                 @JsOverlay
                 public «staticModifier(method)»final «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»){
@@ -270,5 +274,9 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
 
     def typeSpecifier(Method method){
         if (method.genericTypeSpecifiers!==null) '''<«method.genericTypeSpecifiers»> '''
-    }s
+    }
+
+    def safeVarArgs(Method method){
+        if (method.hasVarargs) "@SafeVarargs"
+    }
 }

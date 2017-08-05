@@ -24,7 +24,6 @@ class GwtModuleGenerator {
 <module>
     <source path=""/>
     <inherits name="jsinterop.base.Base" />
-    <inherits name="elemental2.core.Core" />
 </module>
     '''
 }

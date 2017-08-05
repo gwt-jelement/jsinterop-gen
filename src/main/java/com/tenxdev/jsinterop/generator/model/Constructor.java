@@ -28,13 +28,11 @@ public class Constructor extends Method {
 
     public Constructor(String name, Type returnType, List<MethodArgument> arguments) {
         super(name, returnType, arguments, false, null, new ExtendedAttributes(null), null);
-        this.superArguments=new ArrayList<>();
+        this.superArguments = new ArrayList<>();
     }
 
-    protected Constructor(String name, Type returnType, List<MethodArgument> arguments, boolean staticMethod,
-                          String genericTypeSpecifiers, boolean deprecated, boolean enumReturnType,
-                          Method enumOverlay,
-                          String javaName, List<MethodArgument> superArguments){
+    protected Constructor(String name, Type returnType, List<MethodArgument> arguments,
+                          boolean deprecated, List<MethodArgument> superArguments) {
         super(name, returnType, arguments, false, null, deprecated, false, null, null, null);
         this.superArguments = superArguments;
     }
@@ -44,16 +42,11 @@ public class Constructor extends Method {
         this.superArguments = new ArrayList<>();
     }
 
-    public Constructor constructorWithSuperArguments(List<MethodArgument> superArguments) {
-        return new Constructor(name, returnType, arguments, false, null,
-                deprecated, false, null, null, superArguments);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
-        return (T) new Constructor(name, returnType, newArguments, false, null,
-                deprecated, false, null, null, superArguments);
+        return (T) new Constructor(getName(), getReturnType(), newArguments,
+                isDeprecated(), superArguments);
     }
 
     public List<MethodArgument> getSuperArguments() {
