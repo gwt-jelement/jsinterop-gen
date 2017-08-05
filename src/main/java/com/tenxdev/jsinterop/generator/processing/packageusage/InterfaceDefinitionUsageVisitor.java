@@ -71,10 +71,6 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         if (!interfaceDefinition.getAttributes().isEmpty()) {
             result.add("jsinterop.annotations.JsProperty");
         }
-        if (interfaceDefinition.getMethods().stream()
-                .anyMatch(method -> method.getEnumOverlay() != null)) {
-            result.add("jsinterop.base.Any");
-        }
         result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
                 .filter(unionType -> interfaceDefinition != unionType.getOwner())
                 .map(unionType -> unionType.getOwner().getPackageName() + "." + unionType.getOwner().getName())

@@ -67,14 +67,15 @@ class PomGenerator {
 
     <dependencies>
         <dependency>
-          <groupId>com.google.jsinterop</groupId>
-          <artifactId>jsinterop-annotations</artifactId>
-          <version>1.0.1</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>2.8.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
           <groupId>com.google.jsinterop</groupId>
-          <artifactId>base</artifactId>
-          <version>1.0.0-beta-1</version>
+          <artifactId>jsinterop-annotations</artifactId>
+          <version>1.0.1</version>
         </dependency>
     </dependencies>
 </project>

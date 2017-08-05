@@ -25,6 +25,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.parsing.visitors.types.TypeParser;
 
+import java.lang.annotation.Native;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,37 +51,42 @@ public class TypeFactory {
     public TypeFactory(Logger logger) {
         this.typeParser = new TypeParser(this, logger);
 
-        typeMap.put("bool", new NativeType("boolean"));
-        typeMap.put("boolean", new NativeType("boolean"));
-        typeMap.put("int", new NativeType("int"));
-        typeMap.put("Integer", new NativeType("Integer"));
-        typeMap.put("byte", new NativeType("byte"));
+        typeMap.put("bool", NativeType.BOOLEAN);
+        typeMap.put("boolean", NativeType.BOOLEAN);
+        typeMap.put("int", NativeType.INT);
+        typeMap.put("byte", NativeType.BYTE);
+        typeMap.put("octet", NativeType.BYTE);
+        typeMap.put("unsignedshort", NativeType.SHORT);
+        typeMap.put("short", NativeType.SHORT);
+        typeMap.put("double", NativeType.DOUBLE);
+        typeMap.put("unrestricteddouble", NativeType.DOUBLE);
+        typeMap.put("unrestrictedfloat", NativeType.DOUBLE);
+        typeMap.put("float", NativeType.DOUBLE);
+        typeMap.put("unsignedlong", NativeType.DOUBLE);
+        typeMap.put("unsignedlonglong", NativeType.DOUBLE);
+        typeMap.put("EnforceRangeunsignedlong", NativeType.DOUBLE);
+        typeMap.put("long", NativeType.DOUBLE);
+        typeMap.put("longlong", NativeType.DOUBLE);
+
         typeMap.put("Byte", new NativeType("Byte"));
-        typeMap.put("octet", new NativeType("byte"));
-        typeMap.put("any", new ObjectType("Any", "jsinterop.base"));
-        typeMap.put("SerializedScriptValue", new NativeType("Object"));
+        typeMap.put("Integer", new NativeType("Integer"));
+        typeMap.put("Short", new NativeType("Short"));
+        typeMap.put("Double", new NativeType("Double"));
+        typeMap.put("Float", new NativeType("Double"));
+        typeMap.put("Long", new NativeType("Double"));
+
         typeMap.put("object", new NativeType("Object"));
         typeMap.put("void", new NativeType("void"));
-        typeMap.put("unrestricteddouble", new NativeType("double"));
-        typeMap.put("double", new NativeType("double"));
-        typeMap.put("Double", new NativeType("double"));
-        typeMap.put("unrestrictedfloat", new NativeType("double"));
-        typeMap.put("float", new NativeType("double"));
-        typeMap.put("Float", new NativeType("double"));
-        typeMap.put("unsignedlong", new NativeType("double"));
-        typeMap.put("unsignedlonglong", new NativeType("double"));
-        typeMap.put("EnforceRangeunsignedlong", new NativeType("double"));
-        typeMap.put("long", new NativeType("double"));
-        typeMap.put("Long", new NativeType("Double"));
-        typeMap.put("longlong", new NativeType("double"));
-        typeMap.put("unsignedshort", new NativeType("short"));
-        typeMap.put("short", new NativeType("short"));
-        typeMap.put("Short", new NativeType("Short"));
-        typeMap.put("DOMString", new NativeType("String"));
+
         typeMap.put("USVString", new NativeType("String"));
         typeMap.put("ByteString", new NativeType("String"));
-        typeMap.put("Dictionary", new NativeType("Object"));
+        typeMap.put("DOMString", new NativeType("String"));
+
+        typeMap.put("any", new NativeType("Object"));
+
+        typeMap.put("Dictionary", new ObjectType("JsObject",".core"));
         typeMap.put("record", new ObjectType("JsObject",".core"));
+        typeMap.put("SerializedScriptValue", new ObjectType("JsObject",".core"));
     }
 
     public Type getTypeNoParse(String typeName) {
@@ -107,7 +113,6 @@ public class TypeFactory {
         }
         return typeParser.parseType(typeName.replace("?", ""));
     }
-
 
     public Type boxType(Type type) {
         if (type instanceof NativeType) {

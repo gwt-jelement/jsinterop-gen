@@ -19,6 +19,19 @@ package com.tenxdev.jsinterop.generator.model.types;
 
 public class NativeType implements Type {
 
+    public static final NativeType CHAR = new NativeType("char");
+    public static final NativeType BYTE = new NativeType("byte");
+    public static final NativeType SHORT = new NativeType("short");
+    public static final NativeType INT = new NativeType("int");
+    public static final NativeType LONG = new NativeType("long");
+    public static final NativeType FLOAT = new NativeType("float");
+    public static final NativeType DOUBLE = new NativeType("double");
+    public static final NativeType BOOLEAN = new NativeType("boolean");
+
+    public static final NativeType[] NATIVE_TYPES=new NativeType[]{
+            CHAR, BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, BOOLEAN
+    };
+
     private final String typeName;
 
     public NativeType(String typeName) {

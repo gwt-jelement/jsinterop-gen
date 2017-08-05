@@ -23,7 +23,7 @@ class GwtModuleGenerator {
     def generate()'''
 <module>
     <source path=""/>
-    <inherits name="jsinterop.base.Base" />
-</module>
+    <inherits name="com.google.gwt.user.User" />
+ </module>
     '''
 }
