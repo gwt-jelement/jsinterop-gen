@@ -147,9 +147,8 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
                             isVoid(returnType) ? "" : "return ",
                             arguments.get(0).getName(), arguments.get(1).getName());
                 } else {
-                    return String.format("%sJs.<%s>set(this.object(), %s, %s);",
+                    return String.format("%sJs.set(this.object(), %s, %s);",
                             isVoid(returnType) ? "" : "return ",
-                            arguments.get(1).getType().displayValue(),
                             arguments.get(0).getName(), arguments.get(1).getName());
                 }
             case "deleter":

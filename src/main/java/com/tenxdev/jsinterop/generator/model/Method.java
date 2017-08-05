@@ -90,8 +90,9 @@ public class Method implements InterfaceMember, Comparable<Method> {
         return staticMethod;
     }
 
-    public boolean hasVarargs(){
-        return arguments.stream().anyMatch(MethodArgument::isVararg);
+    public boolean needsSafeVararg(){
+        return arguments.stream()
+                .anyMatch(argument->argument.isVararg() && !"Object".equals(argument.getType().displayValue()));
     }
 
     public String getName() {

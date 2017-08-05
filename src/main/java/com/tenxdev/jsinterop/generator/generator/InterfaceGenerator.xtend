@@ -190,7 +190,7 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
                 «safeVarArgs(method)»
                 «method.checkDeprecated»
                 @JsMethod(name = "«method.name»")
-                public «staticModifier(method)»native «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»);
+                public «staticModifier(method)»«safeVarArgsFinal(method)»native «typeSpecifier(method)»«method.returnType.displayValue» «method.javaName.adjustJavaName»(«arguments(method)»);
 
             «ELSE»
                 «safeVarArgs(method)»
@@ -277,6 +277,10 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     }
 
     def safeVarArgs(Method method){
-        if (method.hasVarargs) "@SafeVarargs"
+        if (method.needsSafeVararg) "@SafeVarargs"
+    }
+
+    def safeVarArgsFinal(Method method){
+        if (!method.isStatic && method.needsSafeVararg) "final "
     }
 }
