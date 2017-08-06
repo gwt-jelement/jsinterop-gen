@@ -2,4 +2,4 @@ target/
 .idea/
 xtend-gen/
 *.iml
-
+*.wiki
