@@ -88,6 +88,11 @@ public class «definition.name»«generic(definition)»«
 
             «ENDIF»
         «ELSEIF member.type instanceof UnionType »
+            @JsOverlay
+            public final «member.type.displayValue» get«member.name.toFirstUpper»(){
+                return this.«member.name.adjustJavaName»;
+            }
+
             «FOR type: (member.type as UnionType).types»
                 @JsOverlay
                 public final void set«member.name.toFirstUpper»(«type.displayValue» «member.name.adjustJavaName»){
