@@ -2,4 +2,5 @@ target/
 .idea/
 xtend-gen/
 *.iml
-*.wiki
+jsinterop-gen.wiki/
+jsinterop-gen.wiki/*
