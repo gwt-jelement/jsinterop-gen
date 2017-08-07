@@ -70,14 +70,23 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
 
     def constructors(InterfaceDefinition definition)'''
         «FOR constructor: definition.constructors»
-            «safeVarArgs(constructor)»
-            @JsConstructor
-            public «definition.name»(«arguments(constructor)»){
-                «IF definition.parent!==null»
-                    super(«superArguments(constructor)»);
-                «ENDIF»
-            }
+            «IF constructor.hidden»
+                private «definition.name»(«arguments(constructor)»){
+                    «IF definition.parent!==null»
+                        super(«superArguments(constructor)»);
+                    «ENDIF»
+                }
 
+            «ELSE»
+                «safeVarArgs(constructor)»
+                @JsConstructor
+                public «definition.name»(«arguments(constructor)»){
+                    «IF definition.parent!==null»
+                        super(«superArguments(constructor)»);
+                    «ENDIF»
+                }
+
+            «ENDIF»
         «ENDFOR»
     '''
 

@@ -43,9 +43,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
     @Override
     public List<String> accept(InterfaceDefinition interfaceDefinition) {
         List<String> result = super.accept(interfaceDefinition);
-        result.add("jsinterop.annotations.JsPackage");
-        result.add("jsinterop.annotations.JsType");
-        result.add("jsinterop.annotations.JsOverlay");
+        result.add("jsinterop.annotations.*");
         if (interfaceDefinition.getParent() != null) {
             result.addAll(typeVisitor.accept(interfaceDefinition.getParent()));
         } else if (interfaceDefinition.getParent() instanceof ParameterisedType
@@ -53,11 +51,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
             PackageType packageType = (PackageType) ((ParameterisedType) interfaceDefinition.getParent()).getBaseType();
             result.add(packageType.getPackageName() + "." + packageType.getTypeName());
         }
-        if (!interfaceDefinition.getConstructors().isEmpty()) {
-            result.add("jsinterop.annotations.JsConstructor");
-        }
         if (!interfaceDefinition.getUnionReturnTypes().isEmpty()) {
-            result.add("jsinterop.annotations.JsType");
             result.addAll(typeVisitor.accept(jsType));
             result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
                     .map(UnionType::getTypes)
@@ -65,12 +59,6 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
                     .map(typeVisitor::accept)
                     .flatMap(List::stream)
                     .collect(Collectors.toList()));
-        }
-        if (!interfaceDefinition.getMethods().isEmpty()) {
-            result.add("jsinterop.annotations.JsMethod");
-        }
-        if (!interfaceDefinition.getAttributes().isEmpty()) {
-            result.add("jsinterop.annotations.JsProperty");
         }
         result.addAll(interfaceDefinition.getUnionReturnTypes().stream()
                 .filter(unionType -> interfaceDefinition != unionType.getOwner())

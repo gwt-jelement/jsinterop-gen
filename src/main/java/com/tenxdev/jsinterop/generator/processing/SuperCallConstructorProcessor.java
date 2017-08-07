@@ -93,7 +93,7 @@ public class SuperCallConstructorProcessor {
     }
 
     private Constructor getDefaultConstructor() {
-        return new Constructor(null, null, Collections.emptyList());
+        return new Constructor(null, null, Collections.emptyList(), true);
     }
 
 }

@@ -59,6 +59,6 @@ public class NamedConstructorVisitor extends WebIDLBaseVisitor<Constructor> {
         List<MethodArgument> arguments = ctx.extendedAttributeInner() != null ?
                 ctx.extendedAttributeInner().accept(new ConstructorArgumentsVisitor(parsingContext)) :
                 Collections.emptyList();
-        return new Constructor(this.name, null, arguments);
+        return new Constructor(this.name, null, arguments, false);
     }
 }

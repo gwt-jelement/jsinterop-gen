@@ -31,17 +31,14 @@ public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefiniti
     private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
     private Type jsType;
 
-    public DictionaryDefinitionUsageVisitor(Type jsType){
+    DictionaryDefinitionUsageVisitor(Type jsType) {
         this.jsType = jsType;
     }
 
     @Override
     public List<String> accept(DictionaryDefinition definition) {
         List<String> result = super.accept(definition);
-        result.add("jsinterop.annotations.JsPackage");
-        result.add("jsinterop.annotations.JsProperty");
-        result.add("jsinterop.annotations.JsType");
-        result.add("jsinterop.annotations.JsOverlay");
+        result.add("jsinterop.annotations.*");
         if (!definition.getUnionReturnTypes().isEmpty()) {
             result.addAll(typeVisitor.accept(jsType));
             result.addAll(definition.getUnionReturnTypes().stream()

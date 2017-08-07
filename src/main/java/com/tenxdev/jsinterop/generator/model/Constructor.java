@@ -25,28 +25,30 @@ import java.util.List;
 public class Constructor extends Method {
 
     private final List<MethodArgument> superArguments;
+    private final boolean hidden;
 
-    public Constructor(String name, Type returnType, List<MethodArgument> arguments) {
+    public Constructor(String name, Type returnType, List<MethodArgument> arguments, boolean hidden) {
         super(name, returnType, arguments, false, null, new ExtendedAttributes(null), null);
         this.superArguments = new ArrayList<>();
+        this.hidden = hidden;
     }
 
     protected Constructor(String name, Type returnType, List<MethodArgument> arguments,
-                          boolean deprecated, List<MethodArgument> superArguments) {
+                          boolean deprecated, List<MethodArgument> superArguments, boolean hidden) {
         super(name, returnType, arguments, false, null, deprecated, false, null, null, null);
         this.superArguments = superArguments;
+        this.hidden = hidden;
     }
 
-    protected Constructor(Method method) {
-        super(method);
-        this.superArguments = new ArrayList<>();
+    public boolean isHidden() {
+        return hidden;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Method> T newMethodWithArguments(List<MethodArgument> newArguments) {
         return (T) new Constructor(getName(), getReturnType(), newArguments,
-                isDeprecated(), superArguments);
+                isDeprecated(), superArguments, hidden);
     }
 
     public List<MethodArgument> getSuperArguments() {
