@@ -42,14 +42,14 @@ public class MethodGenericTypesVisitor extends AbstractTypeVisitor<List<String>>
 
     @Override
     protected List<String> visitUnionType(UnionType type) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         type.getTypes().forEach(subtype-> result.addAll(accept(subtype)));
         return result.isEmpty()? Collections.emptyList():result;
     }
 
     @Override
     protected List<String> visitParameterisedType(ParameterisedType type) {
-        ArrayList<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         result.addAll(accept(type.getBaseType()));
         type.getTypeParameters().forEach(subtype-> result.addAll(accept(subtype)));
         return result.isEmpty()? Collections.emptyList():result;

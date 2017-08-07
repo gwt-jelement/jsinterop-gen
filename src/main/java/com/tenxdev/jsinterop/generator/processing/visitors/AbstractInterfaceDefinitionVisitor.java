@@ -40,7 +40,7 @@ public abstract class AbstractInterfaceDefinitionVisitor<T> {
 
     protected abstract T visitConstructors(List<Constructor> constructors);
 
-    protected abstract T visitFeatures(List<Feature> features);
+    protected abstract T visitFeatures(@SuppressWarnings("unused") List<Feature> features);
 
     protected abstract T coallesce(List<T> result);
 

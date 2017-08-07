@@ -17,8 +17,6 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
-import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
@@ -48,17 +46,10 @@ class OperationVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
             return ctx.operationRest().accept(new OperationRestVisitor(parsingContext, returnType,
                     false, extendedAttributes));
         } else {
-            parsingContext.getlogger().reportError("Unexpected condition in operation");
+            parsingContext.getLogger().reportError("Unexpected condition in operation");
             return null;
         }
 
-    }
-
-    private String removeOptionalIndicator(String type) {
-        if (type != null && type.endsWith("?")) {
-            return type.substring(0, type.length() - 1);
-        }
-        return type;
     }
 }
 

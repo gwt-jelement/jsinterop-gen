@@ -58,11 +58,8 @@ public class EnumDefinition extends AbstractDefinition {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         EnumDefinition that = (EnumDefinition) o;
-
-        if (!getName().equals(that.getName())) return false;
-        return values.equals(that.values);
+        return getName().equals(that.getName()) && values.equals(that.values);
     }
 
     @Override

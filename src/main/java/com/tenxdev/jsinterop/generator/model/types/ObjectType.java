@@ -48,8 +48,10 @@ public class ObjectType implements Type, PackageType {
 
         ObjectType that = (ObjectType) o;
 
-        if (packageName != null ? !packageName.equals(that.packageName) : that.packageName != null) return false;
-        return typeName != null ? typeName.equals(that.typeName) : that.typeName == null;
+        return (packageName != null ?
+                packageName.equals(that.packageName) :
+                that.packageName == null) && (typeName != null ?
+                typeName.equals(that.typeName) : that.typeName == null);
     }
 
     @Override

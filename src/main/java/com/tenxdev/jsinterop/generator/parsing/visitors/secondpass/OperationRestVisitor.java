@@ -29,18 +29,15 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
 
-    private static final Pattern TYPE_PARAMETER_PATTERN = Pattern.compile("<([A-Z])>");
     private final Type returnType;
     private final boolean staticMethod;
     private final List<String> extendedAttributes;
 
-    public OperationRestVisitor(ParsingContext context, Type returnType, boolean staticMethod, List<String> extendedAttributes) {
+    OperationRestVisitor(ParsingContext context, Type returnType, boolean staticMethod, List<String> extendedAttributes) {
         super(context);
         this.returnType = returnType;
         this.staticMethod = staticMethod;
@@ -79,21 +76,4 @@ class OperationRestVisitor extends ContextWebIDLBaseVisitor<Method> {
                 extendedAttributes, replacedReturnedType);
     }
 
-    private String extractGenericTypeSpecifiers(String[] genericParameterNames) {
-        return Arrays.stream(genericParameterNames)
-                .map(this::extractGenericTypeSpecifier)
-                .filter(typeSpecifier -> typeSpecifier != null)
-                .collect(Collectors.joining(","));
-    }
-
-    private String extractGenericTypeSpecifier(String genericParameterName) {
-        if (genericParameterName.length() == 1) {
-            return genericParameterName;
-        }
-        Matcher matcher = TYPE_PARAMETER_PATTERN.matcher(genericParameterName);
-        if (matcher.find() && matcher.groupCount() == 1) {
-            return matcher.group(1);
-        }
-        return null;
-    }
 }

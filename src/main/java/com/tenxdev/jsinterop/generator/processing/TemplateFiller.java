@@ -36,11 +36,9 @@ public class TemplateFiller {
             "boolean", "char", "byte", "short", "int", "float", "double");
     private final VelocityEngine velocityEngine;
     private final Model model;
-    private final Logger logger;
 
     public TemplateFiller(Model model, Logger logger) {
         this.model = model;
-        this.logger = logger;
         velocityEngine = new VelocityEngine();
         velocityEngine.setProperty("runtime.log.logsystem", new VelocityLogger(logger));
         velocityEngine.init();

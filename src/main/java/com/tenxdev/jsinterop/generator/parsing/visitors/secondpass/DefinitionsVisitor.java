@@ -41,12 +41,12 @@ public class DefinitionsVisitor extends ContextWebIDLBaseVisitor<List<AbstractDe
                     definitions.extendedAttributeList().accept(new ExtendedAttributeListVisitor(parsingContext))
                     : Collections.emptyList();
             List<String> extendedAttributes = definitions.extendedAttributeList() != null ?
-                    definitions.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) : null;
+                    definitions.extendedAttributeList().accept(new GenericExtendedAttributeListVisitor()) : null;
             AbstractDefinition definition = definitions.definition().accept(new DefinitionVisitor(parsingContext, constructors, extendedAttributes));
             if (definition != null) {
                 definitionList.add(definition);
             } else {
-                parsingContext.getlogger().reportError("Unexpected missed definition: " + ParsingContext.getText(ctx));
+                parsingContext.getLogger().reportError("Unexpected missed definition: " + ParsingContext.getText(ctx));
             }
             definitions = definitions.definitions();
         }

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class DictionaryDefinitionUsageVisitor extends AbstractDictionaryDefinitionVisitor<List<String>> {
     private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
-    private Type jsType;
+    private final Type jsType;
 
     DictionaryDefinitionUsageVisitor(Type jsType) {
         this.jsType = jsType;

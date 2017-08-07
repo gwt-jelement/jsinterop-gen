@@ -51,9 +51,9 @@ public abstract class AbstractModelVisitor<T> {
         }
     }
 
-    protected abstract T visitTypeDefinition(TypeDefinition definition);
+    protected abstract T visitTypeDefinition(@SuppressWarnings("unused") TypeDefinition definition);
 
-    protected abstract T visitEnumDefinition(EnumDefinition definition);
+    protected abstract T visitEnumDefinition(@SuppressWarnings("unused") EnumDefinition definition);
 
     protected abstract T visitCallbackDefinition(CallbackDefinition definition);
 
@@ -61,5 +61,5 @@ public abstract class AbstractModelVisitor<T> {
 
     protected abstract T visitInterfaceDefinition(InterfaceDefinition definition);
 
-    protected abstract T visitImplementsDefinition(ImplementsDefinition definition);
+    protected abstract T visitImplementsDefinition(@SuppressWarnings("unused") ImplementsDefinition definition);
 }

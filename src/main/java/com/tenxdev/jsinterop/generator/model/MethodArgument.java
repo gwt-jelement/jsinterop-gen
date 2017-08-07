@@ -28,7 +28,7 @@ public class MethodArgument {
     private boolean enumSubstitution;
 
     public MethodArgument(String name, Type type, boolean vararg, boolean optional, String defaultValue,
-                          ExtendedAttributes extendedAttributes) {
+                          @SuppressWarnings("unused") ExtendedAttributes extendedAttributes) {
         this(name, type, vararg, optional, defaultValue);
     }
 
@@ -38,14 +38,6 @@ public class MethodArgument {
         this.vararg = vararg;
         this.optional = optional;
         this.defaultValue = defaultValue;
-    }
-
-    MethodArgument(MethodArgument methodArgument) {
-        this.type = methodArgument.type;
-        this.name = methodArgument.name;
-        this.vararg = methodArgument.vararg;
-        this.optional = methodArgument.optional;
-        this.defaultValue = methodArgument.defaultValue;
     }
 
     public MethodArgument newMethodArgumentWithType(Type type) {
@@ -89,14 +81,11 @@ public class MethodArgument {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         MethodArgument that = (MethodArgument) o;
-
-        if (vararg != that.vararg) return false;
-        if (optional != that.optional) return false;
-        if (defaultValue != null ? !defaultValue.equals(that.defaultValue) : that.defaultValue != null) return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        return name != null ? name.equals(that.name) : that.name == null;
+        return vararg == that.vararg && optional == that.optional
+                && (defaultValue != null ? defaultValue.equals(that.defaultValue) : that.defaultValue == null)
+                && (type != null ? type.equals(that.type) : that.type == null)
+                && (name != null ? name.equals(that.name) : that.name == null);
     }
 
     @Override

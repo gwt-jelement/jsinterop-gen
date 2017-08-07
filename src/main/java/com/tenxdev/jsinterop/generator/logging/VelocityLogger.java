@@ -21,7 +21,7 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogChute;
 
 public class VelocityLogger implements LogChute {
-    private Logger logger;
+    private final Logger logger;
 
     public VelocityLogger(Logger logger) {
         this.logger = logger;

@@ -5,10 +5,7 @@ import java.util.Set
 import java.util.TreeSet
 import java.util.Arrays
 import com.tenxdev.jsinterop.generator.model.Method
-import com.tenxdev.jsinterop.generator.model.types.NativeType
 import com.tenxdev.jsinterop.generator.model.types.Type
-import com.tenxdev.jsinterop.generator.processing.TypeFactory
-import javax.annotation.Nonnull
 import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes
 import com.tenxdev.jsinterop.generator.model.types.UnionType
 import java.util.List
@@ -70,15 +67,6 @@ class XtendTemplate {
         if (method.getName() === null || method.getName().isEmpty() ) "callback" else method.getName()
     }
 
-    def boxType(Type type) {
-        if (type instanceof NativeType) {
-            var boxedType = TypeFactory.BOXED_TYPES.get(type.getTypeName());
-            return if (boxedType !== null)  boxedType else type;
-        }
-        //TODO may need to box other types
-        return type;
-    }
-
     def unionTypeName(Type type, AbstractDefinition definition){
         type.displayValue.replace(definition.name+".","")
     }
@@ -105,7 +93,7 @@ class XtendTemplate {
                     «FOR type: (unionType as UnionType).types»
                         @JsOverlay
                         default boolean is«type.displayValue.toFirstUpper.adjustName»(){
-                            return (Object) this instanceof «(boxType(type).displayValue.removeGeneric)»;
+                            return (Object) this instanceof «type.box().displayValue.removeGeneric»;
                         }
 
                     «ENDFOR»

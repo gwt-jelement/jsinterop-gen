@@ -31,7 +31,7 @@ public class EnumSubstitutionVisitor extends AbstractTypeVisitor<Type> {
     private final Model model;
     private final Logger logger;
 
-    public EnumSubstitutionVisitor(Model model, Logger logger) {
+    EnumSubstitutionVisitor(Model model, Logger logger) {
         super();
         this.model = model;
         this.logger = logger;

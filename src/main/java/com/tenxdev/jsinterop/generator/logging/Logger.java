@@ -17,12 +17,9 @@
 
 package com.tenxdev.jsinterop.generator.logging;
 
-import java.io.OutputStream;
 import java.util.function.Supplier;
 
 public interface Logger {
-
-    int LEVEL_ERROR = 0;
 
     int LEVEL_INFO = 1;
 

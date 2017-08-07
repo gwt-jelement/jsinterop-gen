@@ -24,7 +24,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 class DictionaryScanner extends ContextWebIDLBaseVisitor<Void> {
 
-    public DictionaryScanner(ParsingContext parsingContext) {
+    DictionaryScanner(ParsingContext parsingContext) {
         super(parsingContext);
     }
 

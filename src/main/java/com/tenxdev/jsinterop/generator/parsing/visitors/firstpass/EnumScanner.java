@@ -24,7 +24,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 class EnumScanner extends ContextWebIDLBaseVisitor<Void> {
 
-    public EnumScanner(ParsingContext parsingContext) {
+    EnumScanner(ParsingContext parsingContext) {
         super(parsingContext);
     }
 

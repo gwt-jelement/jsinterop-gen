@@ -47,7 +47,7 @@ class TypeVisitor extends ContextWebIDLBaseVisitor<Type> {
         } else if (ctx.unionType() != null) {
             return ctx.unionType().accept(this);
         } else {
-            parsingContext.getlogger().reportError("Unexpected state in visitType");
+            parsingContext.getLogger().reportError("Unexpected state in visitType");
             return null;
         }
     }

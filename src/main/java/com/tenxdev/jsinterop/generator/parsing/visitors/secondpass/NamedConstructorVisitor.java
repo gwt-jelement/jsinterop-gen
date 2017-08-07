@@ -26,7 +26,7 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.Collections;
 import java.util.List;
 
-public class NamedConstructorVisitor extends WebIDLBaseVisitor<Constructor> {
+class NamedConstructorVisitor extends WebIDLBaseVisitor<Constructor> {
 
     private final ParsingContext parsingContext;
     private String name;
@@ -47,9 +47,9 @@ public class NamedConstructorVisitor extends WebIDLBaseVisitor<Constructor> {
             return ctx.extendedAttribute().extendedAttributeRest().extendedAttribute().extendedAttributeRest()
                     .extendedAttribute().accept(this);
         }else{
-            parsingContext.getlogger().reportError("Unexpected state in NamedConstructorVisitor");
-            parsingContext.getlogger().reportError(ParsingContext.getText(ctx));
-            parsingContext.getlogger().reportError(parsingContext.getTree(ctx));
+            parsingContext.getLogger().reportError("Unexpected state in NamedConstructorVisitor");
+            parsingContext.getLogger().reportError(ParsingContext.getText(ctx));
+            parsingContext.getLogger().reportError(parsingContext.getTree(ctx));
             return null;
         }
     }

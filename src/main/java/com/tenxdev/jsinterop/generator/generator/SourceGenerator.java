@@ -24,11 +24,8 @@ import com.tenxdev.jsinterop.generator.processing.TemplateFiller;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 public class SourceGenerator extends XtendTemplate {
 
@@ -80,18 +77,6 @@ public class SourceGenerator extends XtendTemplate {
         }
         int count = numOutput;
         logger.info(() -> String.format("Generated %d Java file%s in %s", count, count != 1 ? "s" : "", outputDirectory));
-    }
-
-    private void outputResource(String outputDirectory, String javaResourcePath) throws IOException {
-        Path filePath = Paths.get(outputDirectory, "src", "main", "java",
-                javaResourcePath.replace("/", File.separator));
-        File parentDirectory = filePath.toFile().getParentFile();
-        if (!parentDirectory.exists() && !parentDirectory.mkdirs()) {
-            throw new IOException(String.format("Unable to create path %s", parentDirectory.getAbsolutePath()));
-        }
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(javaResourcePath)) {
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        }
     }
 
     private Path getSourcePath(String outputDirectory, String definitionPackage, String definitionName, String basePackageName) {

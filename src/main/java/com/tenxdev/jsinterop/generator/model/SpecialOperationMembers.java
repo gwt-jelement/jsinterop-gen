@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpecialOperationMembers implements InterfaceMember {
-    private List<Method> methods=new ArrayList();
+    private final List<Method> methods=new ArrayList<>();
 
     public List<Method> getMethods() {
         return methods;

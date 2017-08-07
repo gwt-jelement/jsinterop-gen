@@ -23,7 +23,6 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Method implements InterfaceMember, Comparable<Method> {
     private final String name;
@@ -65,19 +64,6 @@ public class Method implements InterfaceMember, Comparable<Method> {
         this.enumOverlay = enumOverlay;
         this.javaName = javaName;
         this.replacedReturnType=replacedReturnType;
-    }
-
-    Method(Method method) {
-        this.name = method.name;
-        this.returnType = method.returnType;
-        this.arguments = method.arguments.stream().map(MethodArgument::new).collect(Collectors.toList());
-        this.staticMethod = method.staticMethod;
-        this.genericTypeSpecifiers = method.genericTypeSpecifiers;
-        this.deprecated = method.deprecated;
-        this.enumReturnType = method.enumReturnType;
-        this.enumOverlay = method.enumOverlay;
-        this.javaName = method.javaName;
-        this.replacedReturnType=method.replacedReturnType;
     }
 
     @SuppressWarnings("unchecked")
@@ -181,15 +167,11 @@ public class Method implements InterfaceMember, Comparable<Method> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Method method = (Method) o;
-
-        if (staticMethod != method.staticMethod) return false;
-        if (name != null ? !name.equals(method.name) : method.name != null) return false;
-        if (arguments != null ? !arguments.equals(method.arguments) : method.arguments != null) return false;
-        if (genericTypeSpecifiers != null ? !genericTypeSpecifiers.equals(method.genericTypeSpecifiers) : method.genericTypeSpecifiers != null)
-            return false;
-        return returnType != null ? returnType.equals(method.returnType) : method.returnType == null;
+        return staticMethod == method.staticMethod
+                && (name != null ? name.equals(method.name) : method.name == null)
+                && (arguments != null ? arguments.equals(method.arguments) : method.arguments == null)
+                && (genericTypeSpecifiers != null ? genericTypeSpecifiers.equals(method.genericTypeSpecifiers) : method.genericTypeSpecifiers == null) && (returnType != null ? returnType.equals(method.returnType) : method.returnType == null);
     }
 
     @Override

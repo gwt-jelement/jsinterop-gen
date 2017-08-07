@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 public class NamedConstructorHandler {
 
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public NamedConstructorHandler(Model model, Logger logger) {
         this.model = model;

@@ -63,7 +63,7 @@ class Generator {
     private boolean overwrite;
 
     @SuppressWarnings("FieldCanBeLocal")
-    @Option(name = "-logLevel", usage = "logging level: 0-no logging 1-mimum logging", metaVar = "logLevel")
+    @Option(name = "-logLevel", usage = "logging level: 0-no logging 1-minimum logging 2-debug logging", metaVar = "logLevel")
     private int logLevel = 1;
 
     @SuppressWarnings("unused")

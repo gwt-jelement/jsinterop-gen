@@ -50,13 +50,13 @@ public class DuplicateInheritedInterfaceMembersRemover {
     }
 
     private void processAttributes(InterfaceDefinition definition) {
-        List<Attribute> attribtesToRemove = new ArrayList<>();
+        List<Attribute> attributesToRemove = new ArrayList<>();
         for (Attribute attribute : definition.getAttributes()) {
             if (parentHasAttribute(definition, attribute)) {
-                attribtesToRemove.add(attribute);
+                attributesToRemove.add(attribute);
             }
         }
-        definition.getAttributes().removeAll(attribtesToRemove);
+        definition.getAttributes().removeAll(attributesToRemove);
     }
 
     private void processMethods(InterfaceDefinition definition) {

@@ -24,7 +24,6 @@ import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.*;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractTypeVisitor;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class RemoveEnumUnionTypeVisitor extends AbstractTypeVisitor<Type> {
@@ -32,7 +31,7 @@ public class RemoveEnumUnionTypeVisitor extends AbstractTypeVisitor<Type> {
     private final Model model;
     private final Logger logger;
 
-    public RemoveEnumUnionTypeVisitor(Model model, Logger logger) {
+    RemoveEnumUnionTypeVisitor(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
     }
@@ -48,12 +47,6 @@ public class RemoveEnumUnionTypeVisitor extends AbstractTypeVisitor<Type> {
                 .map(this::accept)
                 .collect(Collectors.toList()));
         return type;
-    }
-
-    public List<UnionType> visitUnionTypes(List<UnionType> unionTypes) {
-        return unionTypes.stream()
-                .map(this::visitUnionType)
-                .collect(Collectors.toList());
     }
 
     @Override

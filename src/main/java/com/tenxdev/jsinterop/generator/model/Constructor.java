@@ -33,8 +33,8 @@ public class Constructor extends Method {
         this.hidden = hidden;
     }
 
-    protected Constructor(String name, Type returnType, List<MethodArgument> arguments,
-                          boolean deprecated, List<MethodArgument> superArguments, boolean hidden) {
+    private Constructor(String name, Type returnType, List<MethodArgument> arguments,
+                        boolean deprecated, List<MethodArgument> superArguments, boolean hidden) {
         super(name, returnType, arguments, false, null, deprecated, false, null, null, null);
         this.superArguments = superArguments;
         this.hidden = hidden;

@@ -26,7 +26,6 @@ public class ExtendedAttributes {
     public static final String GENERIC_RETURN = "GenericReturn";
     public static final String GENERIC_SUB = "GenericSub";
     public static final String GENERIC_PARAMETER = "GenericParameter";
-    public static final String NO_INTERFACE_OBJECT = "NoInterfaceObject";
     static final String JAVA_NAME = "JavaName";
     static final String JS_TYPE_NAME = "JsTypeName";
     static final String JS_PROPERTY_NAME = "JsPropertyName";

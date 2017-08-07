@@ -41,9 +41,8 @@ public class CallbackDefinition extends AbstractDefinition {
         if (o == null || getClass() != o.getClass()) return false;
 
         CallbackDefinition that = (CallbackDefinition) o;
-
-        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
-        return method != null ? method.equals(that.method) : that.method == null;
+        return (getName() != null ? getName().equals(that.getName()) : that.getName() == null)
+                && (method != null ? method.equals(that.method) : that.method == null);
     }
 
     @Override

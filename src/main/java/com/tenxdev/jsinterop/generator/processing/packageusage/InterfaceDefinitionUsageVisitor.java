@@ -33,7 +33,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
 
     private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
     private final MethodVisitor methodVisitor = new MethodVisitor();
-    private Type jsType;
+    private final Type jsType;
 
     InterfaceDefinitionUsageVisitor(Type jsType) {
         super();

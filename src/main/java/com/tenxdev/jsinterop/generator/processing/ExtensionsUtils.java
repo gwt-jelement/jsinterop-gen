@@ -37,9 +37,11 @@ public enum ExtensionsUtils {
 
     INSTANCE;
 
-    private Pattern packagePattern = Pattern.compile("package\\s+\\$\\{basePackage\\}((?>[^;\\s])+)\\s*;");
-    private Pattern partialClassPattern = Pattern.compile("partial\\s+class\\s+((?>[^\\s{])+)\\s*\\{((?>.|\\s)*)\\}");
-    private Pattern importPattern = Pattern.compile("import\\s+([^\\s;]+)\\s*;");
+    @SuppressWarnings("Annotator")
+    private final Pattern packagePattern = Pattern.compile("package\\s+\\$\\{basePackage\\}((?>[^;\\s])+)\\s*;");
+    @SuppressWarnings("Annotator")
+    private final Pattern partialClassPattern = Pattern.compile("partial\\s+class\\s+((?>[^\\s{])+)\\s*\\{((?>.|\\s)*)\\}");
+    private final Pattern importPattern = Pattern.compile("import\\s+([^\\s;]+)\\s*;");
 
     public boolean isPartialClass(File file) {
         return file.getName().contains(".partial.");
@@ -54,7 +56,7 @@ public enum ExtensionsUtils {
         String className = extractClassName(file.getName());
         String packageSuffix = extractPackageSuffix(content);
         if (packageSuffix == null) {
-            logger.formatError("Missing package declation for extension %s in file %s",
+            logger.formatError("Missing package declaration for extension %s in file %s",
                     className, file.getName());
         } else {
             typeFactory.registerType(className, new ExtensionObjectType(className, packageSuffix));
@@ -74,7 +76,7 @@ public enum ExtensionsUtils {
         String className = extractClassName(file.getName());
         String packageSuffix = extractPackageSuffix(content);
         if (packageSuffix == null) {
-            logger.formatError("Missing package declation for extension %s in file %s",
+            logger.formatError("Missing package declaration for extension %s in file %s",
                     className, file.getName());
         } else {
             model.getExtensions().add(new Extension(className, packageSuffix, content));

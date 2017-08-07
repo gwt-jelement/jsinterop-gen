@@ -28,13 +28,14 @@ public class DictionaryMember {
     private Type enumSubstitutionType;
 
     public DictionaryMember(String name, Type type, boolean required, String defaultValue,
-                            ExtendedAttributes extendedAttributes) {
+                            @SuppressWarnings("unused") ExtendedAttributes extendedAttributes) {
         this.name = name;
         this.type = type;
         this.required = required;
         this.defaultValue = defaultValue;
     }
 
+    @SuppressWarnings("unused")
     public boolean isRequired() {
         return required;
     }
@@ -47,6 +48,7 @@ public class DictionaryMember {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public String getDefaultValue() {
         return defaultValue;
     }
@@ -65,9 +67,7 @@ public class DictionaryMember {
         if (o == null || getClass() != o.getClass()) return false;
 
         DictionaryMember that = (DictionaryMember) o;
-
-        if (!name.equals(that.name)) return false;
-        return type.equals(that.type);
+        return name.equals(that.name) && type.equals(that.type);
     }
 
     @Override

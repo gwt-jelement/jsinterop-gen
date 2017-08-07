@@ -59,7 +59,7 @@ class DefinitionVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
         } else if (ctx.implementsStatement() != null) {
             return ctx.implementsStatement().accept(new ImplementsVisitor(parsingContext, extendedAttributes));
         }
-        parsingContext.getlogger().reportError("Unexpected state in DefinitionVisitor");
+        parsingContext.getLogger().reportError("Unexpected state in DefinitionVisitor");
         return null;
     }
 }

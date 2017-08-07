@@ -24,7 +24,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 class CallbackScanner extends ContextWebIDLBaseVisitor<Void> {
 
-    public CallbackScanner(ParsingContext context) {
+    CallbackScanner(ParsingContext context) {
         super(context);
     }
 
@@ -35,8 +35,8 @@ class CallbackScanner extends ContextWebIDLBaseVisitor<Void> {
         } else if (ctx.callbackRest() != null) {
             return ctx.callbackRest().accept(this);
         } else {
-            parsingContext.getlogger().reportError("unexpected state in CallbackRestOrInterface visitor");
-            parsingContext.getlogger().reportError("Content: " + ParsingContext.getText(ctx));
+            parsingContext.getLogger().reportError("unexpected state in CallbackRestOrInterface visitor");
+            parsingContext.getLogger().reportError("Content: " + ParsingContext.getText(ctx));
             return null;
         }
     }

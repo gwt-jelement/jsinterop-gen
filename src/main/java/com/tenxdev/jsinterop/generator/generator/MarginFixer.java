@@ -18,9 +18,9 @@
 package com.tenxdev.jsinterop.generator.generator;
 
 import java.util.Arrays;
-import java.util.function.Function;
+import java.util.Comparator;
 
-public enum MarginFxer {
+public enum MarginFixer {
 
     INSTANCE;
 
@@ -32,15 +32,15 @@ public enum MarginFxer {
         int smallestMargin = Arrays.stream(inputLines)
                 .filter(line -> !line.trim().isEmpty())
                 .map(line -> line.indexOf(line.trim()))
-                .min((o1, o2) -> o1 - o2)
+                .min(Comparator.comparingInt(o -> o))
                 .orElse(0);
         if (smallestMargin == 0) {
             return input;
         }
-        return fixupMargin(inputLines, smallestMargin);
+        return fixUpMargin(inputLines, smallestMargin);
     }
 
-    private String fixupMargin(String[] inputLines, int smallestMargin) {
+    private String fixUpMargin(String[] inputLines, int smallestMargin) {
         String marginToDelete = new String(new char[smallestMargin]).replace('\0', ' ');
         StringBuilder result = new StringBuilder();
         boolean startedOutput = false;

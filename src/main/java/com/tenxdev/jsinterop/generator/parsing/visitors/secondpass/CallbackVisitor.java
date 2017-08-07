@@ -45,8 +45,8 @@ class CallbackVisitor extends ContextWebIDLBaseVisitor<AbstractDefinition> {
         } else if (ctx.callbackRest() != null) {
             return ctx.callbackRest().accept(this);
         } else {
-            parsingContext.getlogger().reportError("unexpected state in CallbackRestOrInterface visitor");
-            parsingContext.getlogger().reportError("Content: " + parsingContext.getText(ctx));
+            parsingContext.getLogger().reportError("unexpected state in CallbackRestOrInterface visitor");
+            parsingContext.getLogger().reportError("Content: " + ParsingContext.getText(ctx));
             return null;
         }
     }

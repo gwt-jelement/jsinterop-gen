@@ -35,6 +35,7 @@ class SetLikeRestVisitor extends ContextWebIDLBaseVisitor<Feature> {
         this.extendedAttributes = extendedAttributes;
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Override
     public Feature visitSetlikeRest(WebIDLParser.SetlikeRestContext ctx) {
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));

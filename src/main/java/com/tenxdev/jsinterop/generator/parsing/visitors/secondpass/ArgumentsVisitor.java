@@ -36,13 +36,13 @@ class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
         List<MethodArgument> argumentList = new ArrayList<>();
         for (WebIDLParser.ArgumentsContext arguments = ctx; arguments != null && arguments.argument() != null; arguments = arguments.arguments()) {
             List<String> extendedAttributes = arguments.argument().extendedAttributeList() != null ?
-                    arguments.argument().extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) :
+                    arguments.argument().extendedAttributeList().accept(new GenericExtendedAttributeListVisitor()) :
                     null;
             boolean added = visitIfNotNull(arguments.argument().optionalOrRequiredArgument().optionalArgument(), argumentList, extendedAttributes) ||
                     visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredArgument(), argumentList, extendedAttributes) ||
                     visitIfNotNull(arguments.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList, extendedAttributes);
             if (!added) {
-                parsingContext.getlogger().reportError("Invalid state in Arguments visitor");
+                parsingContext.getLogger().reportError("Invalid state in Arguments visitor");
             }
         }
         return argumentList;
@@ -60,13 +60,13 @@ class ArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodArgument>> {
     public List<MethodArgument> visitArgumentList(WebIDLParser.ArgumentListContext ctx) {
         List<MethodArgument> argumentList = new ArrayList<>();
         List<String> extendedAttributes = ctx.argument().extendedAttributeList() != null ?
-                ctx.argument().extendedAttributeList().accept(new GenericExtendedAttribeListVisitor()) :
+                ctx.argument().extendedAttributeList().accept(new GenericExtendedAttributeListVisitor()) :
                 null;
         boolean added = visitIfNotNull(ctx.argument().optionalOrRequiredArgument().optionalArgument(), argumentList, extendedAttributes) ||
                 visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredArgument(), argumentList, extendedAttributes) ||
                 visitIfNotNull(ctx.argument().optionalOrRequiredArgument().requiredVarArgArgument(), argumentList, extendedAttributes);
         if (!added) {
-            parsingContext.getlogger().reportError("Invalid state in Arguments visitor");
+            parsingContext.getLogger().reportError("Invalid state in Arguments visitor");
         }
         if (ctx.arguments() != null && ctx.arguments().argument() != null) {
             argumentList.addAll(ctx.arguments().accept(this));

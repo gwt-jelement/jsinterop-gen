@@ -17,34 +17,53 @@
 
 package com.tenxdev.jsinterop.generator.model.types;
 
+import com.google.common.collect.ImmutableMap;
+
 public interface Type {
 
-    default boolean is(String typeName) {
-        return this instanceof NativeType && typeName.equals(this.getTypeName());
-    }
+    ImmutableMap<String, Type> BOXED_TYPES = ImmutableMap.<String, Type>builder()
+            .put("void", new NativeType("Void"))
+            .put("short", new NativeType("Double"))
+            .put("int", new NativeType("Double"))
+            .put("long", new NativeType("Double"))
+            .put("float", new NativeType("Double"))
+            .put("double", new NativeType("Double"))
+            .put("byte", new NativeType("Double"))
+            .put("boolean", new NativeType("Boolean"))
+            .put("char", new NativeType("String"))
+            .build();
 
     String displayValue();
 
     String getTypeName();
 
-    default boolean isPrimitiveType(){
-        return isGwtPrimitiveType() || isLongPrimitiveType();
-    }
-
     default boolean isGwtPrimitiveType() {
         return this instanceof NativeType &&
-                ("byte".equals(((NativeType) this).getTypeName())
-                        || "char".equals(((NativeType) this).getTypeName())
-                        || "short".equals(((NativeType) this).getTypeName())
-                        || "int".equals(((NativeType) this).getTypeName())
-                        || "float".equals(((NativeType) this).getTypeName())
-                        || "double".equals(((NativeType) this).getTypeName())
-                        || "boolean".equals(((NativeType) this).getTypeName()));
+                ("byte".equals(this.getTypeName())
+                        || "char".equals(this.getTypeName())
+                        || "short".equals(this.getTypeName())
+                        || "int".equals(this.getTypeName())
+                        || "float".equals(this.getTypeName())
+                        || "double".equals(this.getTypeName())
+                        || "boolean".equals(this.getTypeName()));
 
     }
 
     default boolean isLongPrimitiveType() {
-        return this instanceof NativeType && "long".equals(((NativeType) this).getTypeName());
+        return this instanceof NativeType && "long".equals(this.getTypeName());
     }
+
+    default boolean isNativeType() {
+        return isGwtPrimitiveType() || isNativeType();
+    }
+
+    default Type box() {
+        if (this instanceof NativeType) {
+            Type boxedType = BOXED_TYPES.get(getTypeName());
+            return boxedType != null ? boxedType : this;
+        }
+        return this;
+    }
+
 
 }

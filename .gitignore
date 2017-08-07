@@ -3,4 +3,3 @@ target/
 xtend-gen/
 *.iml
 jsinterop-gen.wiki/
-jsinterop-gen.wiki/*

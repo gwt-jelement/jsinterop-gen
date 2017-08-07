@@ -22,7 +22,6 @@ import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryDefinition;
 import com.tenxdev.jsinterop.generator.model.DictionaryMember;
 import com.tenxdev.jsinterop.generator.model.Model;
-import com.tenxdev.jsinterop.generator.model.types.ExtensionObjectType;
 import com.tenxdev.jsinterop.generator.model.types.ObjectType;
 
 import java.util.ArrayList;

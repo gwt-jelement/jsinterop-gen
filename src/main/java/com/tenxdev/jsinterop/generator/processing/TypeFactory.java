@@ -17,7 +17,6 @@
 
 package com.tenxdev.jsinterop.generator.processing;
 
-import com.google.common.collect.ImmutableMap;
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.ObjectType;
@@ -25,7 +24,6 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.parsing.visitors.types.TypeParser;
 
-import java.lang.annotation.Native;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,21 +31,12 @@ import java.util.stream.Collectors;
 
 public class TypeFactory {
 
-    public static final ImmutableMap<String, Type> BOXED_TYPES = ImmutableMap.<String, Type>builder()
-            .put("void", new NativeType("Void"))
-            .put("int", new NativeType("Integer"))
-            .put("long", new NativeType("Long"))
-            .put("float", new NativeType("Float"))
-            .put("double", new NativeType("Double"))
-            .put("byte", new NativeType("Byte"))
-            .put("boolean", new NativeType("Boolean"))
-            .put("char", new NativeType("Character"))
-            .build();
     private final TypeParser typeParser;
     private final Map<String, Type> typeMap = new HashMap<>();
     private final Map<String, Type> deferredTypeDefinitions = new HashMap<>();
     private final Map<String, UnionType> anonymousUnionTypes = new HashMap<>();
 
+    @SuppressWarnings("SpellCheckingInspection")
     public TypeFactory(Logger logger) {
         this.typeParser = new TypeParser(this, logger);
 
@@ -114,22 +103,12 @@ public class TypeFactory {
         return typeParser.parseType(typeName.replace("?", ""));
     }
 
-    public Type boxType(Type type) {
-        if (type instanceof NativeType) {
-            Type boxedType = BOXED_TYPES.get(type.getTypeName());
-            return boxedType != null ? boxedType : type;
-        }
-        //TODO may need to box other types
-        return type;
-    }
-
     public Type getUnionType(String[] typeNames) {
         String key = String.join(",", typeNames);
-        UnionType unionType = anonymousUnionTypes.computeIfAbsent(key,
+        return anonymousUnionTypes.computeIfAbsent(key,
                 k -> new UnionType(null, Arrays.stream(typeNames)
                         .map(this::getType)
                         .collect(Collectors.toList())));
-        return unionType;
     }
 
     public void registerType(String name, Type type) {
@@ -151,7 +130,7 @@ public class TypeFactory {
         });
     }
 
-    public boolean hasType(String name) {
+    boolean hasType(String name) {
         return typeMap.containsKey(name);
     }
 }

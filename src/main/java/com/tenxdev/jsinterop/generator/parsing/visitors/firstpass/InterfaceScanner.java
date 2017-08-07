@@ -24,7 +24,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 class InterfaceScanner extends ContextWebIDLBaseVisitor<Void> {
 
-    public InterfaceScanner(ParsingContext context) {
+    InterfaceScanner(ParsingContext context) {
         super(context);
     }
 

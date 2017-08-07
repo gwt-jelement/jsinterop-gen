@@ -24,7 +24,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 class TypeScanner extends ContextWebIDLBaseVisitor<Type> {
 
-    public TypeScanner(ParsingContext parsingContext) {
+    TypeScanner(ParsingContext parsingContext) {
         super(parsingContext);
     }
 
@@ -37,7 +37,7 @@ class TypeScanner extends ContextWebIDLBaseVisitor<Type> {
         } else if (ctx.unionType() != null) {
             return ctx.unionType().accept(this);
         } else {
-            parsingContext.getlogger().reportError("Unexpected state in visitType");
+            parsingContext.getLogger().reportError("Unexpected state in visitType");
             return null;
         }
     }

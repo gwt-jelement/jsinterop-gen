@@ -27,7 +27,6 @@ import org.antlr4.webidl.WebIDLParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +43,7 @@ class DictionaryMemberVisitor extends ContextWebIDLBaseVisitor<List<DictionaryMe
         while (context != null && context.dictionaryMember() != null) {
             ExtendedAttributes extendedAttributes =
                     new ExtendedAttributes(context.extendedAttributeList() != null ?
-                            context.extendedAttributeList().accept(new GenericExtendedAttribeListVisitor())
+                            context.extendedAttributeList().accept(new GenericExtendedAttributeListVisitor())
                             : null);
             WebIDLParser.DictionaryMemberContext memberContext = context.dictionaryMember();
             boolean required = memberContext.required() != null && "required".equals(memberContext.required().getText());

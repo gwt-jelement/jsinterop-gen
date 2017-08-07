@@ -108,16 +108,13 @@ public class Attribute implements InterfaceMember {
         if (o == null || getClass() != o.getClass()) return false;
 
         Attribute attribute = (Attribute) o;
-
-        if (staticAttribute != attribute.staticAttribute) return false;
-        if (deprecated != attribute.deprecated) return false;
-        if (readOnly != attribute.readOnly) return false;
-        if (writeOnly != attribute.writeOnly) return false;
-        if (!name.equals(attribute.name)) return false;
-        if (jsPropertyName != null ? !jsPropertyName.equals(attribute.jsPropertyName) : attribute.jsPropertyName != null)
-            return false;
-        if (!type.equals(attribute.type)) return false;
-        return enumSubstitutionType != null ? enumSubstitutionType.equals(attribute.enumSubstitutionType) : attribute.enumSubstitutionType == null;
+        return staticAttribute == attribute.staticAttribute && deprecated == attribute.deprecated
+                && readOnly == attribute.readOnly
+                && writeOnly == attribute.writeOnly
+                && name.equals(attribute.name)
+                && (jsPropertyName != null ? jsPropertyName.equals(attribute.jsPropertyName) : attribute.jsPropertyName == null)
+                && type.equals(attribute.type)
+                && (enumSubstitutionType != null ? enumSubstitutionType.equals(attribute.enumSubstitutionType) : attribute.enumSubstitutionType == null);
     }
 
     @Override

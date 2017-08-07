@@ -56,24 +56,24 @@ public class Model {
     public void registerDefinition(AbstractDefinition definition, String packageSuffix, String filename) throws ConflictingNameException {
         definition.setPackageName(packageSuffix);
         definition.setFilename(filename);
-        AbstractDefinition exisitingDefinition = definitions.get(definition.getName());
+        AbstractDefinition existingDefinition = definitions.get(definition.getName());
         if (definition instanceof PartialDefinition) {
-            if (exisitingDefinition == null) {
+            if (existingDefinition == null) {
                 deferredPartials.computeIfAbsent(definition.getName(), key -> new ArrayList<>())
                         .add((PartialDefinition) definition);
             } else {
-                exisitingDefinition.getPartialDefinitions().add((PartialDefinition) definition);
+                existingDefinition.getPartialDefinitions().add((PartialDefinition) definition);
             }
         } else if (definition instanceof ImplementsDefinition) {
-            if (exisitingDefinition == null) {
+            if (existingDefinition == null) {
                 deferredImplements.computeIfAbsent(definition.getName(), key -> new ArrayList<>())
                         .add((ImplementsDefinition) definition);
             } else {
-                exisitingDefinition.getImplementsDefinitions().add((ImplementsDefinition) definition);
+                existingDefinition.getImplementsDefinitions().add((ImplementsDefinition) definition);
             }
-        } else if (!definition.equals(exisitingDefinition)) {
-            if (exisitingDefinition != null) {
-                throw new ConflictingNameException(exisitingDefinition);
+        } else if (!definition.equals(existingDefinition)) {
+            if (existingDefinition != null) {
+                throw new ConflictingNameException(existingDefinition);
             }
             definitions.put(definition.getName(), definition);
             List<PartialDefinition> partials = deferredPartials.remove(definition.getName());

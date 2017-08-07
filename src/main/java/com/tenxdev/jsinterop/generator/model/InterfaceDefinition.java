@@ -31,7 +31,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     private final String jsTypeName;
     private final List<UnionType> unionReturnTypes = new ArrayList<>();
     private final String[] genericParameters;
-    private Type parent;
+    private final Type parent;
     private List<Constant> constants = new ArrayList<>();
     private List<Feature> features = new ArrayList<>();
     private List<Constructor> constructors = new ArrayList<>();
@@ -78,7 +78,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
         this.features = interfaceDefinition.features;
         this.jsTypeName = interfaceDefinition.jsTypeName;
         this.genericParameters = interfaceDefinition.genericParameters;
-        this.implementedInterfaces = implementedInterfaces;
+        this.implementedInterfaces = interfaceDefinition.implementedInterfaces;
     }
 
     public List<Type> getImplementedInterfaces() {
@@ -91,10 +91,6 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
 
     public Type getParent() {
         return parent;
-    }
-
-    public void setParent(Type parent) {
-        this.parent = parent;
     }
 
     public List<Method> getMethods() {

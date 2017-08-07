@@ -46,7 +46,7 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     «constructors(definition)»
     «nonFieldAttributes(definition)»
     «methods(definition)»
-    «MarginFxer.INSTANCE.fix(templateFiller.fill(definition, basePackageName))»
+    «MarginFixer.INSTANCE.fix(templateFiller.fill(definition, basePackageName))»
 }
 '''
     }

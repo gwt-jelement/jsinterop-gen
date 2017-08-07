@@ -31,10 +31,10 @@ import java.util.List;
 
 import static org.eclipse.xtext.xbase.lib.StringExtensions.toFirstUpper;
 
-public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOperationMembers> {
+class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOperationMembers> {
 
-    private String containingType;
-    private List<String> extendedAttributes;
+    private final String containingType;
+    private final List<String> extendedAttributes;
 
     SpecialOperationVisitor(ParsingContext parsingContext, String containingType,
                                    List<String> extendedAttributes) {
@@ -106,7 +106,7 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
             case "legacycaller":
                 return "call";
             default:
-                parsingContext.getlogger().formatError("Unknown special operation %s in %s",
+                parsingContext.getLogger().formatError("Unknown special operation %s in %s",
                         specialOperation, parsingContext.getTree(ctx));
                 return null;
         }
@@ -116,7 +116,7 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
         switch (specialOperation) {
             case "getter":
                 if (arguments.size() != 1) {
-                    parsingContext.getlogger().formatError("Unexpected number of arguments (%d) in setter for %s",
+                    parsingContext.getLogger().formatError("Unexpected number of arguments (%d) in setter for %s",
                             arguments.size(), containingType);
                     return null;
                 }
@@ -133,7 +133,7 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
                 }
             case "setter":
                 if (arguments.size() != 2) {
-                    parsingContext.getlogger().formatError("Unexpected number of arguments (%d) in setter for %s",
+                    parsingContext.getLogger().formatError("Unexpected number of arguments (%d) in setter for %s",
                             arguments.size(), containingType);
                     return null;
                 }
@@ -153,7 +153,7 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
                 }
             case "deleter":
                 if (arguments.size() != 1) {
-                    parsingContext.getlogger().formatError("Unexpected number of arguments (%d) in deleter for %s",
+                    parsingContext.getLogger().formatError("Unexpected number of arguments (%d) in deleter for %s",
                             arguments.size(), containingType);
                     return null;
                 }
@@ -161,7 +161,7 @@ public class SpecialOperationVisitor extends ContextWebIDLBaseVisitor<SpecialOpe
                         arguments.get(0).getName());
             case "legacycaller":
                 if (arguments.size() != 1) {
-                    parsingContext.getlogger().formatError("Unexpected number of arguments (%d) in legacy caller for %s",
+                    parsingContext.getLogger().formatError("Unexpected number of arguments (%d) in legacy caller for %s",
                             arguments.size(), containingType);
                     return null;
                 }

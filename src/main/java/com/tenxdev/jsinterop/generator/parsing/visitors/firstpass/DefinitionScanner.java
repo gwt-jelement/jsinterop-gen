@@ -23,7 +23,7 @@ import org.antlr4.webidl.WebIDLParser;
 
 class DefinitionScanner extends ContextWebIDLBaseVisitor<Void> {
 
-    public DefinitionScanner(ParsingContext context) {
+    DefinitionScanner(ParsingContext context) {
         super(context);
     }
 

@@ -55,7 +55,7 @@ public class PackageUsageModelVisitor extends AbstractModelVisitor<List<String>>
             if (type instanceof ObjectType){
                 imports.add(((ObjectType)type).getPackageName()+"."+importName);
             }
-            //TODO should log tyoe not found
+            //TODO should log type not found
         });
         return imports;
     }

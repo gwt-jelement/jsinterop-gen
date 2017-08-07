@@ -42,11 +42,15 @@ public class MethodUnionArgsExpander {
     private final Model model;
     private final Logger logger;
     private final UnionTypeReplacementVisitor unionTypeVisitor;
+    private final HasUnionTypeVisitor hasUnionTypeVisitor;
+    private final GetUnionTypesVisitor getUnionTypeVisitor;
 
     public MethodUnionArgsExpander(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
         this.unionTypeVisitor = new UnionTypeReplacementVisitor();
+        this.hasUnionTypeVisitor = new HasUnionTypeVisitor();
+        this.getUnionTypeVisitor = new GetUnionTypesVisitor();
     }
 
     public void processModel() {
@@ -55,41 +59,47 @@ public class MethodUnionArgsExpander {
     }
 
     private void processInterface(InterfaceDefinition definition) {
-        expandMethodArguments(definition::getMethods);
-        expandMethodArguments(definition::getConstructors);
+        expandMethodArguments(definition, definition::getMethods);
+        expandMethodArguments(definition, definition::getConstructors);
     }
 
-    private <T extends Method> void expandMethodArguments(Supplier<List<T>> methodsSupplier) {
-        List<T> newMethods = processMethods(methodsSupplier.get());
+    private <T extends Method> void expandMethodArguments(InterfaceDefinition definition,
+                                                          Supplier<List<T>> methodsSupplier) {
+        List<T> newMethods = processMethods(definition, methodsSupplier.get());
         methodsSupplier.get().clear();
         methodsSupplier.get().addAll(newMethods);
     }
 
-    private <T extends Method> List<T> processMethods(List<T> methods) {
+    private <T extends Method> List<T> processMethods(InterfaceDefinition definition, List<T> methods) {
         List<T> newMethods = new ArrayList<>();
-        methods.forEach(method -> processMethod(method, newMethods));
+        methods.forEach(method -> processMethod(definition, method, newMethods));
         return newMethods;
     }
 
-    private <T extends Method> void processMethod(T method, List<T> newMethods) {
+    private <T extends Method> void processMethod(InterfaceDefinition definition, T method, List<T> newMethods) {
+        if (hasUnionTypeVisitor.accept(method.getReturnType())) {
+            getUnionTypeVisitor.accept(method.getReturnType()).forEach(unionType ->
+                    definition.addUnionReturnType(definition, unionType, method.getName()));
+        }
         for (MethodArgument methodArgument : method.getArguments()) {
             List<Type> suggestedTypes = unionTypeVisitor.accept(methodArgument.getType());
             if (!suggestedTypes.isEmpty()) {
-                processArgument(method, methodArgument, suggestedTypes, newMethods);
+                processArgument(definition, method, methodArgument, suggestedTypes, newMethods);
                 return;
             }
         }
         newMethods.add(method);
     }
 
-    private <T extends Method> void processArgument(T method, MethodArgument argument,
+    private <T extends Method> void processArgument(InterfaceDefinition definition,
+                                                    T method, MethodArgument argument,
                                                     List<Type> suggestedTypes, List<T> newMethods) {
         int argumentIndex = method.getArguments().indexOf(argument);
         for (Type type : suggestedTypes) {
             List<MethodArgument> newArguments = new ArrayList<>(method.getArguments());
             newArguments.set(argumentIndex, argument.newMethodArgumentWithType(type));
             T newMethod = method.newMethodWithArguments(newArguments);
-            processMethod(newMethod, newMethods);
+            processMethod(definition, newMethod, newMethods);
         }
     }
 

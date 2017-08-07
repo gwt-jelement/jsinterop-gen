@@ -68,13 +68,13 @@ public class TypeParser extends TypesBaseVisitor<Type> {
         if (ctx.baseType != null) {
             if (ctx.promiseRest() != null && ctx.promiseRest().type() != null) {
                 return new ParameterisedType(determineType(ctx.baseType.getText()),
-                        Collections.singletonList(typeFactory.boxType(ctx.promiseRest().type().accept(this))));
+                        Collections.singletonList(ctx.promiseRest().type().accept(this).box()));
             }
             if (ctx.promiseRest2() != null && ctx.promiseRest2().type(0) != null
                     && ctx.promiseRest2().type(1) != null) {
                 return new ParameterisedType(determineType(ctx.baseType.getText()),
-                        Arrays.asList(typeFactory.boxType(ctx.promiseRest2().type(0).accept(this)),
-                                typeFactory.boxType(ctx.promiseRest2().type(1).accept(this))));
+                        Arrays.asList(ctx.promiseRest2().type(0).accept(this).box(),
+                                ctx.promiseRest2().type(1).accept(this).box()));
             }
             return new ParameterisedType(determineType(ctx.baseType.getText()), Collections.emptyList());
         }

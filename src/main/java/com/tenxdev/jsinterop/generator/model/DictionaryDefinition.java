@@ -69,9 +69,9 @@ public class DictionaryDefinition extends AbstractDefinition implements HasUnion
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DictionaryDefinition that = (DictionaryDefinition) o;
-        if (!getName().equals(that.getName())) return false;
-        if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
-        return members != null ? members.equals(that.members) : that.members == null;
+        return getName().equals(that.getName())
+                && (parent != null ? parent.equals(that.parent) : that.parent == null)
+                && (members != null ? members.equals(that.members) : that.members == null);
     }
 
     @Override

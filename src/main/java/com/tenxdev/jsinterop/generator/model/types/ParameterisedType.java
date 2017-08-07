@@ -72,11 +72,8 @@ public class ParameterisedType implements Type {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ParameterisedType that = (ParameterisedType) o;
-
-        if (!typeParameters.equals(that.typeParameters)) return false;
-        return baseType.equals(that.baseType);
+        return typeParameters.equals(that.typeParameters) && baseType.equals(that.baseType);
     }
 
     @Override

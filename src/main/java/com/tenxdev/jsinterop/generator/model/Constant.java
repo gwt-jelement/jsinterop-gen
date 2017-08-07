@@ -40,10 +40,9 @@ public class Constant implements InterfaceMember {
         if (o == null || getClass() != o.getClass()) return false;
 
         Constant constant = (Constant) o;
-
-        if (!name.equals(constant.name)) return false;
-        if (!type.equals(constant.type)) return false;
-        return value.equals(constant.value);
+        return name.equals(constant.name)
+                && type.equals(constant.type)
+                && value.equals(constant.value);
     }
 
     @Override

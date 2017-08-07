@@ -52,14 +52,14 @@ public class AttributeEnumTypeProcessor {
                 .filter(attribute -> hasEnumTypeVisitor.accept(attribute.getType()))
                 .forEach(attribute -> {
                     oldAttributes.add(attribute);
-                    newAttributes.add(processAttribute(definition, attribute));
+                    newAttributes.add(processAttribute(attribute));
 
                 });
         definition.getAttributes().removeAll(oldAttributes);
         definition.getAttributes().addAll(newAttributes);
     }
 
-    private Attribute processAttribute(InterfaceDefinition definition, Attribute attribute) {
+    private Attribute processAttribute(Attribute attribute) {
         Type newType = enumSubstitutionVisitor.accept(attribute.getType());
         if (!(newType instanceof UnionType)) {
             return attribute.newAttributeWithEnumSubstitutionType(newType);

@@ -22,17 +22,15 @@ import java.util.List;
 
 public class Extension {
 
-    private final boolean partial;
     private final List<String> imports;
-    private String className;
-    private String packageSuffix;
-    private String template;
+    private final String className;
+    private final String packageSuffix;
+    private final String template;
 
     public Extension(String className, String packageSuffix, String template) {
         this.className = className;
         this.packageSuffix = packageSuffix;
         this.template = template;
-        this.partial = false;
         this.imports = Collections.emptyList();
     }
 
@@ -40,13 +38,9 @@ public class Extension {
         this.className = className;
         this.packageSuffix = null;
         this.template = template;
-        this.partial = true;
         this.imports = imports;
     }
 
-    public boolean isPartial() {
-        return partial;
-    }
 
     public List<String> getImports() {
         return imports;

@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 class AttributesVisitor {
 
     private final PackageUsageTypeVisitor typeVisitor = new PackageUsageTypeVisitor();
-    private Type jsType;
+    private final Type jsType;
 
-    public AttributesVisitor(Type jsType) {
+    AttributesVisitor(Type jsType) {
         this.jsType = jsType;
     }
 

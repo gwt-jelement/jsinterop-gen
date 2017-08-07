@@ -114,7 +114,7 @@ public class «definition.name»«generic(definition)»«
         «ENDIF»
     «ENDFOR»
 
-    «MarginFxer.INSTANCE.fix(templateFiller.fill(definition, basePackageName))»
+    «MarginFixer.INSTANCE.fix(templateFiller.fill(definition, basePackageName))»
 }
     '''
     }

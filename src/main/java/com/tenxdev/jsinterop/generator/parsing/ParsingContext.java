@@ -40,7 +40,7 @@ public class ParsingContext {
         return typeFactory;
     }
 
-    public Logger getlogger() {
+    public Logger getLogger() {
         return logger;
     }
 

@@ -34,11 +34,9 @@ public class ImplementsDefinition extends AbstractDefinition {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ImplementsDefinition that = (ImplementsDefinition) o;
-
-        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
-        return parent != null ? parent.equals(that.parent) : that.parent == null;
+        return (getName() != null ? getName().equals(that.getName()) : that.getName() == null)
+                && (parent != null ? parent.equals(that.parent) : that.parent == null);
     }
 
     @Override

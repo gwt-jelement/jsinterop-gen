@@ -31,8 +31,8 @@ public class InterfaceDetector {
 
     private final Type arrayLikeType;
     private final Type isObjectType;
-    private Model model;
-    private Logger logger;
+    private final Model model;
+    private final Logger logger;
 
     public InterfaceDetector(Model model, Logger logger) {
         this.model = model;
@@ -43,14 +43,14 @@ public class InterfaceDetector {
 
     public void process() {
         logger.info(() -> "Detecting implied interfaces");
-        model.getInterfaceDefinitions().stream()
-                .filter(definition -> definition.getParent() == null)
-                .forEach(this::processInterfaceDefinition);
+        model.getInterfaceDefinitions().forEach(this::processInterfaceDefinition);
     }
 
     private void processInterfaceDefinition(InterfaceDefinition definition) {
-        logger.debug(() -> "Adding IsObject to " + definition.getName());
-        definition.getImplementedInterfaces().add(isObjectType);
+        if (definition.getParent() == null) {
+            logger.debug(() -> "Adding IsObject to " + definition.getName());
+            definition.getImplementedInterfaces().add(isObjectType);
+        }
         detectArrayLike(definition);
     }
 
@@ -59,7 +59,7 @@ public class InterfaceDetector {
                 getIndexedGetter(definition).ifPresent(getterMethod -> {
                     definition.getMethods().remove(getterMethod);
                     definition.getAttributes().remove(lengthAttribute);
-                    Type newInterface = new ParameterisedType(arrayLikeType, getterMethod.getReturnType());
+                    Type newInterface = new ParameterisedType(arrayLikeType, getterMethod.getReturnType().box());
                     definition.getImplementedInterfaces().add(newInterface);
                     logger.debug(() -> "Adding " + newInterface.displayValue() +
                             " to " + definition.getName());

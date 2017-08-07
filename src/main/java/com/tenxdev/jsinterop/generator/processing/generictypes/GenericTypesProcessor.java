@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 public class GenericTypesProcessor {
 
     private final MethodGenericTypesVisitor methodVisitor;
-    private Model model;
-    private Logger logger;
-    private Pattern TYPE_PATTERN = Pattern.compile("([A-Z]) extends .*");
+    private final Model model;
+    private final Logger logger;
+    private final Pattern TYPE_PATTERN = Pattern.compile("([A-Z]) extends .*");
 
     public GenericTypesProcessor(Model model, Logger logger) {
         this.model = model;

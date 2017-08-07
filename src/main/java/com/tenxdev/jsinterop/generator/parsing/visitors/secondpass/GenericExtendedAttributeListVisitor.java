@@ -24,7 +24,7 @@ import org.antlr4.webidl.WebIDLParser;
 import java.util.ArrayList;
 import java.util.List;
 
-class GenericExtendedAttribeListVisitor extends WebIDLBaseVisitor<List<String>> {
+class GenericExtendedAttributeListVisitor extends WebIDLBaseVisitor<List<String>> {
 
     @Override
     public List<String> visitExtendedAttributeList(WebIDLParser.ExtendedAttributeListContext ctx) {

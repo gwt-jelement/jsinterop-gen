@@ -18,17 +18,13 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.MethodArgument;
-import com.tenxdev.jsinterop.generator.parsing.FileAwareANTLRErrorListener;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
-import com.tenxdev.jsinterop.generator.parsing.visitors.firstpass.DefinitionsScanner;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr4.webidl.WebIDLLexer;
 import org.antlr4.webidl.WebIDLParser;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,8 +49,7 @@ class ConstructorArgumentsVisitor extends ContextWebIDLBaseVisitor<List<MethodAr
             parser.removeErrorListeners();
             parser.addErrorListener(parsingContext.getParser().getErrorListeners().get(0));
             WebIDLParser.ConstructorArgsContext constructorArgs = parser.constructorArgs();
-            List<MethodArgument> argumentList = constructorArgs.accept(this);
-            return argumentList;
+            return constructorArgs.accept(this);
         }
         return Collections.emptyList();
     }

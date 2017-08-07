@@ -17,7 +17,6 @@
 
 package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
-import com.tenxdev.jsinterop.generator.model.AbstractDefinition;
 import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
 import com.tenxdev.jsinterop.generator.model.Feature;
 import com.tenxdev.jsinterop.generator.model.interfaces.InterfaceMember;
@@ -73,7 +72,7 @@ class InterfaceMemberVisitor extends ContextWebIDLBaseVisitor<InterfaceMember> {
         if (ctx.iterable() != null) {
             return ctx.iterable().accept(new IterableVisitor(parsingContext, extendedAttributes));
         }
-        parsingContext.getlogger().reportError("Unexpected state in InterfaceMembers");
+        parsingContext.getLogger().reportError("Unexpected state in InterfaceMembers");
         return null;
     }
 }

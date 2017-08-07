@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 public class PrintStreamLogger implements Logger {
     private final DateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy:hh:mm:ss.SSS Z");
     private final PrintStream printStream;
-    private PrintStream errorStream;
+    private final PrintStream errorStream;
     private int logLevel;
 
     public PrintStreamLogger(PrintStream printStream, PrintStream errorStream) {

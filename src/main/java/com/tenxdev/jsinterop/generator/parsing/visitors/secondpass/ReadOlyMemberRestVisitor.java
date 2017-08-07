@@ -42,7 +42,7 @@ class ReadOlyMemberRestVisitor extends ContextWebIDLBaseVisitor<InterfaceMember>
         if (ctx.readWriteSetlike() != null) {
             return ctx.readWriteSetlike().setlikeRest().accept(new SetLikeRestVisitor(parsingContext, true, extendedAttributes));
         }
-        parsingContext.getlogger().reportError("ReadOlyMemberRestVisitor: Unexpected state in ReadOnlyMemberRest");
+        parsingContext.getLogger().reportError("ReadOlyMemberRestVisitor: Unexpected state in ReadOnlyMemberRest");
         return null;
     }
 }
