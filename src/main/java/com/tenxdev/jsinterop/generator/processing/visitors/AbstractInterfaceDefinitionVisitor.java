@@ -18,6 +18,7 @@
 package com.tenxdev.jsinterop.generator.processing.visitors;
 
 import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,11 @@ public abstract class AbstractInterfaceDefinitionVisitor<T> {
         result.add(visitAttributes(interfaceDefinition.getAttributes()));
         result.add(visitConstants(interfaceDefinition.getConstants()));
         result.add(visitFeatures(interfaceDefinition.getFeatures()));
+        result.add(visitImplementedInterfaces(interfaceDefinition.getImplementedInterfaces()));
         return coallesce(result);
     }
+
+    protected abstract T visitImplementedInterfaces(List<Type> implementedInterfaces);
 
     protected abstract T visitConstructors(List<Constructor> constructors);
 

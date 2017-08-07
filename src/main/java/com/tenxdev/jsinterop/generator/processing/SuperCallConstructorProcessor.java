@@ -66,6 +66,9 @@ public class SuperCallConstructorProcessor {
     }
 
     private InterfaceDefinition findParentInterface(InterfaceDefinition interfaceDefinition) {
+        if (interfaceDefinition.getParent() == null) {
+            return null;
+        }
         Type parentType = interfaceDefinition.getParent() instanceof ParameterisedType ?
                 ((ParameterisedType) interfaceDefinition.getParent()).getBaseType() : interfaceDefinition.getParent();
         if (parentType instanceof ExtensionObjectType) {

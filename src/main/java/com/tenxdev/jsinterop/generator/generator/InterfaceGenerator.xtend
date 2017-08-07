@@ -26,6 +26,7 @@ import com.tenxdev.jsinterop.generator.model.types.ArrayType
 import com.tenxdev.jsinterop.generator.model.Constructor
 import com.tenxdev.jsinterop.generator.model.types.UnionType
 import com.tenxdev.jsinterop.generator.processing.TemplateFiller
+import java.util.stream.Collectors
 
 class InterfaceGenerator extends XtendTemplate{
 
@@ -38,7 +39,7 @@ package «basePackageName»«definition.getPackageName()»;
 «imports(basePackageName, definition)»
 
 @JsType(namespace = JsPackage.GLOBAL, name="«definition.jsTypeName»", isNative = true)
-public class «definition.name.adjustJavaName»«generic(definition)»«extendsClass(definition)»{
+public class «definition.name.adjustJavaName»«generic(definition)»«extendsClass(definition)»«implementsInterfaces(definition)» {
     «constants(definition)»
     «unionTypes(definition)»
     «fields(definition)»
@@ -52,6 +53,13 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
 
     def extendsClass(InterfaceDefinition definition){
         if (definition.parent!==null)  " extends "+definition.parent.displayValue
+    }
+
+    def implementsInterfaces(InterfaceDefinition definition){
+        if (!definition.implementedInterfaces.empty)
+            definition.implementedInterfaces.stream
+                .map([type | type.displayValue])
+                .collect(Collectors.joining(", ", " implements ",""))
     }
 
     def constants(InterfaceDefinition definition)'''

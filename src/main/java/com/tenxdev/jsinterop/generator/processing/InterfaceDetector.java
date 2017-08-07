@@ -22,6 +22,7 @@ import com.tenxdev.jsinterop.generator.model.Attribute;
 import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
 import com.tenxdev.jsinterop.generator.model.Method;
 import com.tenxdev.jsinterop.generator.model.Model;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.Optional;
@@ -29,6 +30,7 @@ import java.util.Optional;
 public class InterfaceDetector {
 
     private final Type arrayLikeType;
+    private final Type isObjectType;
     private Model model;
     private Logger logger;
 
@@ -36,28 +38,32 @@ public class InterfaceDetector {
         this.model = model;
         this.logger = logger;
         this.arrayLikeType = model.getTypeFactory().getTypeNoParse("ArrayLike");
+        this.isObjectType = model.getTypeFactory().getTypeNoParse("IsObject");
     }
 
     public void process() {
         logger.info(() -> "Detecting implied interfaces");
-        Type baseType = model.getTypeFactory().getTypeNoParse("IsObject");
         model.getInterfaceDefinitions().stream()
-                .filter(definition -> baseType.equals(definition.getParent()))
+                .filter(definition -> definition.getParent() == null)
                 .forEach(this::processInterfaceDefinition);
     }
 
     private void processInterfaceDefinition(InterfaceDefinition definition) {
+        logger.debug(() -> "Adding IsObject to " + definition.getName());
+        definition.getImplementedInterfaces().add(isObjectType);
         detectArrayLike(definition);
     }
 
     private void detectArrayLike(InterfaceDefinition definition) {
-        getLengthAttribute(definition).ifPresent(lengthAttribute->
-            getIndexedGetter(definition).ifPresent(getterMethod->{
-                definition.getMethods().remove(getterMethod);
-                definition.getAttributes().remove(lengthAttribute);
-                definition.setParent(arrayLikeType);
-                logger.debug(() -> "Adding ArrayLike to " + definition.getName());
-            }));
+        getLengthAttribute(definition).ifPresent(lengthAttribute ->
+                getIndexedGetter(definition).ifPresent(getterMethod -> {
+                    definition.getMethods().remove(getterMethod);
+                    definition.getAttributes().remove(lengthAttribute);
+                    Type newInterface = new ParameterisedType(arrayLikeType, getterMethod.getReturnType());
+                    definition.getImplementedInterfaces().add(newInterface);
+                    logger.debug(() -> "Adding " + newInterface.displayValue() +
+                            " to " + definition.getName());
+                }));
     }
 
     private Optional<Attribute> getLengthAttribute(InterfaceDefinition definition) {

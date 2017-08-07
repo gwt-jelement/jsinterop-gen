@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.model.types;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,10 @@ public class ParameterisedType implements Type {
     public ParameterisedType(Type baseType, List<Type> typeParameters) {
         this.baseType = baseType;
         this.typeParameters = typeParameters;
+    }
+
+    public ParameterisedType(Type baseType, Type... typeParameters) {
+        this(baseType, Arrays.asList(typeParameters));
     }
 
     public List<Type> getTypeParameters() {

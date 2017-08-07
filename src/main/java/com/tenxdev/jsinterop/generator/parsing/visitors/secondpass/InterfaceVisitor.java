@@ -47,7 +47,7 @@ class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
     public InterfaceDefinition visitInterface_(WebIDLParser.Interface_Context ctx) {
         String name = ctx.name.getText();
         Type parent = ctx.inheritance() == null || ctx.inheritance().IDENTIFIER_WEBIDL() == null
-                ? parsingContext.getTypeFactory().getTypeNoParse("IsObject")
+                ? null
                 : parsingContext.getTypeFactory().getTypeNoParse(ctx.inheritance().IDENTIFIER_WEBIDL().getText());
         ExtendedAttributes extendedAttributes = new ExtendedAttributes(this.extendedAttributes);
         String[] genericExtendTypeNames = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_EXTEND, null);
@@ -60,7 +60,6 @@ class InterfaceVisitor extends ContextWebIDLBaseVisitor<InterfaceDefinition> {
             parent = new ParameterisedType(parent, genericTypes);
         }
         List<InterfaceMember> members = ctx.interfaceMembers().accept(new InterfaceMembersVisitor(parsingContext, name));
-        return new InterfaceDefinition(name, parent.getTypeName().equals(name) ? null : parent, constructors,
-                members, extendedAttributes);
+        return new InterfaceDefinition(name, parent, constructors, members, extendedAttributes);
     }
 }

@@ -24,6 +24,7 @@ import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.model.types.UnionType;
 import com.tenxdev.jsinterop.generator.processing.visitors.AbstractInterfaceDefinitionVisitor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
     private final MethodVisitor methodVisitor = new MethodVisitor();
     private Type jsType;
 
-    public InterfaceDefinitionUsageVisitor(Type jsType) {
+    InterfaceDefinitionUsageVisitor(Type jsType) {
         super();
         this.jsType = jsType;
     }
@@ -45,7 +46,7 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
         result.add("jsinterop.annotations.JsPackage");
         result.add("jsinterop.annotations.JsType");
         result.add("jsinterop.annotations.JsOverlay");
-        if (interfaceDefinition.getParent() !=null) {
+        if (interfaceDefinition.getParent() != null) {
             result.addAll(typeVisitor.accept(interfaceDefinition.getParent()));
         } else if (interfaceDefinition.getParent() instanceof ParameterisedType
                 && ((ParameterisedType) interfaceDefinition.getParent()).getBaseType() instanceof PackageType) {
@@ -75,6 +76,13 @@ public class InterfaceDefinitionUsageVisitor extends AbstractInterfaceDefinition
                 .filter(unionType -> interfaceDefinition != unionType.getOwner())
                 .map(unionType -> unionType.getOwner().getPackageName() + "." + unionType.getOwner().getName())
                 .collect(Collectors.toList()));
+        return result;
+    }
+
+    @Override
+    protected List<String> visitImplementedInterfaces(List<Type> implementedInterfaces) {
+        List<String> result = new ArrayList<>();
+        implementedInterfaces.forEach(type -> result.addAll(typeVisitor.accept(type)));
         return result;
     }
 

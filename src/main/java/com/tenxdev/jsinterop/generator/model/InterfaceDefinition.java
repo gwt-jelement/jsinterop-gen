@@ -37,6 +37,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
     private List<Constructor> constructors = new ArrayList<>();
     private List<Method> methods = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
+    private List<Type> implementedInterfaces = new ArrayList<>();
 
     public InterfaceDefinition(String name, Type parent, List<Constructor> constructors,
                                List<InterfaceMember> members, ExtendedAttributes extendedAttributes) {
@@ -77,6 +78,11 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
         this.features = interfaceDefinition.features;
         this.jsTypeName = interfaceDefinition.jsTypeName;
         this.genericParameters = interfaceDefinition.genericParameters;
+        this.implementedInterfaces = implementedInterfaces;
+    }
+
+    public List<Type> getImplementedInterfaces() {
+        return implementedInterfaces;
     }
 
     public String[] getGenericParameters() {
