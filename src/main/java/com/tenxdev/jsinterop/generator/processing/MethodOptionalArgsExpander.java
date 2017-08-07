@@ -22,6 +22,7 @@ import com.tenxdev.jsinterop.generator.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * This class creates nee methods without optional arguments for methods with optional arguments, and removes all method
@@ -49,18 +50,13 @@ public class MethodOptionalArgsExpander {
     }
 
     private void processInterface(InterfaceDefinition definition) {
-        List<Method> newMethods = processMethods(definition.getMethods());
-        definition.getMethods().clear();
-        definition.getMethods().addAll(newMethods);
-
-        List<Constructor> newConstructors = processMethods(definition.getConstructors());
-        definition.getConstructors().clear();
-        definition.getConstructors().addAll(newConstructors);
+        processMethods(definition::getMethods);
+        processMethods(definition::getConstructors);
     }
 
-    private <T extends Method> List<T> processMethods(List<T> methods) {
+    private <T extends Method> void processMethods(Supplier<List<T>> methodsSupplier) {
         List<T> newMethods = new ArrayList<>();
-        methods.forEach(method -> {
+        methodsSupplier.get().forEach(method -> {
             if (hasOptionalArgs(method)) {
                 List<T> expandedMethods = expandMethod(method);
                 expandedMethods.removeAll(newMethods);
@@ -69,7 +65,8 @@ public class MethodOptionalArgsExpander {
                 newMethods.add(method);
             }
         });
-        return newMethods;
+        methodsSupplier.get().clear();
+        methodsSupplier.get().addAll(newMethods);
     }
 
     private boolean hasOptionalArgs(Method method) {

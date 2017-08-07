@@ -18,11 +18,15 @@
 package com.tenxdev.jsinterop.generator.processing.uniontypes;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
+import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.model.MethodArgument;
+import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.Type;
-import com.tenxdev.jsinterop.generator.model.types.UnionType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * This class generates new methods for methods with union type arguments, and removes the definition of methods with
@@ -36,14 +40,13 @@ import java.util.*;
  */
 public class MethodUnionArgsExpander {
     private final Model model;
-    private final GetUnionTypesVisitor getUnionTypesVisitor = new GetUnionTypesVisitor();
-    private final RemoveEnumUnionTypeVisitor removeEnumUnionTypeVisitor;
     private final Logger logger;
+    private final UnionTypeReplacementVisitor unionTypeVisitor;
 
     public MethodUnionArgsExpander(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
-        this.removeEnumUnionTypeVisitor = new RemoveEnumUnionTypeVisitor(model, logger);
+        this.unionTypeVisitor = new UnionTypeReplacementVisitor();
     }
 
     public void processModel() {
@@ -52,46 +55,14 @@ public class MethodUnionArgsExpander {
     }
 
     private void processInterface(InterfaceDefinition definition) {
-        expandMethodArguments(definition);
-        expandConstructorArguments(definition);
-        findUnionReturnTypes(definition);
+        expandMethodArguments(definition::getMethods);
+        expandMethodArguments(definition::getConstructors);
     }
 
-    private void expandMethodArguments(InterfaceDefinition definition) {
-        List<Method> newMethods = processMethods(definition.getMethods());
-        definition.getMethods().clear();
-        definition.getMethods().addAll(newMethods);
-    }
-
-    private void expandConstructorArguments(InterfaceDefinition definition) {
-        List<Constructor> newConstructors = processMethods(definition.getConstructors());
-        definition.getConstructors().clear();
-        definition.getConstructors().addAll(newConstructors);
-    }
-
-    private void findUnionReturnTypes(InterfaceDefinition definition) {
-        Map<String, UnionType> unionReturnTypes = new HashMap<>();
-        Set<UnionType> uniqueValues = new HashSet<>();
-        for (Method method : definition.getMethods()) {
-            List<UnionType> accept = getUnionTypesVisitor.accept(method.getReturnType());
-            for (UnionType type : accept) {
-                if (uniqueValues.add(type)) {
-                    unionReturnTypes.put(method.getName(), type);
-                }
-            }
-        }
-        for (Method method : definition.getMethods()) {
-            if (method.getReplacedReturnType() != null) {
-                List<UnionType> unionTypes = getUnionTypesVisitor.accept(method.getReplacedReturnType());
-                for (UnionType type : unionTypes) {
-                    if (uniqueValues.add(type)) {
-                        unionReturnTypes.put(method.getName(), type);
-                    }
-                }
-            }
-        }
-        unionReturnTypes.forEach((name, unionType) ->
-                definition.addUnionReturnType(definition, removeEnumUnionTypeVisitor.visitUnionType(unionType), name));
+    private <T extends Method> void expandMethodArguments(Supplier<List<T>> methodsSupplier) {
+        List<T> newMethods = processMethods(methodsSupplier.get());
+        methodsSupplier.get().clear();
+        methodsSupplier.get().addAll(newMethods);
     }
 
     private <T extends Method> List<T> processMethods(List<T> methods) {
@@ -101,7 +72,6 @@ public class MethodUnionArgsExpander {
     }
 
     private <T extends Method> void processMethod(T method, List<T> newMethods) {
-        UnionTypeReplacementVisitor unionTypeVisitor = new UnionTypeReplacementVisitor();
         for (MethodArgument methodArgument : method.getArguments()) {
             List<Type> suggestedTypes = unionTypeVisitor.accept(methodArgument.getType());
             if (!suggestedTypes.isEmpty()) {
