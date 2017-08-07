@@ -18,75 +18,59 @@
 package com.tenxdev.jsinterop.generator.processing;
 
 import com.tenxdev.jsinterop.generator.logging.Logger;
-import com.tenxdev.jsinterop.generator.model.*;
+import com.tenxdev.jsinterop.generator.model.InterfaceDefinition;
+import com.tenxdev.jsinterop.generator.model.Method;
+import com.tenxdev.jsinterop.generator.model.MethodArgument;
+import com.tenxdev.jsinterop.generator.model.Model;
 import com.tenxdev.jsinterop.generator.model.types.ArrayType;
 import com.tenxdev.jsinterop.generator.model.types.NativeType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class NativeTypeArrayArgumentHandler {
 
-    private Model model;
-    private Logger logger;
+    private final Type arrayType;
+    private final Model model;
+    private final Logger logger;
 
     public NativeTypeArrayArgumentHandler(Model model, Logger logger) {
         this.model = model;
         this.logger = logger;
+        this.arrayType = model.getTypeFactory().getType("Array");
     }
 
     public void process() {
         logger.info(() -> "Creating method overloads for methods with native array types");
-        model.getInterfaceDefinitions().forEach(definition -> processInterface(model, definition));
+        model.getInterfaceDefinitions().forEach(this::processInterface);
     }
 
-    private void processInterface(Model model, InterfaceDefinition definition) {
-        processMethods(model, definition);
-        processConstructors(model, definition);
+    private void processInterface(InterfaceDefinition definition) {
+        processMethods(definition::getMethods);
+        processMethods(definition::getConstructors);
     }
 
-    private void processConstructors(Model model, InterfaceDefinition definition) {
-        ArrayList<Constructor> newConstructors = new ArrayList<>();
-        definition.getConstructors().forEach(constructor -> {
-            Constructor newConstructor = processConstructor(model, definition, constructor);
-            while (newConstructor != null) {
-                newConstructors.add(newConstructor);
-                newConstructor = processConstructor(model, definition, newConstructor);
-            }
-        });
-        definition.getConstructors().addAll(newConstructors);
-    }
-
-    private void processMethods(Model model, InterfaceDefinition definition) {
-        ArrayList<Method> newMethods = new ArrayList<>();
-        definition.getMethods().forEach(method -> {
-            Method newMethod = processMethod(model, definition, method);
+    private <T extends Method> void processMethods(Supplier<List<T>> methodsSupplier) {
+        ArrayList<T> newMethods = new ArrayList<>();
+        methodsSupplier.get().forEach(method -> {
+            T newMethod = processMethod(method);
             while (newMethod != null) {
                 newMethods.add(newMethod);
-                newMethod = processMethod(model, definition, newMethod);
+                newMethod = processMethod(newMethod);
             }
         });
-        definition.getMethods().addAll(newMethods);
+        methodsSupplier.get().addAll(newMethods);
     }
 
-    private Method processMethod(Model model, InterfaceDefinition definition, Method method) {
-        return getNativeArrayArgument(method).<Method>map(argument -> {
+    private <T extends Method> T processMethod(T method) {
+        return getNativeArrayArgument(method).<T>map(argument -> {
             ArrayList<MethodArgument> newArguments = new ArrayList<>(method.getArguments());
-            Type arrayType = model.getTypeFactory().getType("Array");
             MethodArgument newArgument = argument.newMethodArgumentWithType(arrayType);
             newArguments.replaceAll(argument1 -> argument1 == argument ? newArgument : argument1);
             return method.newMethodWithArguments(newArguments);
-        }).orElse(null);
-    }
-
-    private Constructor processConstructor(Model model, InterfaceDefinition definition, Constructor constructor) {
-        return getNativeArrayArgument(constructor).<Constructor>map(argument -> {
-            ArrayList<MethodArgument> newArguments = new ArrayList<>(constructor.getArguments());
-            Type arrayType = model.getTypeFactory().getType("Array");
-            MethodArgument newArgument = argument.newMethodArgumentWithType(arrayType);
-            newArguments.replaceAll(argument1 -> argument1 == argument ? newArgument : argument1);
-            return constructor.newMethodWithArguments(newArguments);
         }).orElse(null);
     }
 

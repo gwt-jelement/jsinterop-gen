@@ -27,6 +27,10 @@ public interface Type {
 
     String getTypeName();
 
+    default boolean isPrimitiveType(){
+        return isGwtPrimitiveType() || isLongPrimitiveType();
+    }
+
     default boolean isGwtPrimitiveType() {
         return this instanceof NativeType &&
                 ("byte".equals(((NativeType) this).getTypeName())
