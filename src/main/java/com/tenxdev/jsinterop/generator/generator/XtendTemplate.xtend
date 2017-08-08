@@ -7,7 +7,6 @@ import java.util.Arrays
 import com.tenxdev.jsinterop.generator.model.Method
 import com.tenxdev.jsinterop.generator.model.types.Type
 import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes
-import com.tenxdev.jsinterop.generator.model.types.UnionType
 import java.util.List
 
 class XtendTemplate {
@@ -73,24 +72,24 @@ class XtendTemplate {
 
     def unionTypes(HasUnionReturnTypes definition)'''
         «FOR unionType: definition.unionReturnTypes»
-            «IF (unionType as UnionType).owner === definition»
+            «IF unionType.owner === definition»
                 @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
-                public interface «(unionType as UnionType).name» {
-                    «FOR type: (unionType as UnionType).types»
+                public interface «unionType.name» {
+                    «FOR type: unionType.types»
                         @JsOverlay
-                        static «(unionType as UnionType).name» of(«type.displayValue» value){
+                        static «unionType.name» of(«type.displayValue» value){
                             return Js.cast(value);
                         }
 
                     «ENDFOR»
-                    «FOR type: (unionType as UnionType).types»
+                    «FOR type: unionType.types»
                         @JsOverlay
                         default «type.displayValue» as«type.displayValue.toFirstUpper.adjustName»(){
                             return Js.cast(this);
                         }
 
                     «ENDFOR»
-                    «FOR type: (unionType as UnionType).types»
+                    «FOR type: unionType.types»
                         @JsOverlay
                         default boolean is«type.displayValue.toFirstUpper.adjustName»(){
                             return (Object) this instanceof «type.box().displayValue.removeGeneric»;
@@ -114,6 +113,5 @@ class XtendTemplate {
     def adjustArray(String value){
         value.replace("[]", "Array").removeGeneric;
     }
-
 
 }

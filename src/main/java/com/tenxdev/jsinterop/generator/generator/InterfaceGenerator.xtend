@@ -180,7 +180,7 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
                 «IF !attribute.writeOnly»
                     «attribute.checkDeprecated»
                     @JsProperty(name="«attribute.name»")
-                    public «staticModifier(attribute)»native «attribute.type.displayValue» get«attribute.name.toFirstUpper»();
+                    public «staticModifier(attribute)»native «attribute.type.displayValue» «getterPrefix(attribute)»«attribute.name.toFirstUpper»();
 
                 «ENDIF»
                 «IF !attribute.readOnly»
@@ -300,4 +300,9 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
     def safeVarArgsFinal(Method method){
         if (!method.isStatic && method.needsSafeVararg) "final "
     }
+
+    def getterPrefix(Attribute attribute){
+        if ("boolean".equals(attribute.type.displayValue())) "is" else "get"
+    }
+
 }

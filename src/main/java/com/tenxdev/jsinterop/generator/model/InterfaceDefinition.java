@@ -65,7 +65,7 @@ public class InterfaceDefinition extends AbstractDefinition implements HasUnionR
                 .map(member -> (SpecialOperationMembers) member)
                 .forEach(member -> this.methods.addAll(member.getMethods()));
         this.jsTypeName = extendedAttributes.extractValue(ExtendedAttributes.JS_TYPE_NAME,
-                extendedAttributes.hasExtendedAttribute(ExtendedAttributes.NO_INTERFACE_OBJECT)?"Object":name);
+                extendedAttributes.hasExtendedAttribute(ExtendedAttributes.NO_INTERFACE_OBJECT) ? "Object" : name);
         this.genericParameters = extendedAttributes.extractValues(ExtendedAttributes.GENERIC_PARAMETER, null);
     }
 
