@@ -19,6 +19,8 @@ package com.tenxdev.jsinterop.generator.parsing.visitors.secondpass;
 
 import com.tenxdev.jsinterop.generator.model.Attribute;
 import com.tenxdev.jsinterop.generator.model.ExtendedAttributes;
+import com.tenxdev.jsinterop.generator.model.types.GenericType;
+import com.tenxdev.jsinterop.generator.model.types.ParameterisedType;
 import com.tenxdev.jsinterop.generator.model.types.Type;
 import com.tenxdev.jsinterop.generator.parsing.ParsingContext;
 import org.antlr4.webidl.WebIDLParser;
@@ -29,20 +31,29 @@ class AttributeRestVisitor extends ContextWebIDLBaseVisitor<Attribute> {
 
     private final boolean readOnly;
     private final boolean staticAttribute;
-    private final List<String> extendedAttributes;
+    private final List<String> extendedAttributesList;
 
     AttributeRestVisitor(ParsingContext context, boolean readOnly, boolean staticAttribute, List<String> extendedAttributes) {
         super(context);
         this.readOnly = readOnly;
         this.staticAttribute = staticAttribute;
-        this.extendedAttributes = extendedAttributes;
+        this.extendedAttributesList = extendedAttributes;
     }
 
     @Override
     public Attribute visitAttributeRest(WebIDLParser.AttributeRestContext ctx) {
         String name = ctx.attributeName().getText();
         Type type = ctx.type().accept(new TypeVisitor(parsingContext));
-        return new Attribute(name, type, readOnly, staticAttribute, new ExtendedAttributes(extendedAttributes));
+        ExtendedAttributes extendedAttributes = new ExtendedAttributes(extendedAttributesList);
+        String genericTypeName = extendedAttributes.extractValue(ExtendedAttributes.GENERIC_PARAMETER, null);
+        if (staticAttribute && genericTypeName != null) {
+            parsingContext.getLogger().formatError("Ignored generic type specifier %s on static attribute %s",
+                    genericTypeName, name);
+            genericTypeName = null;
+        }
+        Type actualType = genericTypeName == null ?
+                type : new ParameterisedType(type, new GenericType(genericTypeName));
+        return new Attribute(name, actualType, readOnly, staticAttribute, extendedAttributes);
     }
 
 }
