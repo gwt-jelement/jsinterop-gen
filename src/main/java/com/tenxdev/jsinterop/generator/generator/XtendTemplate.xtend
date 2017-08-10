@@ -8,6 +8,8 @@ import com.tenxdev.jsinterop.generator.model.Method
 import com.tenxdev.jsinterop.generator.model.types.Type
 import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes
 import java.util.List
+import com.tenxdev.jsinterop.generator.model.MethodArgument
+import com.tenxdev.jsinterop.generator.generator.jsondocs.Documentation
 
 class XtendTemplate {
 
@@ -112,6 +114,27 @@ class XtendTemplate {
 
     def adjustArray(String value){
         value.replace("[]", "Array").removeGeneric;
+    }
+
+    def javadoc(String description)'''
+
+    /**
+     * «description»
+     */
+    '''
+
+    def javadoc(Documentation documentation, String className, String methodName, List<MethodArgument> arguments){
+        documentation.getMemberDescription(className, methodName)
+            .map([description|'''
+                /**
+                 * «description»
+                 «FOR argument: arguments »
+                  * @param «argument.name» «documentation.getArgumentDescription(className, methodName, arguments.indexOf(argument))
+                      .map([s|s]).orElse("")»
+                 «ENDFOR»
+                 **/
+            ''']).orElse("");
+
     }
 
 }

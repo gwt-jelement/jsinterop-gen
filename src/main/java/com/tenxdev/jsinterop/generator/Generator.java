@@ -20,6 +20,8 @@ package com.tenxdev.jsinterop.generator;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
 import com.tenxdev.jsinterop.generator.generator.SourceGenerator;
+import com.tenxdev.jsinterop.generator.generator.jsondocs.Documentation;
+import com.tenxdev.jsinterop.generator.generator.jsondocs.DocumentationBuilder;
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.logging.PrintStreamLogger;
 import com.tenxdev.jsinterop.generator.model.Model;
@@ -65,6 +67,9 @@ class Generator {
     @SuppressWarnings("FieldCanBeLocal")
     @Option(name = "-logLevel", usage = "logging level: 0-no logging 1-minimum logging 2-debug logging", metaVar = "logLevel")
     private int logLevel = 1;
+
+    @Option(name = "-jsondocs", usage = "The folder containing JSON documentation for the API", metaVar = "jsondocs")
+    private String jsonDocsDirectory;
 
     @SuppressWarnings("unused")
     @Argument
@@ -122,7 +127,10 @@ class Generator {
         new InterfaceDetector(model, logger).process();
 
         new ImportResolver().processModel(model, logger); //must run after all type substitutions
-        new SourceGenerator(logger).processModel(model, outputDirectory, basePackage);
+        Documentation documentation = jsonDocsDirectory != null ?
+                new DocumentationBuilder(logger).loadFrom(jsonDocsDirectory) :
+                new Documentation();
+        new SourceGenerator(logger).processModel(model, outputDirectory, basePackage, documentation);
     }
 
     private void checkArguments() throws CmdLineException {

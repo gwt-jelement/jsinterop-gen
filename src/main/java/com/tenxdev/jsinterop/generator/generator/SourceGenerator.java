@@ -17,6 +17,7 @@
 
 package com.tenxdev.jsinterop.generator.generator;
 
+import com.tenxdev.jsinterop.generator.generator.jsondocs.Documentation;
 import com.tenxdev.jsinterop.generator.logging.Logger;
 import com.tenxdev.jsinterop.generator.model.*;
 import com.tenxdev.jsinterop.generator.processing.TemplateFiller;
@@ -36,7 +37,8 @@ public class SourceGenerator extends XtendTemplate {
         this.logger = logger;
     }
 
-    public void processModel(Model model, String outputDirectory, String basePackageName) throws IOException {
+    public void processModel(Model model, String outputDirectory, String basePackageName,
+                             Documentation documentation) throws IOException {
         logger.info(() -> "Generating Java source code");
 
         outputFile(Paths.get(outputDirectory, "pom.xml"), new PomGenerator().generate(VERSION));
@@ -45,7 +47,7 @@ public class SourceGenerator extends XtendTemplate {
                 "JElement.gwt.xml"), new GwtModuleGenerator().generate());
         EnumGenerator enumGenerator = new EnumGenerator();
         CallbackGenerator callbackGenerator = new CallbackGenerator();
-        InterfaceGenerator interfaceGenerator = new InterfaceGenerator();
+        InterfaceGenerator interfaceGenerator = new InterfaceGenerator(documentation);
         DictionaryGenerator dictionaryGenerator = new DictionaryGenerator();
         TemplateFiller templateFiller = new TemplateFiller(model, logger);
         int numOutput = 0;

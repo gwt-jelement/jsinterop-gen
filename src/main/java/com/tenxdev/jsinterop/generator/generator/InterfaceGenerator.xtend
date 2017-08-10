@@ -27,8 +27,15 @@ import com.tenxdev.jsinterop.generator.model.Constructor
 import com.tenxdev.jsinterop.generator.model.types.UnionType
 import com.tenxdev.jsinterop.generator.processing.TemplateFiller
 import java.util.stream.Collectors
+import com.tenxdev.jsinterop.generator.generator.jsondocs.Documentation
 
 class InterfaceGenerator extends XtendTemplate{
+
+    private Documentation documentation;
+
+    new(Documentation documentation){
+        this.documentation=documentation;
+    }
 
     def generate(String basePackageName, InterfaceDefinition definition, TemplateFiller templateFiller){
         Collections.sort(definition.methods)
@@ -37,7 +44,7 @@ class InterfaceGenerator extends XtendTemplate{
 package «basePackageName»«definition.getPackageName()»;
 
 «imports(basePackageName, definition)»
-
+«documentation.getClassDescription(definition.name).map([description|javadoc(description)]).orElse("")»
 @JsType(namespace = JsPackage.GLOBAL, name="«definition.jsTypeName»", isNative = true)
 public class «definition.name.adjustJavaName»«generic(definition)»«extendsClass(definition)»«implementsInterfaces(definition)» {
     «constants(definition)»
@@ -195,6 +202,7 @@ public class «definition.name.adjustJavaName»«generic(definition)»«extendsC
 
     def methods(InterfaceDefinition definition)'''
         «FOR method: definition.methods»
+            «javadoc(documentation, definition.name, method.name, method.arguments)»
             «IF method.body !== null»
                 «safeVarArgs(method)»
                 «method.checkDeprecated»
