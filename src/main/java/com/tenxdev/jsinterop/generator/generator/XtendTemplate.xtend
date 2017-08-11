@@ -10,6 +10,7 @@ import com.tenxdev.jsinterop.generator.model.interfaces.HasUnionReturnTypes
 import java.util.List
 import com.tenxdev.jsinterop.generator.model.MethodArgument
 import com.tenxdev.jsinterop.generator.generator.jsondocs.Documentation
+import com.tenxdev.jsinterop.generator.model.types.UnionType
 
 class XtendTemplate {
 
@@ -73,25 +74,25 @@ class XtendTemplate {
     }
 
     def unionTypes(HasUnionReturnTypes definition)'''
-        «FOR unionType: definition.unionReturnTypes»
-            «IF unionType.owner === definition»
+        «FOR unionType : definition.unionReturnTypes»
+            «IF (unionType as UnionType).owner === definition»
                 @JsType(isNative = true, name = "?", namespace = JsPackage.GLOBAL)
-                public interface «unionType.name» {
-                    «FOR type: unionType.types»
+                public interface «(unionType as UnionType).name» {
+                    «FOR type: (unionType as UnionType).types»
                         @JsOverlay
-                        static «unionType.name» of(«type.displayValue» value){
+                        static «(unionType as UnionType).name» of(«type.displayValue» value){
                             return Js.cast(value);
                         }
 
                     «ENDFOR»
-                    «FOR type: unionType.types»
+                    «FOR type: (unionType as UnionType).types»
                         @JsOverlay
                         default «type.displayValue» as«type.displayValue.toFirstUpper.adjustName»(){
                             return Js.cast(this);
                         }
 
                     «ENDFOR»
-                    «FOR type: unionType.types»
+                    «FOR type: (unionType as UnionType).types»
                         @JsOverlay
                         default boolean is«type.displayValue.toFirstUpper.adjustName»(){
                             return (Object) this instanceof «type.box().displayValue.removeGeneric»;
