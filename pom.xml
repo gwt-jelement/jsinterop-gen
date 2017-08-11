@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.10xdev</groupId>
-    <artifactId>gwt-web-jsinterop-generator</artifactId>
+    <artifactId>jsinterop-gen</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
